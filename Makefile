@@ -6,30 +6,30 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 11:55:38 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/20 14:33:15 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/21 12:17:43 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+NAME = simple_shell
 
 SRC = main.c
 
 OBJ = $(SRC:.c=.o)
 
-HEADER = incl/minishell.h
+HEADER = simple_shell
 
 CFLAGS = -Wall -Werror -Wextra
 
 GCC = gcc
 
 all: $(NAME)
-	@echo "minishell executable ready ✅"
+	@echo "simple_shell executable ready ✅"
 
 .c.o:
 	$(GCC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ) $(HEADER)
-	$(GCC) $(CFLAGS) -o $@ $^
+	$(GCC) $(CFLAGS) -o $@ $^ -lreadline
 
 clean:
 	@rm -f $(OBJ)
