@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 11:55:38 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/21 12:17:43 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/21 16:56:59 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,21 +22,29 @@ CFLAGS = -Wall -Werror -Wextra
 
 GCC = gcc
 
-all: $(NAME)
+LIBFTPRINTF = libftprintf
+
+all: libs $(NAME)
 	@echo "simple_shell executable ready ✅"
 
 .c.o:
 	$(GCC) $(CFLAGS) -c $< -o $@
 
+libs:
+	@make -C $(LIBFTPRINTF)
+	@echo "libprintf library ready ✅"
+
 $(NAME): $(OBJ) $(HEADER)
-	$(GCC) $(CFLAGS) -o $@ $^ -lreadline
+	$(GCC) $(CFLAGS) -L $(LIBFTPRINTF) -o $@ $^ -lreadline -lftprintf
 
 clean:
 	@rm -f $(OBJ)
+	@make clean -C $(LIBFTPRINTF)
 
 fclean:
 	@rm -f $(OBJ)
 	@rm -f $(NAME)
+	@make fclean -C $(LIBFTPRINTF)
 
 re: fclean all
 

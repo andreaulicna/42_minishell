@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 11:47:21 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/21 12:18:39 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/21 15:32:46 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 
 # include <stdio.h>
 # include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+# include <readline/readline.h> // readline
+# include <readline/history.h> // readline
+# include <string.h> // strok
+# include "libftprintf/ft_printf.h"
 
 #endif
