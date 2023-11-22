@@ -6,36 +6,51 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:55:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/21 18:44:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/26 15:30:08 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "simple_shell.h"
+#include "incl/minishell.h"
+#include "libftprintf/ft_printf.h"
+
+void	free_arr(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
 
 int	main(int argc, char **argv)
 {
-	char	*input;
 	(void) argc;
 	(void) argv;
-	while (1)
+	char	*input;
+	char	**arr;
+	int	i;
+	
+	input = readline("simple-shell\% ");
+	if (input == NULL)
 	{
-		input = readline("simple-shell\% ");
-		if (input == NULL)
-		{
-			printf("exit");
-			//free(input);
-			return (-1);
-		}
-		printf("%s\n\n", input);
-		free(input);
+		printf("exit");
+		return (-1);
 	}
-// check unsigned printf with -1 
-//	ft_printf("my printf: %u\n", -1);
-//	printf("printf: %u\n", -1);
+	arr = ft_split(input, ' ');
+	i = 0;
+	while (arr[i])
+	{
+		printf("%s\n", arr[i]);
+		i++;
+	}
+	free(input);
+	free_arr(arr);
 	return(0);
 }
-
-
 
 ////Original simple shell code
 ////-> uses getline which is not allowed for minishell
