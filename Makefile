@@ -6,13 +6,14 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 11:55:38 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/21 16:56:59 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/26 15:31:23 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = simple_shell
 
-SRC = main.c
+#SRC = simple_shell.c
+SRC = my_shell.c
 
 OBJ = $(SRC:.c=.o)
 
