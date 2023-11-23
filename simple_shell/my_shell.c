@@ -6,12 +6,12 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:55:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/22 17:00:25 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/23 14:28:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
-#include "libftprintf/ft_printf.h"
+#include "../incl/minishell.h"
+#include "../libftprintf/ft_printf.h"
 
 void	free_arr(char **arr)
 {
@@ -108,7 +108,7 @@ int	main(int argc, char **argv, char *env[])
 		env_path = get_path(env);
 		paths = ft_split(env_path, ':');
 		cmd_full = get_command_full(paths, cmd);
-		if (cmd_full != NULL && execve(cmd_full, input_arr, env) == -1)
+		if (execve(cmd_full, input_arr, env) == -1)
 			command_not_found(input_arr, paths, cmd_full);
 	}
 	free_arr(input_arr);
