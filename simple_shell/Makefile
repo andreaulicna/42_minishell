@@ -5,27 +5,28 @@
 #                                                     +:+ +:+         +:+      #
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/26 15:33:19 by aulicna          ###   ########.fr        #
+#    Created: 2023/11/20 11:55:38 by aulicna           #+#    #+#              #
+#    Updated: 2023/11/23 19:30:09 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+NAME = simple_shell
 
-SRC = main.c
+#SRC = simple_shell.c
+SRC = my_shell.c
 
 OBJ = $(SRC:.c=.o)
 
-HEADER = incl/minishell.h
+HEADER = ../incl/minishell.h
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra
 
 GCC = gcc
 
-LIBFTPRINTF = libftprintf
+LIBFTPRINTF = ../libftprintf
 
 all: libs $(NAME)
-	@echo "minishell executable ready ✅"
+	@echo "simple_shell executable ready ✅"
 
 .c.o:
 	$(GCC) $(CFLAGS) -c $< -o $@

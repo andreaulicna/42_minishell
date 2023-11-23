@@ -5,134 +5,126 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/20 11:55:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/26 15:30:08 by aulicna          ###   ########.fr       */
+/*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
+/*   Updated: 2023/11/26 15:33:59 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incl/minishell.h"
 #include "libftprintf/ft_printf.h"
 
-void	free_arr(char **arr)
+char	*get_hostname(void)
 {
+	int	fd;
+	char	*content;
+	char	*hostname;
 	int	i;
 
+
+	fd = open("/proc/sys/kernel/hostname", O_RDONLY);
+	content = get_next_line(fd);
+	close(fd);
 	i = 0;
-	while (arr[i])
+	while (content[i] && content[i] != '.')
+		i++;
+	hostname = (char *) malloc(sizeof(char) * (i + 3));
+	i = 0;
+	while (content[i] && content[i] != '.')
 	{
-		free(arr[i]);
+		hostname[i] = content[i];
 		i++;
 	}
-	free(arr);
+	hostname[i] = ':';
+	hostname[i + 1] = '\0';
+	free(content);
+	return(hostname);
 }
 
-int	main(int argc, char **argv)
+char	*get_username(char *env[])
+{
+	int	i;
+	char	*username;
+
+	i = 0;
+	while (ft_strncmp("USER=", env[i], 5))
+		i++;
+	username = ft_strjoin(env[i] + 5, "@");
+	return (username);
+}
+
+char	*get_directory(char *env[])
+{
+	int	i;
+	char	*cwd;
+	char	*home;
+	char	*directory;
+	char	*directory_final;
+
+	i = 0;
+	while (ft_strncmp("PWD=", env[i], 4))
+		i++;
+	cwd = env[i] + 4;
+	i = 0;
+	while (ft_strncmp("HOME=", env[i], 5))
+		i++;
+	home = env[i] + 5;
+	if (ft_strnstr(cwd, home, ft_strlen(cwd)) != NULL)
+		directory = ft_strjoin("~", cwd + ft_strlen(home));
+	else
+		directory = ft_strdup(cwd);
+	directory_final = ft_strjoin(directory, "$");
+	free(directory);
+	return (directory_final);
+}
+
+char	*construct_prompt(char *username, char *hostname, char *directory)
+{
+	char	*tmp_prompt;
+	char	*prompt;
+
+	tmp_prompt = ft_strjoin(username, hostname);
+	prompt = ft_strjoin(tmp_prompt, directory);
+	free(tmp_prompt);
+	return (prompt);
+}
+
+char	*set_prompt(char *env[])
+{
+	char	*hostname;
+	char	*prompt;
+	char	*username;
+	char	*directory;
+
+	username = get_username(env);
+	hostname = get_hostname();
+	directory = get_directory(env);
+	prompt = construct_prompt(username, hostname, directory);
+	free(username);
+	free(hostname);
+	free(directory);
+	return (prompt);
+}
+
+int main(int argc, char **argv, char *env[])
 {
 	(void) argc;
 	(void) argv;
+	char *prompt;
 	char	*input;
-	char	**arr;
-	int	i;
-	
-	input = readline("simple-shell\% ");
-	if (input == NULL)
-	{
-		printf("exit");
-		return (-1);
-	}
-	arr = ft_split(input, ' ');
-	i = 0;
-	while (arr[i])
-	{
-		printf("%s\n", arr[i]);
-		i++;
-	}
-	free(input);
-	free_arr(arr);
-	return(0);
-}
 
-////Original simple shell code
-////-> uses getline which is not allowed for minishell
-//
-//int	main(int argc, char **argv)
-//{
-//
-//	char	*prompt;
-//	char	*lineptr;
-//	size_t	n;
-//	__ssize_t	nchars_read;
-//	char	*lineptr_copy;
-//	const char	*delim = " \n";
-//	char	*token;
-//	int	num_tokens;
-//	char	**arr;
-//	int	i;
-//
-//	(void) argc;
-//	(void) argv;
-//	prompt = "simple-shell\% ";
-//	printf("%s", prompt);
-//	n = 0;
-//	lineptr = NULL;
-//	nchars_read = getline(&lineptr, &n, stdin);
-//	/* Dynamically allocate space to store a copy of the string read */
-//	lineptr_copy = (char *) malloc(sizeof(char) * nchars_read);
-//	if (lineptr_copy == NULL)
-//	{
-//		perror("tsh: memory allocation error");
-//		return (-1);
-//	}
-//	/* Make a copy of the lineptr */
-//	strcpy(lineptr_copy, lineptr);
-//	if (nchars_read == -1)
-//	{
-//		printf("exit\n");
-//		free(lineptr);
-//		free(lineptr_copy);
-//		return (-1);
-//	}
-//	else
-//	{
-//		
-//		/* Calculate the total number of tokens expected from the string */
-//		/* split the string (lineptr) into an array of words */
-//		token = strtok(lineptr, delim);
-//		
-//		/* determine how many tokens are there*/
-//		num_tokens = 0;
-//		while (token != NULL)
-//		{
-//			token = strtok(NULL, delim);
-//			num_tokens++;
-//		}
-//		num_tokens++;
-//	
-//		/* Allocate space to hold the array of strings (tokens) */
-//		arr = (char **) malloc(sizeof(char *) * num_tokens);
-//	
-//		/* Store each token in the array */
-//		i = 0;
-//		token = strtok(lineptr_copy, delim);
-//		while (token != NULL)
-//		{
-//			arr[i] = (char *) malloc(sizeof(char) * strlen(token));
-//			strcpy(arr[i], token);
-//			printf("%s\n", arr[i]);
-//			token = strtok(NULL, delim);
-//			i++;
-//		}
-//		arr[i] = NULL;
-//		
-//		free(lineptr);
-//		free(lineptr_copy);
-//		i = 0;
-//		while(arr[i])
-//		{
-//			free(arr[i]);
-//			i++;
-//		}
-//		free(arr);
-//	}
-//	return (0);
-//}
+	while(1)
+	{
+		prompt = set_prompt(env);
+		input = readline(prompt);
+		if (input == NULL)
+		{
+			free (prompt);
+			free (input);
+			printf("exit\n");
+			exit (0);
+		}
+		free (prompt);
+	}
+	free (input);
+	return (0);
+}

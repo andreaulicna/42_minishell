@@ -6,12 +6,12 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:55:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/22 14:36:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/23 14:16:41 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
-#include "libftprintf/ft_printf.h"
+#include "../incl/minishell.h"
+#include "../libftprintf/ft_printf.h"
 
 char	*get_location(char *command)
 {
