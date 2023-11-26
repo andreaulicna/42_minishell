@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:09:39 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/26 16:12:09 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/26 17:01:45 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static char	*get_hostname(void)
 		i++;
 	hostname = (char *) malloc(sizeof(char) * (i + 3));
 	i = 0;
-	while (content[i] && content[i] != '.')
+	while (content[i] && content[i] != '.' && content[i] != '\n')
 	{
 		hostname[i] = content[i];
 		i++;
@@ -103,7 +103,7 @@ static char	*get_directory(char *env[])
 		directory = ft_strjoin("~", cwd + ft_strlen(home));
 	else
 		directory = ft_strdup(cwd);
-	directory_final = ft_strjoin(directory, "$");
+	directory_final = ft_strjoin(directory, "$ ");
 	free(directory);
 	return (directory_final);
 }
