@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/22 08:39:47 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/26 19:27:59 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "../libftprintf/ft_printf.h"
 # include <stdio.h>      // For printf, perror
 # include <stdlib.h>     // For malloc, free, exit, getenv
 # include <unistd.h>     // For read, write, access, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname, ttyslot
@@ -28,5 +29,10 @@
 # include <readline/readline.h> // For readline-related functions
 # include <readline/history.h>	// For readline-related functions
 
+// prompt.c
+char	*set_prompt(char *env[]);
+
+// ft_split_minishell.c
+char	**ft_split_minishell(char const *s, char c);
 
 #endif
