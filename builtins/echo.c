@@ -1,5 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
+/*   Updated: 2023/11/27 14:23:03 by vbartos          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
+// ft_echo
+// - simulates the bash builtin 'echo';
+// - also checks for the -n flag (doesn't print newline);
 int	ft_echo(char **args)
 {
 	int	n_flag;

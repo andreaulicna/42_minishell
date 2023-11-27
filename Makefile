@@ -6,7 +6,7 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/11/27 12:19:51 by vbartos          ###   ########.fr        #
+#    Updated: 2023/11/27 14:24:59 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,9 @@ NAME = minishell
 
 SRC = src/minishell.c\
 		src/utils.c\
-		builtins/echo.c
+		builtins/echo.c\
+		builtins/pwd.c\
+		builtins/env.c
 
 OBJ = $(SRC:.c=.o)
 

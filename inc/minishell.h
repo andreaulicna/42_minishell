@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 12:23:14 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/27 14:24:42 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # define PROMPT "minishell$ "
 
+// IMPORT FUNCTIONS
 # include <stdio.h>      // For printf, perror
 # include <stdlib.h>     // For malloc, free, exit, getenv
 # include <unistd.h>     // For read, write, access, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname, ttyslot
@@ -30,12 +31,18 @@
 # include <readline/readline.h> // For readline-related functions
 # include <readline/history.h>	// For readline-related functions
 
+// IMPORT MACROS
+# include <limits.h>	// For PATH_MAX
+
+// IMPORT CUSTOM LIBRARIES
 # include "../lib/ft_printf.h"
 # include "../lib/libft/libft.h"
 # include "../lib/libft/get_next_line_bonus.h"
 
 // BUILTINS
 int		ft_echo(char **args);
+int		ft_pwd(void);
+int		ft_env(char **envp);
 
 // UTILS
 size_t	strs_count(char **strs);

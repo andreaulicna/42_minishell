@@ -6,13 +6,13 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/27 12:34:11 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/27 14:43:31 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
 	// char	*prompt;
 	// char	*cmd;
@@ -28,8 +28,16 @@ int main(void)
 	// }
 	// free(cmd);
 
+	(void) argc;
+	(void) argv;
+
 	// char *echo_cmd[] = {"echo", "ahojda", "kamarade", NULL};
 	char *echo_cmd2[] = {"echo", "-n", "ahojda", "kamarade", NULL};
 	ft_echo(echo_cmd2);
+	ft_printf("\n\n\n");
+	ft_pwd();
+	ft_printf("\n\n\n");
+	ft_env(envp);
+	ft_printf("\n\n\n");
 	return (0);
 }
