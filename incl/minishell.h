@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/26 19:27:59 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/27 12:47:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 
 // prompt.c
 char	*set_prompt(char *env[]);
+
+// input.c
+int	check_quotes(char *input);
 
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);

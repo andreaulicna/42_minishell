@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/26 19:29:57 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/27 12:59:23 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,15 @@ int main(int argc, char **argv, char *env[])
 	char	*input;
 	int	i;
 
+	prompt = set_prompt(env);
 	while(1)
 	{
-		prompt = set_prompt(env);
 		input = readline(prompt);
-		add_history(input);
-		argv = ft_split_minishell(input, ' ');
-		i = 0;
-		while (argv[i])
+		if (!check_quotes(input))
 		{
-			printf("%s\n", argv[i]);
-			i++;
+			printf("tu\n");
+			free(input);
+			continue ;
 		}
 		if (input == NULL)
 		{
@@ -39,8 +37,16 @@ int main(int argc, char **argv, char *env[])
 			printf("\nexit\n");
 			exit (0);
 		}
-		free (prompt);
+		add_history(input);
+		argv = ft_split_minishell(input, ' ');
+		i = 0;
+		while (argv[i])
+		{
+			printf("%s\n", argv[i]);
+			i++;
+		}
+		free (input);
 	}
-	free (input);
+	free (prompt);
 	return (0);
 }
