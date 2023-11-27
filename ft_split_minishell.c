@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 19:23:37 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 12:36:14 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/27 20:03:56 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ static int	ft_is_sep(char check, char c)
 		return (1);
 	else
 		return (0);
+}
+
+void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes)
+{
+	if (c == '\'' && !(*d_quotes % 2))
+		*s_quotes += 1;
+	else if (c == '"' && !(*s_quotes % 2))
+		*d_quotes += 1;
 }
 
 static unsigned int	ft_count_words(char const *s, char c)
@@ -33,12 +41,9 @@ static unsigned int	ft_count_words(char const *s, char c)
 	s_quotes = 0;
 	d_quotes = 0;
 	in_wrd = 0;
-	while (s[i] != '\0')
+	while (s[i])
 	{
-		if (s[i] == '\'')
-			s_quotes++;
-		else if (s[i] == '"')
-			d_quotes++;
+		count_qoutes(s[i], &s_quotes, &d_quotes);
 		if (!ft_is_sep(s[i], c) && in_wrd == 0)
 		{
 			in_wrd = 1;
@@ -53,46 +58,51 @@ static unsigned int	ft_count_words(char const *s, char c)
 	return (num_wrds);
 }
 
-static void	ft_fill_arr(char *sub_arr, char const *s, char c)
+static char	*ft_fill_arr(char const *s, unsigned int start,
+	unsigned int end)
 {
 	unsigned int	i;
+	char			*sub_arr;
 
+	sub_arr = (char *) malloc(sizeof(char) * (end - start + 1));
 	i = 0;
-	while (ft_is_sep(s[i], c) == 0)
+	while (start < end && s[i])
 	{
-		sub_arr[i] = s[i];
+		sub_arr[i] = s[start];
 		i++;
+		start++;
 	}
 	sub_arr[i] = '\0';
+	return (sub_arr);
 }
 
 static void	ft_alloc_fill_arr(char **arr, char const *s, char c)
 {
-	unsigned int	i;
-	unsigned int	j;
+	int				i;
 	unsigned int	wrds;
+	unsigned int	s_quotes;
+	unsigned int	d_quotes;
+	int				in_wrd;
 
 	i = 0;
 	wrds = 0;
-	while (s[i] != '\0')
+	s_quotes = 0;
+	d_quotes = 0;
+	in_wrd = -1;
+	while (i <= (int)ft_strlen(s))
 	{
-		if (ft_is_sep(s[i], c) == 1)
+		count_qoutes(s[i], &s_quotes, &d_quotes);
+		if (!ft_is_sep(s[i], c) && in_wrd == -1)
+			in_wrd = i;
+		else if ((ft_is_sep(s[i], c) || i == (int)ft_strlen(s)) && in_wrd >= 0
+			&& !(s_quotes % 2) && !(d_quotes % 2))
 		{
-			i++;
+				arr[wrds++] = ft_fill_arr(s, in_wrd, i);
+				in_wrd = -1;
 		}
-		else
-		{
-			j = 0;
-			while (ft_is_sep(s[i + j], c) == 0)
-			{
-				j++;
-			}
-			arr[wrds] = (char *) malloc(sizeof(char) * (j + 1));
-			ft_fill_arr(arr[wrds], &s[i], c);
-			i += j;
-			wrds++;
-		}
+		i++;
 	}
+	arr[wrds] = '\0';
 }
 
 char	**ft_split_minishell(char const *s, char c)
@@ -107,6 +117,5 @@ char	**ft_split_minishell(char const *s, char c)
 	if (!arr)
 		return (NULL);
 	ft_alloc_fill_arr(arr, s, c);
-	arr[num_wrds] = 0;
 	return (arr);
 }

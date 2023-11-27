@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 12:41:41 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 12:58:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/27 18:35:26 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,26 @@
 int	check_quotes(char *input)
 {
 	int	i;
-	unsigned int	s_quotes;
-	unsigned int	d_quotes;
+	unsigned int	quotes;
 
+	quotes = 0;
+	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '\'')
-			s_quotes = 1;
-		else if (input[i] == '\'' && s_quotes == 1)
-			s_quotes = 0;
-		else if (input[i] == '"')
-			d_quotes = 1;
-		else if (input[i] == '"' && d_quotes == 1)
-			d_quotes = 0;
+		if (input[i] == '\'' && quotes == 0)
+			quotes = 1;
+		else if (input[i] == '\'' && quotes == 1)
+			quotes = 0;
+		else if (input[i] == '"' && quotes == 0)
+			quotes = 2;
+		else if (input[i] == '"' && quotes == 2)
+			quotes = 0;
 		i++;
 	}
-	if (s_quotes != 0 || d_quotes != 0)
+	if (quotes != 0)
 	{
 		ft_putstr_fd("Minishell cannot interpret unclosed quotes, ", 2);
-//		ft_putstr_fd("please close them.", 2);
+		ft_putstr_fd("please close them.\n", 2);
 		return (0);
 	}
 	return (1);
