@@ -6,14 +6,15 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/11/28 06:36:12 by vbartos          ###   ########.fr        #
+#    Updated: 2023/11/28 09:42:28 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = src/minishell.c\
-		src/utils.c\
+SRC = main/minishell.c\
+		main/utils.c\
+		env/env.c\
 		builtins/echo.c\
 		builtins/pwd.c\
 		builtins/env.c\

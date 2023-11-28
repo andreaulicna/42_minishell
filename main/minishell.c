@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/28 06:53:10 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/28 13:20:25 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int main(int argc, char **argv, char **envp)
 {
+	t_data	data;
 	// char	*prompt;
 	// char	*cmd;
 	// size_t	n;
@@ -34,8 +35,25 @@ int main(int argc, char **argv, char **envp)
 	(void) argv;
 	// (void) envp;
 
+	env_init(envp, &data);
+	t_list *current = data.env_list;
+	env_add(current, "CUSTOM_ENV=ahojda");
+	while (current != NULL)
+	{
+		ft_printf("%s\n", current->content);
+		current = current->next;
+	}
+	ft_printf("\n\n\n");
+	current = data.env_list;
+	env_remove(&current, "lol");
+	while (current != NULL)
+	{
+		ft_printf("%s\n", current->content);
+		current = current->next;
+	}
+
 	// char *echo_cmd[] = {"echo", "ahojda", "kamarade", NULL};
-	// char *echo_cmd2[] = {"echo", "-n", "ahojda", "kamarade", NULL};
+	// char *echo_cmd2[] = {"echo", "-f", "ahojda", "kamarade", NULL};
 	// ft_echo(echo_cmd2);
 	// ft_printf("\n\n\n");
 	// ft_pwd();
@@ -43,13 +61,13 @@ int main(int argc, char **argv, char **envp)
 	// ft_env(envp);
 	// ft_printf("\n\n\n");
 
-	char *cd_cmd[] = {"cd", "/home/hackerman/", NULL};
-	char *cd_cmd2[] = {"cd", "/home/hackerman/minishell/", NULL};
-	char *cd_cmd3[] = {"cd", "..", NULL};
-	ft_pwd();
-	ft_cd(cd_cmd);
-	ft_cd(cd_cmd2);
-	ft_cd(cd_cmd3);
-	ft_env(envp);
+	// char *cd_cmd[] = {"cd", "/home/hackerman/", NULL};
+	// char *cd_cmd2[] = {"cd", "/home/hackerman/minishell/", NULL};
+	// char *cd_cmd3[] = {"cd", "..", NULL};
+	// ft_pwd();
+	// ft_cd(cd_cmd);
+	// ft_cd(cd_cmd2);
+	// ft_cd(cd_cmd3);
+	// ft_env(envp);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/28 06:50:57 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/28 13:18:45 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,20 @@
 # include "../lib/ft_printf.h"
 # include "../lib/libft/libft.h"
 # include "../lib/libft/get_next_line_bonus.h"
+
+// STRUCTS
+
+typedef struct	s_data
+{
+	t_list		*env_list;
+}				t_data;
+
+// ENVIRONMENT
+int		env_init(char **envp, t_data *data);
+int		env_add(t_list *head, char *env_var);
+t_list	*env_find(t_list *head, char *variable_key);
+t_list	**env_remove(t_list **head, char *variable_key);
+
 
 // BUILTINS
 int		ft_echo(char **args);
