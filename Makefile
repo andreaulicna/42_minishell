@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/27 16:27:25 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/28 14:36:41 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,9 @@ NAME = minishell
 SRC = main.c \
 						prompt.c \
 						input.c \
-						ft_split_minishell.c
+						ft_split_minishell.c \
+						manage_quotes.c \
+						lexer.c
 
 OBJ = $(SRC:.c=.o)
 

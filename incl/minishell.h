@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 12:47:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/28 14:35:03 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,23 @@
 # include <readline/readline.h> // For readline-related functions
 # include <readline/history.h>	// For readline-related functions
 
+typedef enum s_tokens
+{
+	PIPE = 1,
+	LESS,
+	LESS_2,
+	GREATER,
+	GREATER_2,
+}	t_tokens;
+
+typedef struct s_lexer
+{
+	int		id;
+	char	*word;
+	t_tokens token;
+	struct s_lexer	*next;
+}	t_lexer;
+
 // prompt.c
 char	*set_prompt(char *env[]);
 
@@ -37,5 +54,12 @@ int	check_quotes(char *input);
 
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
+
+// manage_quotes.c
+void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
+int	quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
+
+// lexer.c
+t_lexer *input_arr_to_lexer_list(char **input_split);
 
 #endif

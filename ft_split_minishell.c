@@ -6,11 +6,19 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 19:23:37 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 20:03:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/28 12:51:35 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incl/minishell.h"
+
+/**
+ * @brief	Checks whether a character is a separator or a null terminator.
+ * 
+ * @param	check	character to check
+ * @param	c		separator character
+ * @return 	int		1 if the character is a separator or '\0', otherwise 0
+ */
 
 static int	ft_is_sep(char check, char c)
 {
@@ -20,13 +28,18 @@ static int	ft_is_sep(char check, char c)
 		return (0);
 }
 
-void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes)
-{
-	if (c == '\'' && !(*d_quotes % 2))
-		*s_quotes += 1;
-	else if (c == '"' && !(*s_quotes % 2))
-		*d_quotes += 1;
-}
+/**
+ * @brief	Counts the number of words (tokens) in the input string,
+ * taking into account single and double quotes as potential delimiters.
+ * 
+ * It uses a variable in_wrd to signify when it is parsing a potential word.
+ * Once the function locates a separator it checks whether the quotes are paired
+ * and if so, it resets the in_wrd variable to start the processing next word.
+ * 
+ * @param	s				input string
+ * @param	c				delimiter character
+ * @return	unsigned int	the number of words in the input string
+ */
 
 static unsigned int	ft_count_words(char const *s, char c)
 {
@@ -49,14 +62,21 @@ static unsigned int	ft_count_words(char const *s, char c)
 			in_wrd = 1;
 			num_wrds++;
 		}
-		else if (ft_is_sep(s[i], c)
-			&& (!(s_quotes % 2) && !(d_quotes % 2)))
+		else if (ft_is_sep(s[i], c) && quotes_pair(s_quotes, d_quotes))
 			in_wrd = 0;
 		i++;
 	}
-	printf("%d\n", num_wrds);
 	return (num_wrds);
 }
+
+/**
+ * @brief	Fills an array with characters from a substring of a string.
+ * 
+ * @param	s		input string
+ * @param	start	starting index of the substring
+ * @param	end		ending index of the substring
+ * @return	char*	dynamically allocated string containing the substring
+ */
 
 static char	*ft_fill_arr(char const *s, unsigned int start,
 	unsigned int end)
@@ -75,6 +95,22 @@ static char	*ft_fill_arr(char const *s, unsigned int start,
 	sub_arr[i] = '\0';
 	return (sub_arr);
 }
+
+/**
+ * @brief	Allocates and fills an array with substrings separated by 
+ * a delimiter character.
+ * 
+ * It uses a variable in_wrd to signify when it is parsing a potential word. The
+ * beginning of this word is saved in in_wrd.
+ * 
+ * Once the function locates a separator it checks whether the quotes are paired
+ * and if so, it fills in the word and resets the in_wrd variable to start
+ * processing the next word.
+ * 
+ * @param	arr	array to store the substrings
+ * @param 	s 	input string
+ * @param	c	delimiter character
+ */
 
 static void	ft_alloc_fill_arr(char **arr, char const *s, char c)
 {
@@ -95,7 +131,7 @@ static void	ft_alloc_fill_arr(char **arr, char const *s, char c)
 		if (!ft_is_sep(s[i], c) && in_wrd == -1)
 			in_wrd = i;
 		else if ((ft_is_sep(s[i], c) || i == (int)ft_strlen(s)) && in_wrd >= 0
-			&& !(s_quotes % 2) && !(d_quotes % 2))
+			&& quotes_pair(s_quotes, d_quotes))
 		{
 				arr[wrds++] = ft_fill_arr(s, in_wrd, i);
 				in_wrd = -1;
@@ -104,6 +140,15 @@ static void	ft_alloc_fill_arr(char **arr, char const *s, char c)
 	}
 	arr[wrds] = '\0';
 }
+
+/**
+ * @brief	Splits a string into an array of substrings based on a delimiter
+ * character, considering single and double quotes in the input string.
+ * 
+ * @param	s		input string
+ * @param	c		delimiter character
+ * @return	char**	dynamically allocated array containing the substrings
+ */
 
 char	**ft_split_minishell(char const *s, char c)
 {
