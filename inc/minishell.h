@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 14:24:42 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/28 06:50:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 int		ft_echo(char **args);
 int		ft_pwd(void);
 int		ft_env(char **envp);
+int		ft_cd(char **args);
 
 // UTILS
 size_t	strs_count(char **strs);
