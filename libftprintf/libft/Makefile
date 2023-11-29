@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aulicna <marvin@42.fr>                     +#+  +:+       +#+         #
+#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/15 13:02:34 by aulicna           #+#    #+#              #
-#    Updated: 2023/05/01 17:05:32 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/23 19:28:54 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
 OBJ_GNL = $(SRC_GNL:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 
@@ -74,10 +74,10 @@ $(NAME): $(OBJ)
 	ar rc $(NAME) $(OBJ)
 
 .c.o:
-	gcc $(CFLAGS) -c $< -o $@
+	@gcc $(CFLAGS) -c $< -o $@
 
 bonus: $(OBJ) $(OBJ_BONUS) $(OBJ_GNL)
-	ar rc $(NAME) $(OBJ) $(OBJ_BONUS) $(OBJ_GNL)
+	@ar rc $(NAME) $(OBJ) $(OBJ_BONUS) $(OBJ_GNL)
 
 clean:
 	@rm -f $(OBJ) $(OBJ_BONUS) $(OBJ_GNL)

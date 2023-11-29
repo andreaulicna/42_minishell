@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 12:42:49 by aulicna           #+#    #+#              #
-#    Updated: 2023/05/01 17:16:26 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/23 19:29:22 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ OBJ = $(SRC:.c=.o)
 
 LIBFT = libft
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 GCC = gcc
 
@@ -42,13 +42,13 @@ all: $(NAME)
 bonus: all
 
 ${NAME}: $(OBJ)
-	make -C $(LIBFT) bonus
-	cp libft/libft.a ./
-	mv libft.a $(NAME)
-	$(AR) $(NAME) $(OBJ)
+	@make -C $(LIBFT) bonus
+	@cp libft/libft.a ./
+	@mv libft.a $(NAME)
+	@$(AR) $(NAME) $(OBJ)
 
 .c.o:
-	$(GCC) $(CFLAGS) -c $< -o $@
+	@$(GCC) $(CFLAGS) -c $< -o $@
 
 clean:
 	make clean -C $(LIBFT)

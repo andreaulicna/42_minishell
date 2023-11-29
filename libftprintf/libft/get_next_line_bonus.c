@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 11:26:06 by aulicna           #+#    #+#             */
-/*   Updated: 2023/05/01 17:13:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/23 19:37:20 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = process_current_line(s[fd]);
 	s[fd] = save_remainder_of_line(s[fd]);
+	free(s[fd]);
+	s[fd] = NULL;
 	return (line);
 }
