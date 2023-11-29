@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/28 14:36:41 by aulicna          ###   ########.fr        #
+#    Updated: 2023/11/29 15:25:35 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRC = main.c \
 						input.c \
 						ft_split_minishell.c \
 						manage_quotes.c \
-						lexer.c
+						lexer.c \
+						parser.c
 
 OBJ = $(SRC:.c=.o)
 

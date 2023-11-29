@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/28 14:35:03 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:26:25 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,31 @@ typedef enum s_tokens
 	GREATER_2,
 }	t_tokens;
 
+typedef enum s_builtins
+{
+	B_ECHO = 1,
+	B_CD,
+	B_PWD,
+	B_EXPORT,
+	B_UNSET,
+	B_ENV,
+	B_EXIT,
+}	t_builtdins;
+
 typedef struct s_lexer
 {
 	int		id;
 	char	*word;
 	t_tokens token;
-	struct s_lexer	*next;
 }	t_lexer;
+
+typedef struct s_simple_cmds
+{
+	char	**cmd;
+	t_list	*redirects;
+	t_builtdins	builtin;
+
+}	t_simple_cmds;
 
 // prompt.c
 char	*set_prompt(char *env[]);
@@ -60,6 +78,9 @@ void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
 int	quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 // lexer.c
-t_lexer *input_arr_to_lexer_list(char **input_split);
+t_list *input_arr_to_lexer_list(char **input_split);
+
+// parser.c
+t_list *lexer_to_simple_cmds(t_list **lexer);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/28 15:55:50 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:37:03 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,43 @@ int	check_input_null(char *input)
 	return (1);
 }
 
+void	free_lexer(t_list **lexer)
+{
+	t_list	*tmp;
+	t_lexer	*content;
+
+	if (!*lexer)
+		return ;
+	while (*lexer)
+	{
+		tmp = (*lexer)->next;
+		content = (t_lexer *) (*lexer)->content;
+		if (content->word)
+			free(content->word);
+		free(content);
+		free(*lexer);
+		*lexer = tmp;
+	}
+	lexer = NULL;
+}
+
+void	print_lexer(t_list **lexer)
+{
+	t_lexer	*content;
+	t_list *current;
+	
+	current = *lexer;
+	while (current != NULL)
+	{
+		content = (t_lexer *) (current->content);
+		if (content->token)
+			ft_printf("token: %d\n", content->token);
+		else
+			ft_printf("word: %s\n", content->word);
+		current = current->next;
+	}
+}
+
 int main(int argc, char **argv, char *env[])
 {
 	(void) argc;
@@ -43,8 +80,8 @@ int main(int argc, char **argv, char *env[])
 	char	*input;
 	int	i;
 	unsigned int	null_input;
-	t_lexer	*lexer;
-	//t_lexer *current;
+	t_list	*lexer;
+	t_list	*simple_cmds;
 
 	prompt = set_prompt(env);
 	null_input = 0;
@@ -54,6 +91,7 @@ int main(int argc, char **argv, char *env[])
 		if (!check_input_null(input))
 		{
 			null_input = 1;
+			free(input);
 			break ;
 		}
 		if (!check_quotes(input))
@@ -72,46 +110,24 @@ int main(int argc, char **argv, char *env[])
 		}
 		printf("----------------------\n");
 		/* Split E */
-		/* Lexer - Expand S */
+		/* Lexer - Link list S */
 		printf("Minishell lexer output:\n");
 		lexer = input_arr_to_lexer_list(input_split);
-		//free_arr(input_split);
-	//	current = lexer->next;
-	//	while(current->next)
-	//	{
-	//		if (current->word)
-	//			printf("word: %s\n", current->word);
-	//		else if (current->token)
-	//			printf("token: %d\n", current->token);
-	//		current = current->next;
-	//	}
-	//	if (current->word)
-	//		printf("word: %s\n", current->word);
-	//	else if (current->token)
-	//		printf("token: %d\n", current->token);
-//		current = lexer;
-//		while (current != NULL)
-//		{
-//			ft_printf("wordv: %s\n", current->word);
-//			current = current->next;
-//		}
-//		printf("id 0: %d\n", lexer->id);
-//		printf("word 0: %s\n", lexer->word);
-		//printf("id 1: %d\n", lexer->next->id);
-		//printf("word 0: %s\n", lexer->next->word);
-		while (lexer)
-		{
-			if (lexer->word)
-				printf("word: %s\n", lexer->word);
-			else if (lexer->token)
-				printf("token: %d\n", lexer->token);
-			lexer = lexer->next;
-		}
+		free_arr(input_split);
+		print_lexer(&lexer);
 		printf("----------------------\n");
-		/* Lexer - Expand E */
+		/* Lexer - Link list E */
+		/* Parser - Link list S */
+		printf("Minishell parser output:\n");
+		simple_cmds = lexer_to_simple_cmds(&lexer);
+		(void) simple_cmds;
+		//printf("%p\n", simple_cmds->content);
+		printf("----------------------\n");
+		/* Parser - Link list E */
+		free(input);
+		free_lexer(&lexer);
 	}
-	free (prompt);
-	free (input);
+	free(prompt);
 	if (null_input == 1)
 	{
 		printf("\nexit\n");
