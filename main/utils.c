@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 11:48:52 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/29 11:04:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/29 13:23:28 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	strs_count(char **strs)
 	size_t	strs_count;
 
 	strs_count = 0;
-	while (strs[strs_count] != NULL)
+	while (strs[strs_count])
 		strs_count++;
 	return (strs_count);
 }

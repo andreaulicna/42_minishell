@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/29 10:53:04 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/29 13:33:17 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv, char **envp)
 	// t_list *current = data.env_list;
 	// env_add(current, "CUSTOM_ENV=ahojda");
 	ft_export(export_cmd, &data);
-	ft_printf("\n\n\n");
+	// ft_printf("\n\n\n");
 	ft_export(export_cmd2, &data);
 	ft_export(export_cmd, &data);
 	// while (current != NULL)
