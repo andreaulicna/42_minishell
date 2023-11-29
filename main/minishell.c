@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/28 13:20:25 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:53:04 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,28 @@ int main(int argc, char **argv, char **envp)
 	(void) argv;
 	// (void) envp;
 
+	char *export_cmd[] = {"export", NULL};
+	char *export_cmd2[] = {"export", "Zzloun", "zzabijak=hehe", NULL};
 	env_init(envp, &data);
-	t_list *current = data.env_list;
-	env_add(current, "CUSTOM_ENV=ahojda");
-	while (current != NULL)
-	{
-		ft_printf("%s\n", current->content);
-		current = current->next;
-	}
+	// t_list *current = data.env_list;
+	// env_add(current, "CUSTOM_ENV=ahojda");
+	ft_export(export_cmd, &data);
 	ft_printf("\n\n\n");
-	current = data.env_list;
-	env_remove(&current, "lol");
-	while (current != NULL)
-	{
-		ft_printf("%s\n", current->content);
-		current = current->next;
-	}
+	ft_export(export_cmd2, &data);
+	ft_export(export_cmd, &data);
+	// while (current != NULL)
+	// {
+	// 	ft_printf("%s\n", current->content);
+	// 	current = current->next;
+	// }
+	// ft_printf("\n\n\n");
+	// current = data.env_list;
+	// env_remove(&current, "lol");
+	// while (current != NULL)
+	// {
+	// 	ft_printf("%s\n", current->content);
+	// 	current = current->next;
+	// }
 
 	// char *echo_cmd[] = {"echo", "ahojda", "kamarade", NULL};
 	// char *echo_cmd2[] = {"echo", "-f", "ahojda", "kamarade", NULL};

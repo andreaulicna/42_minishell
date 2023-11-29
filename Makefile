@@ -6,7 +6,7 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/11/28 09:42:28 by vbartos          ###   ########.fr        #
+#    Updated: 2023/11/29 07:55:23 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRC = main/minishell.c\
 		builtins/echo.c\
 		builtins/pwd.c\
 		builtins/env.c\
-		builtins/cd.c
+		builtins/cd.c\
+		builtins/export.c
 
 OBJ = $(SRC:.c=.o)
 

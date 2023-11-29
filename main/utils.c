@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 11:48:52 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/27 13:52:55 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/29 11:04:46 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ size_t	strs_count(char **strs)
 	return (strs_count);
 }
 
-// free_list
+// free_array
 // - frees a dynamically allocated 2D array;
-int		free_list(char **strs)
+int		free_array(char **strs)
 {
 	int	i;
 
