@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/29 11:01:21 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:19:28 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		ft_cd(char **args);
 int		ft_export(char **args, t_data *data);
 void	ft_export_list(t_data *data);
 void	ft_export_sort(char **env_arr);
-
+void	ft_export_format(char *env_var);
 
 // UTILS
 size_t	strs_count(char **strs);

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/29 13:33:17 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:16:27 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,9 @@ int main(int argc, char **argv, char **envp)
 	// (void) envp;
 
 	char *export_cmd[] = {"export", NULL};
-	char *export_cmd2[] = {"export", "Zzloun", "zzabijak=hehe", NULL};
+	char *export_cmd2[] = {"export", "ZPozoounn", "zzabijak=hehe", NULL};
 	env_init(envp, &data);
-	// t_list *current = data.env_list;
-	// env_add(current, "CUSTOM_ENV=ahojda");
+	env_add(data.env_list, "CUSTOM_ENV=ahojda");
 	ft_export(export_cmd, &data);
 	// ft_printf("\n\n\n");
 	ft_export(export_cmd2, &data);
