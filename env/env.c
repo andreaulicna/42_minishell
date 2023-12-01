@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/29 06:33:43 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/01 16:59:07 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ t_list	*env_find(t_list *head, char *variable_key)
 {
 	if (head == NULL)
 		return (NULL);
-	if (ft_strncmp(head->content, variable_key, ft_strlen(variable_key)) == 0)
+	if (ft_strlen(head->content) == ft_strlen(variable_key) &&
+		ft_strncmp(head->content, variable_key, ft_strlen(variable_key)) == 0)
 		return (head);
 	return (env_find(head->next, variable_key));
 }
@@ -62,6 +63,8 @@ t_list	**env_remove(t_list **head, char *variable_key)
 	t_list *var_after;
 	
 	var_to_remove = env_find(*head, variable_key);
+	if (var_to_remove == NULL)
+		return (head);
 	if (var_to_remove == *head)
 	{
 		*head = (*head)->next;
