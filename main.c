@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/29 15:37:03 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/01 14:35:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,30 @@ void	free_lexer(t_list **lexer)
 	lexer = NULL;
 }
 
+
+void	free_simple_cmds(t_list **simple_cmds)
+{
+	t_simple_cmds *content_simple_cmds;
+	t_list	*free_redirects;
+	t_list	*tmp;
+	t_simple_cmds	*content;
+
+	if (!simple_cmds)
+		return ;
+	content_simple_cmds = (t_simple_cmds *) (*simple_cmds)->content;
+	free_redirects = content_simple_cmds->redirects;
+	free_lexer(&free_redirects);
+	while (*simple_cmds)
+	{
+		tmp = (*simple_cmds)->next;
+		content = (t_simple_cmds *) (*simple_cmds)->content;
+		free(content);
+		free(*simple_cmds);
+		*simple_cmds = tmp;
+	}
+	simple_cmds = NULL;
+}
+
 void	print_lexer(t_list **lexer)
 {
 	t_lexer	*content;
@@ -67,6 +91,24 @@ void	print_lexer(t_list **lexer)
 			ft_printf("token: %d\n", content->token);
 		else
 			ft_printf("word: %s\n", content->word);
+		current = current->next;
+	}
+}
+
+void	print_simple_cmds(t_list **simple_cmds)
+{
+	t_simple_cmds *content_simple_cmds;
+	t_lexer *content_redirects;
+	t_list	*current;
+
+	content_simple_cmds = (t_simple_cmds *) (*simple_cmds)->content;
+	current = content_simple_cmds->redirects;
+	printf("***Redirects***\n");
+	while (current != NULL)
+	{
+		content_redirects = (t_lexer *) current->content;
+		printf("Redirect token: %d\n", content_redirects->token);
+		printf("Redirect word: %s\n", content_redirects->word);
 		current = current->next;
 	}
 }
@@ -120,12 +162,15 @@ int main(int argc, char **argv, char *env[])
 		/* Parser - Link list S */
 		printf("Minishell parser output:\n");
 		simple_cmds = lexer_to_simple_cmds(&lexer);
-		(void) simple_cmds;
-		//printf("%p\n", simple_cmds->content);
+		printf("Rest of lexer: \n");
+		print_lexer(&lexer);
+		printf("Simple cmds: \n");
+		print_simple_cmds(&simple_cmds);
 		printf("----------------------\n");
 		/* Parser - Link list E */
 		free(input);
 		free_lexer(&lexer);
+		free_simple_cmds(&simple_cmds);
 	}
 	free(prompt);
 	if (null_input == 1)
