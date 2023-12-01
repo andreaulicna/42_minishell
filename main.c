@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/01 14:35:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/01 22:55:47 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,17 @@ void	print_simple_cmds(t_list **simple_cmds)
 	t_simple_cmds *content_simple_cmds;
 	t_lexer *content_redirects;
 	t_list	*current;
+	int	i;
 
 	content_simple_cmds = (t_simple_cmds *) (*simple_cmds)->content;
 	current = content_simple_cmds->redirects;
+	printf("***Cmds***\n");
+	i = 0;
+	while (content_simple_cmds->cmd[i])
+	{
+		printf("%s\n", content_simple_cmds->cmd[i]);
+		i++;
+	}
 	printf("***Redirects***\n");
 	while (current != NULL)
 	{

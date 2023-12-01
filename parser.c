@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/01 16:06:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/01 22:57:25 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void	move_redirect_to_redirects_list(t_list *node, t_list **redirects)
 
 void	free_lexer_node(t_list **lexer, int id)
 {
+	// doesn't work for deleting the first element unless the linking of pointers
+	// is done in the function that calls this one
 	t_list *current;
 	t_list *previous;
 	t_lexer *content;
@@ -143,6 +145,7 @@ void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 	int	i;
 	t_list	*current;
 	t_lexer	*content;
+	t_list	*tmp;
 
 	i = 0;
 	current = *lexer;
@@ -152,7 +155,11 @@ void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 		if (content->word)
 		{
 			cmd[i] = ft_strdup(content->word);
+			tmp = current->next;
 			free_lexer_node(lexer, content->id);
+			printf("hello\n");
+			// linking done here as the free_lezer_node doesn't account for deleting the first element
+			*lexer = tmp;
 			current = *lexer;
 		}
 		cmd_len--;
