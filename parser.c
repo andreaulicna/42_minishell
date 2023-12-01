@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/01 14:06:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/01 16:06:56 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,15 @@ void	free_lexer_node(t_list **lexer, int id)
 	previous = NULL;
 
 	content = (t_lexer *) current->content;
+	printf("id: %d\n", content->id);
 	while (current && content->id != id)
 	{
 		previous = current;
 		current = current->next;
 		content = (t_lexer *) current->content;
 	}
-	previous->next = current->next;
+	if (previous)
+		previous->next = current->next;
 	if (content->word)
 		free(content->word);
 	free(content);
@@ -112,44 +114,90 @@ void	separate_redirects(t_list **lexer, t_list **redirects)
 		move_redirect_to_redirects_list(current, redirects);
 		free_lexer_node(lexer, content->id + 1);
 		free_lexer_node(lexer, content->id);
-		printf("jou\n");
 	}
 	separate_redirects(lexer, redirects);
 }
 
-void	create_cmd(t_list **lexer, t_list **redirects)
+int	ft_cmd_len(t_list **lexer)
 {
-	separate_redirects(lexer, redirects);
+	int	i;
+	t_list	*current;
+	t_lexer	*content;
+
+	if (!lexer)
+		return (0);
+	current = *lexer;
+	content = (t_lexer *) current->content;
+	i = 0;
+	while (current && content->token != PIPE)
+	{
+		i++;
+		current = current->next;
+		content = (t_lexer *) current->content;
+	}
+	return (i);
+}
+
+void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
+{
+	int	i;
+	t_list	*current;
+	t_lexer	*content;
+
+	i = 0;
+	current = *lexer;
+	while (cmd_len > 0)
+	{
+		content = (t_lexer *) current->content;
+		if (content->word)
+		{
+			cmd[i] = ft_strdup(content->word);
+			free_lexer_node(lexer, content->id);
+			current = *lexer;
+		}
+		cmd_len--;
+		i++;
+	}
+	cmd[i] = NULL;
+}
+
+void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
+{
+	int	cmd_len;
+	char	**cmd;
+	t_list *node_simple_cmds;
+	t_list *redirects;
+	t_simple_cmds *content_cmd;
+
+	redirects = NULL;
+	separate_redirects(lexer, &redirects);
+	cmd_len = ft_cmd_len(lexer);
+	printf("cmd_len: %d\n", cmd_len);
+	cmd = ft_calloc(cmd_len + 1, sizeof(char *));
+	create_cmd(lexer, cmd, cmd_len);
+	content_cmd = malloc(sizeof(t_lexer));
+	content_cmd->cmd = cmd;
+	content_cmd->redirects = redirects;
+	//content_cmd->builtin = NULL;
+	node_simple_cmds = ft_lstnew(content_cmd);
+	ft_lstadd_back(simple_cmds, node_simple_cmds);
 }
 
 t_list *lexer_to_simple_cmds(t_list **lexer)
 {
 	t_list *simple_cmds;
-	t_list *node_simple_cmds;
 	t_list *current;
 	t_lexer *content;
-	t_list *redirects;
-	t_simple_cmds *content_cmd;
 
 
 	simple_cmds = NULL;
-	redirects = NULL;
 	current = *lexer;
 	while (current)
 	{
 		content = (t_lexer *) current->content;
 		if (content->token == PIPE)
-		{
-			printf("token\n");
-			create_cmd(lexer, &redirects); 
-		}
+			create_simple_cmds(lexer, &simple_cmds); 
 		current = current->next;
 	}
-	content_cmd = malloc(sizeof(t_lexer));
-	content_cmd->cmd = NULL;
-	content_cmd->redirects = redirects;
-	//content_cmd->builtin = NULL;
-	node_simple_cmds = ft_lstnew(content_cmd);
-	ft_lstadd_back(&simple_cmds, node_simple_cmds);
 	return (simple_cmds);
 }
