@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/29 16:00:15 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/01 16:13:39 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void	ft_export_list(t_data *data)
 		i++;
 		current = current->next;
 	}
+	env_arr[i] = NULL;
 	ft_export_sort(env_arr);
 	i = 0;
 	while (i < ft_lstsize(data->env_list))
