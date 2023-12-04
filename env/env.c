@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/01 16:59:07 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/04 12:50:59 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,17 @@ int	env_init(char **envp, t_data *data)
 {
 	t_list	*head;
 	t_list	*current;
+	char	*temp;
 
 	head = NULL;
 	current = NULL;
 	while (*envp != NULL)
 	{
-		current = ft_lstnew(*envp);
+		temp = ft_strdup(*envp);
+		current = ft_lstnew(temp);
 		ft_lstadd_back(&head, current);
 		envp++;
+		printf("%s\n", (char *)current->content);
 	}
 	data->env_list = head;
 	return (0);
@@ -48,8 +51,7 @@ t_list	*env_find(t_list *head, char *variable_key)
 {
 	if (head == NULL)
 		return (NULL);
-	if (ft_strlen(head->content) == ft_strlen(variable_key) &&
-		ft_strncmp(head->content, variable_key, ft_strlen(variable_key)) == 0)
+	if (ft_strncmp(head->content, variable_key, ft_strlen(variable_key)) == 0)
 		return (head);
 	return (env_find(head->next, variable_key));
 }
