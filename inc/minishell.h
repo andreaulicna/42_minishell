@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/01 16:38:15 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/04 12:52:21 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,11 @@
 # include <readline/history.h>	// For readline-related functions
 
 // IMPORT MACROS
-# include <limits.h>	// For PATH_MAX
+// # include <limits.h> 	// For PATH_MAX
+# include <sys/param.h> // For PATH_MAX (different systems)
 
 // IMPORT CUSTOM LIBRARIES
 # include "../lib/ft_printf.h"
-# include "../lib/libft/libft.h"
-# include "../lib/libft/get_next_line_bonus.h"
 
 // STRUCTS
 
@@ -56,8 +55,12 @@ t_list	**env_remove(t_list **head, char *variable_key);
 // BUILTINS
 int		ft_echo(char **args);
 int		ft_pwd(void);
-int		ft_env(char **envp);
-int		ft_cd(char **args);
+int		ft_env(t_data *data);
+int		ft_cd(char **args, t_data *data);
+char	*ft_cd_getpath(char *path_name, size_t len, t_data *data);
+void	ft_cd_update(char *oldpwd, t_data *data);
+int		ft_cd_home(char *oldpwd, t_data *data);
+int		ft_cd_previous(char *oldpwd, t_data *data);
 int		ft_export(char **args, t_data *data);
 void	ft_export_list(t_data *data);
 void	ft_export_sort(char **env_arr);
