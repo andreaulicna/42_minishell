@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/01 22:57:25 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/04 10:40:37 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ void	free_lexer_node(t_list **lexer, int id)
 	}
 	if (previous)
 		previous->next = current->next;
+	else
+		*lexer = current->next;
 	if (content->word)
 		free(content->word);
 	free(content);
@@ -145,7 +147,6 @@ void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 	int	i;
 	t_list	*current;
 	t_lexer	*content;
-	t_list	*tmp;
 
 	i = 0;
 	current = *lexer;
@@ -155,11 +156,7 @@ void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 		if (content->word)
 		{
 			cmd[i] = ft_strdup(content->word);
-			tmp = current->next;
 			free_lexer_node(lexer, content->id);
-			printf("hello\n");
-			// linking done here as the free_lezer_node doesn't account for deleting the first element
-			*lexer = tmp;
 			current = *lexer;
 		}
 		cmd_len--;

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/01 22:55:47 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/04 10:39:47 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	free_simple_cmds(t_list **simple_cmds)
 	{
 		tmp = (*simple_cmds)->next;
 		content = (t_simple_cmds *) (*simple_cmds)->content;
+		free_arr(content->cmd);
 		free(content);
 		free(*simple_cmds);
 		*simple_cmds = tmp;
