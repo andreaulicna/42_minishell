@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/29 15:26:25 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:01:56 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ typedef struct s_simple_cmds
 	char	**cmd;
 	t_list	*redirects;
 	t_builtdins	builtin;
-
 }	t_simple_cmds;
 
 // prompt.c

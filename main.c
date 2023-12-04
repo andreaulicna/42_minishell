@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/04 10:39:47 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/04 14:26:32 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,18 @@ void	free_lexer(t_list **lexer)
 
 void	free_simple_cmds(t_list **simple_cmds)
 {
-	t_simple_cmds *content_simple_cmds;
+	t_simple_cmds *content;
 	t_list	*free_redirects;
 	t_list	*tmp;
-	t_simple_cmds	*content;
 
 	if (!simple_cmds)
 		return ;
-	content_simple_cmds = (t_simple_cmds *) (*simple_cmds)->content;
-	free_redirects = content_simple_cmds->redirects;
-	free_lexer(&free_redirects);
 	while (*simple_cmds)
 	{
 		tmp = (*simple_cmds)->next;
 		content = (t_simple_cmds *) (*simple_cmds)->content;
+		free_redirects = content->redirects;
+		free_lexer(&free_redirects);
 		free_arr(content->cmd);
 		free(content);
 		free(*simple_cmds);
@@ -98,27 +96,37 @@ void	print_lexer(t_list **lexer)
 
 void	print_simple_cmds(t_list **simple_cmds)
 {
+	t_list	*current;
 	t_simple_cmds *content_simple_cmds;
 	t_lexer *content_redirects;
-	t_list	*current;
+	t_list	*current_redirect;
 	int	i;
+	int	order;
 
-	content_simple_cmds = (t_simple_cmds *) (*simple_cmds)->content;
-	current = content_simple_cmds->redirects;
-	printf("***Cmds***\n");
-	i = 0;
-	while (content_simple_cmds->cmd[i])
+	current = *simple_cmds;
+	order = 0;
+	while (current)
 	{
-		printf("%s\n", content_simple_cmds->cmd[i]);
-		i++;
-	}
-	printf("***Redirects***\n");
-	while (current != NULL)
-	{
-		content_redirects = (t_lexer *) current->content;
-		printf("Redirect token: %d\n", content_redirects->token);
-		printf("Redirect word: %s\n", content_redirects->word);
+		printf("%50s %d\n", "SIMPLE CMDS", order);
+		content_simple_cmds = (t_simple_cmds *) current->content;
+		current_redirect = content_simple_cmds->redirects;
+		printf("\n***Cmds***\n");
+		i = 0;
+		while (content_simple_cmds->cmd[i])
+		{
+			printf("%s\n", content_simple_cmds->cmd[i]);
+			i++;
+		}
+		printf("\n***Redirects***\n");
+		while (current_redirect != NULL)
+		{
+			content_redirects = (t_lexer *) current_redirect->content;
+			printf("Redirect token: %d\n", content_redirects->token);
+			printf("Redirect word: %s\n", content_redirects->word);
+			current_redirect = current_redirect->next;
+		}
 		current = current->next;
+		order++;
 	}
 }
 
@@ -173,7 +181,11 @@ int main(int argc, char **argv, char *env[])
 		simple_cmds = lexer_to_simple_cmds(&lexer);
 		printf("Rest of lexer: \n");
 		print_lexer(&lexer);
-		printf("Simple cmds: \n");
+		printf("----------------------\n");
+		printf("SIMPLE CMDS - before expander\n");
+		print_simple_cmds(&simple_cmds);
+		printf("SIMPLE CMDS - after expander\n");
+		//expander(&simple_cmds);
 		print_simple_cmds(&simple_cmds);
 		printf("----------------------\n");
 		/* Parser - Link list E */

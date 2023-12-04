@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/04 10:40:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/04 15:02:53 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ int	error_parser_double_token(t_tokens token)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `",
 		STDERR_FILENO);
-	if (token == LESS)
+	if (token == PIPE)
+		ft_putstr_fd("|", STDERR_FILENO);
+	else if (token == LESS)
 		ft_putstr_fd("<", STDERR_FILENO);
 	else if (token == LESS_2)
 		ft_putstr_fd("<<", STDERR_FILENO);
@@ -42,7 +44,7 @@ void	move_redirect_to_redirects_list(t_list *node, t_list **redirects)
 	t_list	*node_move;
 	t_list	*node_new;
 	t_lexer	*content_move;
-	t_lexer *content_move_word;
+	t_lexer	*content_move_word;
 	t_lexer	*content_new;
 
 	node_move = node;
@@ -52,23 +54,19 @@ void	move_redirect_to_redirects_list(t_list *node, t_list **redirects)
 	content_new->token = content_move->token;
 	content_move_word = (t_lexer *) node_move->next->content;
 	content_new->word = ft_strdup(content_move_word->word);
-	node_new = ft_lstnew(content_new);	
+	node_new = ft_lstnew(content_new);
 	ft_lstadd_back(redirects, node_new);
 }
 
 void	free_lexer_node(t_list **lexer, int id)
 {
-	// doesn't work for deleting the first element unless the linking of pointers
-	// is done in the function that calls this one
-	t_list *current;
-	t_list *previous;
-	t_lexer *content;
+	t_list	*current;
+	t_list	*previous;
+	t_lexer	*content;
 
 	current = *lexer;
 	previous = NULL;
-
 	content = (t_lexer *) current->content;
-	printf("id: %d\n", content->id);
 	while (current && content->id != id)
 	{
 		previous = current;
@@ -98,7 +96,8 @@ void	separate_redirects(t_list **lexer, t_list **redirects)
 	while (current && !content->token)
 	{
 		current = current->next;
-		content = (t_lexer *) current->content;
+		if (current)
+			content = (t_lexer *) current->content;
 	}
 	// end recursion when end the end of lexer list or encounters |
 	if (!current || content->token == PIPE)
@@ -124,7 +123,7 @@ void	separate_redirects(t_list **lexer, t_list **redirects)
 
 int	ft_cmd_len(t_list **lexer)
 {
-	int	i;
+	int		i;
 	t_list	*current;
 	t_lexer	*content;
 
@@ -137,14 +136,15 @@ int	ft_cmd_len(t_list **lexer)
 	{
 		i++;
 		current = current->next;
-		content = (t_lexer *) current->content;
+		if (current)
+			content = (t_lexer *) current->content;
 	}
 	return (i);
 }
 
 void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 {
-	int	i;
+	int		i;
 	t_list	*current;
 	t_lexer	*content;
 
@@ -167,41 +167,46 @@ void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 
 void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
 {
-	int	cmd_len;
-	char	**cmd;
-	t_list *node_simple_cmds;
-	t_list *redirects;
-	t_simple_cmds *content_cmd;
+	int				cmd_len;
+	char			**cmd;
+	t_list			*node_simple_cmds;
+	t_list			*redirects;
+	t_simple_cmds	*content_cmd;
 
 	redirects = NULL;
 	separate_redirects(lexer, &redirects);
 	cmd_len = ft_cmd_len(lexer);
-	printf("cmd_len: %d\n", cmd_len);
 	cmd = ft_calloc(cmd_len + 1, sizeof(char *));
 	create_cmd(lexer, cmd, cmd_len);
 	content_cmd = malloc(sizeof(t_lexer));
 	content_cmd->cmd = cmd;
 	content_cmd->redirects = redirects;
-	//content_cmd->builtin = NULL;
 	node_simple_cmds = ft_lstnew(content_cmd);
 	ft_lstadd_back(simple_cmds, node_simple_cmds);
 }
 
-t_list *lexer_to_simple_cmds(t_list **lexer)
+t_list	*lexer_to_simple_cmds(t_list **lexer)
 {
-	t_list *simple_cmds;
-	t_list *current;
-	t_lexer *content;
-
+	t_list	*simple_cmds;
+	t_list	*current;
+	t_lexer	*content;
 
 	simple_cmds = NULL;
 	current = *lexer;
+	content = (t_lexer *) current->content;
+	if (content->token == PIPE)
+		error_parser_double_token(content->token);
 	while (current)
 	{
 		content = (t_lexer *) current->content;
 		if (content->token == PIPE)
-			create_simple_cmds(lexer, &simple_cmds); 
-		current = current->next;
+		{
+			free_lexer_node(lexer, content->id);
+			current = *lexer;
+			continue ;
+		}
+		create_simple_cmds(lexer, &simple_cmds);
+		current = *lexer;
 	}
 	return (simple_cmds);
 }
