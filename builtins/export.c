@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/01 16:13:39 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:44:15 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ void	ft_export_list(t_data *data)
 	t_list	*current;
 	int		i;
 
-	env_arr = (char **)malloc(sizeof(char *) *(ft_lstsize(data->env_list)) + 1);
+	env_arr = (char **)malloc(sizeof(char *)
+				* (ft_lstsize(data->env_list) + 1));
 	if (!env_arr)
 	{
 		perror("ft_export array malloc");

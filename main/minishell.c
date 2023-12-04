@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/04 12:27:14 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:36:34 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,28 +50,28 @@ int main(int argc, char **argv, char **envp)
 	(void) argv;
 	// (void) envp;
 
-	// char *export_cmd[] = {"export", NULL};
-	// char *export_cmd2[] = {"export", "AAAA", "hehe=lol", "zzabijak=hehe", NULL};
+	char *export_cmd[] = {"export", NULL};
+	char *export_cmd2[] = {"export", "AAAA", "hehe=lol", "zzabijak=hehe", NULL};
 	// char *unset_cmd[] = {"unset", NULL};
-	// char *unset_cmd2[] = {"unset", "COLORTRM", "DISPLAY", NULL};
+	char *unset_cmd2[] = {"unset", "COLORTRM", "DISPLAY", NULL};
 
 	env_init(envp, &data);
-	char *cd_cmd[] = {"cd", NULL};
-	char *cd_cmd2[] = {"cd", "vole", "haha" , NULL};
-	ft_env(&data);
+	// char *cd_cmd[] = {"cd", NULL};
+	// char *cd_cmd2[] = {"cd", "../..", "haha" , NULL};
+	// ft_env(&data);
 	printf("\n\n");
-	ft_cd(cd_cmd2, &data);
+	// ft_cd(cd_cmd2, &data);
 	printf("\n\n");
-	ft_pwd();
-	ft_cd(cd_cmd, &data);
-	ft_pwd();
+	// ft_pwd();
+	// ft_cd(cd_cmd, &data);
+	// ft_pwd();
 	printf("\n\n");
-	ft_env(&data);
-	// ft_export(export_cmd, &data);
+	// ft_env(&data);
+	ft_export(export_cmd, &data);
 	// ft_unset(unset_cmd, &data);
-	// ft_unset(unset_cmd2, &data);
-	// ft_printf("\n\n\n");
-	// ft_export(export_cmd2, &data);
+	ft_unset(unset_cmd2, &data);
+	ft_printf("\n\n\n");
+	ft_export(export_cmd2, &data);
 	// ft_export(export_cmd, &data);
 	// while (current != NULL)
 	// {

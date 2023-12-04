@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/04 12:50:59 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/04 13:35:39 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	env_init(char **envp, t_data *data)
 		current = ft_lstnew(temp);
 		ft_lstadd_back(&head, current);
 		envp++;
-		printf("%s\n", (char *)current->content);
 	}
 	data->env_list = head;
 	return (0);
@@ -39,8 +38,10 @@ int	env_init(char **envp, t_data *data)
 int	env_add(t_list *head, char *env_var)
 {
 	t_list	*new_var;
-	
-	new_var = ft_lstnew(env_var);
+	char	*temp;
+
+	temp = ft_strdup(env_var);	
+	new_var = ft_lstnew(temp);
 	ft_lstadd_back(&head, new_var);
 	return (0);
 }
@@ -79,6 +80,7 @@ t_list	**env_remove(t_list **head, char *variable_key)
 		var_after = var_to_remove->next;
 		var_before->next = var_after;
 	}
+	free(var_to_remove->content);
 	free(var_to_remove);
 	return (head);
 }
