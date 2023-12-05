@@ -6,13 +6,14 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/12/01 16:37:44 by vbartos          ###   ########.fr        #
+#    Updated: 2023/12/05 14:26:50 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRC = main/minishell.c\
+		main/free.c\
 		main/utils.c\
 		env/env.c\
 		builtins/echo.c\
@@ -20,7 +21,8 @@ SRC = main/minishell.c\
 		builtins/env.c\
 		builtins/cd.c\
 		builtins/export.c\
-		builtins/unset.c
+		builtins/unset.c\
+		builtins/exit.c
 
 OBJ = $(SRC:.c=.o)
 
