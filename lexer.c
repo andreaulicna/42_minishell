@@ -6,11 +6,24 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/29 12:19:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/05 15:36:28 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incl/minishell.h"
+
+/**
+ * @brief	Identifies a token from a given string.
+ * 
+ * This function checks if the given string matches any predefined token
+ * (e.g., "|", "<", "<<", ">", ">>"). If a match is found, it returns
+ * the corresponding token enum value as defined in the s_tokens struct;
+ * otherwise, it returns 0.
+ * 
+ * @param	check		string to be checked against known token strings
+ * @return	t_tokens	returns the corresponding token enum value if found;
+ * otherwise, returns 0
+ */
 
 t_tokens	is_token(char *check)
 {
@@ -29,6 +42,16 @@ t_tokens	is_token(char *check)
 		return GREATER_2;
 	return (0);
 }
+
+/**
+ * @brief	Converts an input string array into a lexer-linked list where each
+ * node represents either a token or a word from the input.
+ * 
+ * For each node of the lexer list, either the word or the token is filled in.
+ * 
+ * @param	input_split	array of strings obtained from ft_split_minishell
+ * @return	t_list*		returns a pointer to the head of the lexer-linked list.
+ */
 
 t_list *input_arr_to_lexer_list(char **input_split)
 {

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/04 13:01:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/05 14:20:21 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef enum s_builtins
 	B_UNSET,
 	B_ENV,
 	B_EXIT,
-}	t_builtdins;
+}	t_builtins;
 
 typedef struct s_lexer
 {
@@ -60,8 +60,11 @@ typedef struct s_simple_cmds
 {
 	char	**cmd;
 	t_list	*redirects;
-	t_builtdins	builtin;
+	t_builtins	builtin;
 }	t_simple_cmds;
+
+// main.c
+void	print_lexer(t_list **lexer);
 
 // prompt.c
 char	*set_prompt(char *env[]);
