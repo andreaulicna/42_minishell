@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/05 17:57:52 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/05 18:21:49 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv, char **envp)
 	// ft_cd(cd_cmd3);
 	// ft_env(envp);
 	char *exit_cmd[] = {"exit", "COLORTRM", "DISPLAY", NULL};
-	char *exit_cmd2[] = {"exit", "257d", NULL};
+	char *exit_cmd2[] = {"exit", "-257", NULL};
 	ft_exit(exit_cmd, &data);
 	ft_exit(exit_cmd2, &data);
 	return (0);
