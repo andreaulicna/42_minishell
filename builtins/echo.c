@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2023/11/28 10:42:06 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/05 18:52:53 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ int	ft_echo(char **args)
 		}
 		while (args[i] != NULL)
 		{
-			ft_printf("%s", args[i]);
+			ft_putstr_fd(args[i], STDOUT_FILENO);
 			if (args[i + 1] && args[i][0] != '\0')
-				ft_printf(" ");
+				ft_putstr_fd(" ", STDOUT_FILENO);
 			i++;
 		}
 	}
 	if (n_flag == 0)
-		ft_printf("\n");
+		ft_putchar_fd("\n", STDOUT_FILENO);
 	return (0);
 }

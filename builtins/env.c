@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:24:31 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/04 09:58:16 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/05 19:05:09 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_env(t_data *data)
 	current = data->env_list;
 	while (current != NULL)
 	{
-		ft_printf("%s\n", current->content);
+		ft_putendl_fd(current->content, STDOUT);
 		current = current->next;
 	}
 	return (0);

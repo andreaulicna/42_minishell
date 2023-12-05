@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/05 17:52:19 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/05 19:01:20 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 # define MINISHELL_H
 
 # define PROMPT "minishell$ "
+
+# define STDIN	0
+# define STDOUT	1
+# define STDERR	2
 
 // IMPORT FUNCTIONS
 # include <stdio.h>      // For printf, perror

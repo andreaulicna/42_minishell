@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/04 12:43:56 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/05 19:04:12 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_cd_home(char *oldpwd, t_data *data)
 
 	ret = chdir(ft_cd_getpath("HOME", 4, data));
 	if (ret != 0)
-		perror("HOME not set");
+		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 	else
 		ft_cd_update(oldpwd, data);
 	return (ret);
@@ -68,7 +68,7 @@ int	ft_cd_previous(char *oldpwd, t_data *data)
 
 	ret = chdir(ft_cd_getpath("OLDPWD", 6, data)) != 0;
 	if (ret != 0)
-		perror("OLDPWD not set");
+		ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
 	else
 		ft_cd_update(oldpwd, data);
 	return (ret);
@@ -97,7 +97,11 @@ int	ft_cd(char **args, t_data *data)
 	{
 		ret = chdir(args[1]);
 		if (ret != 0)
-			perror("No such file or directory");
+		{
+			ft_putstr_fd("minishell: cd: ", STDERR);
+			ft_putstr_fd(args[1], STDERR);
+			ft_putendl_fd(": No such file or directory", STDERR);
+		}
 		else
 			ft_cd_update(cwd, data);
 	}
