@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/06 10:57:07 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:47:12 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv, char **envp)
 	// ft_cd(cd_cmd, &data);
 	// ft_pwd();
 	printf("\n\n");
-	// ft_env(&data);
+	ft_env(&data);
 	ft_export(export_cmd, &data);
 	// ft_unset(unset_cmd, &data);
 	ft_unset(unset_cmd2, &data);

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/06 13:29:13 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 15:04:11 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,22 @@ void	ft_export_format(char *env_var)
 	char	*substr1;
 	char	*substr2;
 
-	ft_putstr_fd("declare -x ", 1);
+	ft_putstr_fd("declare -x ", STDOUT);
 	if (ft_strchr(env_var, '=') != NULL)
 	{
 		equalsign_pos = ft_strlen(env_var) - ft_strlen(ft_strchr(env_var, '='));
 		substr1 = ft_substr(env_var, 0, equalsign_pos);
 		substr2 = ft_substr(env_var, equalsign_pos + 1,
 							ft_strlen(env_var) - ft_strlen(substr1));
-		ft_putstr_fd(substr1, 1);
-		ft_putstr_fd("=\"", 1);
-		ft_putstr_fd(substr2, 1);
-		ft_putstr_fd("\"", 1);
+		ft_putstr_fd(substr1, STDOUT);
+		ft_putstr_fd("=\"", STDOUT);
+		ft_putstr_fd(substr2, STDOUT);
+		ft_putstr_fd("\"", STDOUT);
 		free(substr1);
 		free(substr2);
 	}
 	else
-		ft_putstr_fd(env_var, 1);
+		ft_putstr_fd(env_var, STDOUT);
 	ft_putstr_fd("\n", 1);
 }
 
@@ -73,6 +73,7 @@ void	ft_export_list(t_data *data)
 	char	**env_arr;
 	t_list	*current;
 	int		i;
+	t_env	*env;
 
 	env_arr = (char **)malloc(sizeof(char *)
 				* (ft_lstsize(data->env_list) + 1));
@@ -85,7 +86,8 @@ void	ft_export_list(t_data *data)
 	i = 0;
 	while (i < ft_lstsize(data->env_list) && current != NULL)
 	{
-		env_arr[i] = current->content;
+		env = (t_env *)current->content;
+		env_arr[i] = env->full_string;
 		i++;
 		current = current->next;
 	}
@@ -101,9 +103,8 @@ void	ft_export_list(t_data *data)
 }
 
 // ft_export
-// - if export with no args
-// 	- print a list of env variables with string before ALPHABETICALLY;
-// 	- to print alphabetically, copy the contents into char array, then sort;
+// - if no args, prints a list of env variables ALPHABETICALLY;
+// - to print alphabetically, copy the contents into char array, then sort;
 // - if args
 // 	- capital letters added into the existing list, lowercase to the end;
 int		ft_export(char **args, t_data *data)

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/06 10:52:11 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 14:57:04 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,20 @@ int	free_array(char **strs)
 	return (0);
 }
 
-int	free_linkedlist(t_list **head)
+int	free_envlist(t_list **head)
 {
-	t_list *current = *head;
-	t_list *next;
+	t_list	*current;
+	t_list	*next;
+	t_env	*env;
 
+	current = *head;
 	while (current != NULL) 
 	{
 		next = current->next;
+		env = (t_env *) current->content;
+		free(env->full_string);
+		free(env->name);
+		free(env->value);
 		free(current->content);
 		free(current);
 		current = next;
@@ -63,5 +69,5 @@ int	free_linkedlist(t_list **head)
 void	free_data(t_data *data)
 {
 	if (data->env_list != NULL)
-		free_linkedlist(&data->env_list);
+		free_envlist(&data->env_list);
 }

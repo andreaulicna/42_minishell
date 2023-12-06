@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/06 13:31:56 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 15:01:35 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,28 @@ int	env_init(char **envp, t_data *data)
 }
 
 // env_add
-// - adds a new variable to the local environment variables list;
+// - adds a new variable to minishell's environment variables list;
+// - splits the variable into name+value pair;
+// - if added variable has no '=', assings no value;
 int	env_add(t_list **head, char *env_var)
 {
 	t_list	*new_var;
-	char	*temp;
+	t_env	*env;
+	size_t	equal_pos;
 
-	temp = ft_strdup(env_var);	
-	new_var = ft_lstnew(temp);
+	equal_pos = 0;
+	while (env_var[equal_pos] != '=' && env_var[equal_pos] != '\0')
+		equal_pos++;
+	env = malloc(sizeof(t_env));
+	if (!env)
+		return (1);
+	env->full_string = ft_strdup(env_var);
+	env->name = ft_substr(env_var, 0, equal_pos);
+	if (env_var[equal_pos] == '=')
+		env->value = ft_strdup(env_var + equal_pos + 1);
+	else
+		env->value = NULL;	
+	new_var = ft_lstnew(env);
 	ft_lstadd_back(head, new_var);
 	return (0);
 }

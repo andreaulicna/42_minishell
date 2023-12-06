@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 13:24:02 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 14:56:22 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct	s_env
 {
 	char		*name;
 	char		*value;
+	char		*full_string;
 }				t_env;
 
 // ENVIRONMENT
@@ -85,7 +86,7 @@ void	exit_minishell(t_data *data, int exit_status);
 
 // FREES
 void	free_data(t_data *data);
-int		free_linkedlist(t_list **head);
+int		free_envlist(t_list **head);
 int		free_array(char **strs);
 
 
