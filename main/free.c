@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/05 18:32:57 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 10:52:11 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	free_array(char **strs)
 	return (0);
 }
 
-void	free_linkedlist(t_list **head)
+int	free_linkedlist(t_list **head)
 {
 	t_list *current = *head;
 	t_list *next;
@@ -41,6 +41,7 @@ void	free_linkedlist(t_list **head)
 		current = next;
 	}
 	*head = NULL;
+	return (0);
 }
 
 // free_env

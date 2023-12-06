@@ -6,7 +6,7 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/12/05 14:26:50 by vbartos          ###   ########.fr        #
+#    Updated: 2023/12/06 10:51:05 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,14 @@ NAME = minishell
 SRC = main/minishell.c\
 		main/free.c\
 		main/utils.c\
-		env/env.c\
-		builtins/echo.c\
-		builtins/pwd.c\
-		builtins/env.c\
-		builtins/cd.c\
-		builtins/export.c\
-		builtins/unset.c\
-		builtins/exit.c
+		main/env.c\
+		builtins/ft_echo.c\
+		builtins/ft_pwd.c\
+		builtins/ft_env.c\
+		builtins/ft_cd.c\
+		builtins/ft_export.c\
+		builtins/ft_unset.c\
+		builtins/ft_exit.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/05 18:21:49 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 10:57:07 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,6 @@ int main(int argc, char **argv, char **envp)
 	t_data	data;
 
 	init_data(&data, envp);
-	// char	*prompt;
-	// char	*cmd;
-	// size_t	n;
-
-	// prompt = PROMPT;
-	// cmd = NULL;
-	// n = 0;
-	// while (1)
-	// {
-	// 	ft_pwd();
-	// 	printf("%s", prompt);
-	// 	getline(&cmd, &n, stdin);
-	// 	ft_cd(cmd);
-	// }
-	// free(cmd);
 
 	(void) argc;
 	(void) argv;
@@ -44,10 +29,10 @@ int main(int argc, char **argv, char **envp)
 
 	// char *cd_cmd[] = {"cd", NULL};
 	// char *cd_cmd2[] = {"cd", "../..", "haha" , NULL};
-	// ft_env(&data);
-	printf("\n\n");
+
+	// printf("\n\n");
 	// ft_cd(cd_cmd2, &data);
-	printf("\n\n");
+	// printf("\n\n");
 	// ft_pwd();
 	// ft_cd(cd_cmd, &data);
 	// ft_pwd();
