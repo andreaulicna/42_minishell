@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/05 14:27:05 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/06 11:46:14 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	print_simple_cmds(t_list **simple_cmds)
 	order = 0;
 	while (current)
 	{
-		printf("%50s %d\n", "SIMPLE CMDS", order);
+		printf("%s %d\n", "SIMPLE CMDS", order);
 		content_simple_cmds = (t_simple_cmds *) current->content;
 		current_redirect = content_simple_cmds->redirects;
 		printf("\n***Cmds***\n");
@@ -137,7 +137,7 @@ int main(int argc, char **argv, char *env[])
 	char	**input_split;
 	char	*prompt;
 	char	*input;
-	int	i;
+	//int	i;
 	unsigned int	null_input;
 	t_list	*lexer;
 	t_list	*simple_cmds;
@@ -160,33 +160,33 @@ int main(int argc, char **argv, char *env[])
 		}
 		/* Split S*/
 		input_split = ft_split_minishell(input, ' ');
-		i = 0;
-		printf("Minishell split output:\n");
-		while (input_split[i])
-		{
-			printf("%s\n", input_split[i]);
-			i++;
-		}
-		printf("----------------------\n");
+	//	i = 0;
+	//	printf("Minishell split output:\n");
+	//	while (input_split[i])
+	//	{
+	//		printf("%s\n", input_split[i]);
+	//		i++;
+	//	}
+	//	printf("----------------------\n");
 		/* Split E */
 		/* Lexer - Link list S */
-		printf("Minishell lexer output:\n");
+	//	printf("Minishell lexer output:\n");
 		lexer = input_arr_to_lexer_list(input_split);
 		free_arr(input_split);
-		print_lexer(&lexer);
-		printf("----------------------\n");
+	//	print_lexer(&lexer);
+	//	printf("----------------------\n");
 		/* Lexer - Link list E */
 		/* Parser - Link list S */
-		printf("Minishell parser output:\n");
+	//	printf("Minishell parser output:\n");
 		simple_cmds = lexer_to_simple_cmds(&lexer);
-		printf("Rest of lexer: \n");
-		print_lexer(&lexer);
-		printf("----------------------\n");
-		printf("SIMPLE CMDS - before expander\n");
+	//	printf("Rest of lexer: \n");
+	//	print_lexer(&lexer);
+	//	printf("----------------------\n");
+	//	printf("SIMPLE CMDS - before expander\n");
+	//	print_simple_cmds(&simple_cmds);
+	//	printf("SIMPLE CMDS - after expander\n");
 		print_simple_cmds(&simple_cmds);
-		printf("SIMPLE CMDS - after expander\n");
-		//expander(&simple_cmds);
-		print_simple_cmds(&simple_cmds);
+		expander(&simple_cmds);
 		printf("----------------------\n");
 		/* Parser - Link list E */
 		free(input);

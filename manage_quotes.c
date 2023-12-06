@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 12:35:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 11:06:05 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/06 12:15:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * @brief	Counts single and double quotes in a string.
  * 
  * This function keeps track of the number of single and double quotes
- * encountered in the input string. It's used in the word counting process
+ * encountered in the input string. It's used in the word-counting process
  * to correctly handle quoted substrings as part of a word.
  * 
  * @param	c			character to check

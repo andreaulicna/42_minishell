@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 11:11:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/06 11:46:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,8 @@ void	free_lexer_node(t_list **lexer, int id);
 // error.c
 int		error_handler(int code);
 int		error_parser_double_token(t_tokens token);
+
+// expander.c
+void expander(t_list **simple_cmds);
 
 #endif

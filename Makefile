@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/12/06 11:12:27 by aulicna          ###   ########.fr        #
+#    Updated: 2023/12/06 11:46:28 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRC = main.c \
 						lexer.c \
 						parser.c \
 						parser_redirects.c \
-						error.c
+						error.c \
+						expander.c
 
 OBJ = $(SRC:.c=.o)
 
