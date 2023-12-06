@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 11:46:14 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/06 16:56:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ void	print_simple_cmds(t_list **simple_cmds)
 	order = 0;
 	while (current)
 	{
+		printf("pointer: %p\n", current->next);
 		printf("%s %d\n", "SIMPLE CMDS", order);
 		content_simple_cmds = (t_simple_cmds *) current->content;
 		current_redirect = content_simple_cmds->redirects;
@@ -118,11 +119,11 @@ void	print_simple_cmds(t_list **simple_cmds)
 			i++;
 		}
 		printf("\n***Redirects***\n");
-		while (current_redirect != NULL)
+		while (current_redirect)
 		{
 			content_redirects = (t_lexer *) current_redirect->content;
 			printf("Redirect token: %d\n", content_redirects->token);
-			printf("Redirect word: %s\n", content_redirects->word);
+			printf("Redirect word: %s\n", content_redirects->word + 1);
 			current_redirect = current_redirect->next;
 		}
 		current = current->next;
@@ -173,7 +174,7 @@ int main(int argc, char **argv, char *env[])
 	//	printf("Minishell lexer output:\n");
 		lexer = input_arr_to_lexer_list(input_split);
 		free_arr(input_split);
-	//	print_lexer(&lexer);
+		print_lexer(&lexer);
 	//	printf("----------------------\n");
 		/* Lexer - Link list E */
 		/* Parser - Link list S */
@@ -186,14 +187,17 @@ int main(int argc, char **argv, char *env[])
 	//	print_simple_cmds(&simple_cmds);
 	//	printf("SIMPLE CMDS - after expander\n");
 		print_simple_cmds(&simple_cmds);
-		expander(&simple_cmds);
 		printf("----------------------\n");
+		expander(&simple_cmds);
+		ft_printf("tu\n");
+		//print_simple_cmds(&simple_cmds);
+		//printf("----------------------\n");
 		/* Parser - Link list E */
-		free(input);
-		free_lexer(&lexer);
-		free_simple_cmds(&simple_cmds);
+	//	free(input);
+	//	free_lexer(&lexer);
+	//	free_simple_cmds(&simple_cmds);
 	}
-	free(prompt);
+	//free(prompt);
 	if (null_input == 1)
 	{
 		printf("\nexit\n");
