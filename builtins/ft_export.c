@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/05 19:07:02 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:29:13 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int		ft_export(char **args, t_data *data)
 	i = 1;
 	while (args[i] != NULL)
 	{
-		env_add(data->env_list, args[i]);
+		env_add(&data->env_list, args[i]);
 		i++;
 	}
 	return (0);

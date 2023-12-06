@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/04 13:35:39 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:31:56 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,11 @@
 int	env_init(char **envp, t_data *data)
 {
 	t_list	*head;
-	t_list	*current;
-	char	*temp;
 
 	head = NULL;
-	current = NULL;
 	while (*envp != NULL)
 	{
-		temp = ft_strdup(*envp);
-		current = ft_lstnew(temp);
-		ft_lstadd_back(&head, current);
+		env_add(&head, *envp);
 		envp++;
 	}
 	data->env_list = head;
@@ -35,14 +30,14 @@ int	env_init(char **envp, t_data *data)
 
 // env_add
 // - adds a new variable to the local environment variables list;
-int	env_add(t_list *head, char *env_var)
+int	env_add(t_list **head, char *env_var)
 {
 	t_list	*new_var;
 	char	*temp;
 
 	temp = ft_strdup(env_var);	
 	new_var = ft_lstnew(temp);
-	ft_lstadd_back(&head, new_var);
+	ft_lstadd_back(head, new_var);
 	return (0);
 }
 

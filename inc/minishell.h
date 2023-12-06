@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 10:52:54 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:24:02 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,15 @@ typedef struct	s_data
 	t_list		*env_list;
 }				t_data;
 
+typedef struct	s_env
+{
+	char		*name;
+	char		*value;
+}				t_env;
+
 // ENVIRONMENT
 int		env_init(char **envp, t_data *data);
-int		env_add(t_list *head, char *env_var);
+int		env_add(t_list **head, char *env_var);
 t_list	*env_find(t_list *head, char *variable_key);
 t_list	**env_remove(t_list **head, char *variable_key);
 
