@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 12:41:41 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/27 18:35:26 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/06 11:06:41 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_quotes(char *input)
 {
-	int	i;
+	int				i;
 	unsigned int	quotes;
 
 	quotes = 0;

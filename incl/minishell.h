@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/05 14:20:21 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/06 11:11:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ typedef enum s_builtins
 
 typedef struct s_lexer
 {
-	int		id;
-	char	*word;
-	t_tokens token;
+	int			id;
+	char		*word;
+	t_tokens	token;
 }	t_lexer;
 
 typedef struct s_simple_cmds
 {
-	char	**cmd;
-	t_list	*redirects;
+	char		**cmd;
+	t_list		*redirects;
 	t_builtins	builtin;
 }	t_simple_cmds;
 
@@ -70,19 +70,27 @@ void	print_lexer(t_list **lexer);
 char	*set_prompt(char *env[]);
 
 // input.c
-int	check_quotes(char *input);
+int		check_quotes(char *input);
 
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 
 // manage_quotes.c
 void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
-int	quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
+int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 // lexer.c
-t_list *input_arr_to_lexer_list(char **input_split);
+t_list	*input_arr_to_lexer_list(char **input_split);
 
 // parser.c
-t_list *lexer_to_simple_cmds(t_list **lexer);
+t_list	*lexer_to_simple_cmds(t_list **lexer);
+
+// parser_redirects.c
+void	separate_redirects(t_list **lexer, t_list **redirects);
+void	free_lexer_node(t_list **lexer, int id);
+
+// error.c
+int		error_handler(int code);
+int		error_parser_double_token(t_tokens token);
 
 #endif
