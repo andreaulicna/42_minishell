@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:59:11 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 15:46:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/07 16:28:55 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	separate_redirects(t_list **lexer, t_list **redirects)
 	t_list	*current;
 	t_lexer	*content;
 
-	printf("re\n");
 	current = *lexer;
 	content = (t_lexer *) current->content;
 	while (current && !content->token)
