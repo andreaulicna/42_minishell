@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/08 14:26:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 15:26:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,15 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
 	rest = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	printf("rest:%s||\n", rest);
 	//printf("key:%s||\n", key);
-	found = env_find(env_list, "$USER");
+	found = env_find(env_list, key_to_find);
+	if (!found)
+	{
+		printf("JOU\n");
+	}
+	content_found = (t_env *) found->content;
+	printf("found: %s\n", content_found->value);
 	if (found)
 	{
-		content_found = (t_env *) found->content;
 		tmp1 = ft_strjoin(until_dollar, content_found->value);
 		printf("tmp1: %s\n", tmp1);
 		tmp2 = ft_strjoin(tmp1, rest);

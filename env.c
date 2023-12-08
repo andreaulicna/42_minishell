@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/08 14:19:26 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 15:26:34 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ t_list	*env_find(t_list *head, char *variable_key)
 {
 	if (head == NULL)
 		return (NULL);
-	if (ft_strncmp(head->content, variable_key, ft_strlen(variable_key)) == 0)
+	t_env *content = (t_env *) head->content;
+	if (ft_strncmp(content->name, variable_key, ft_strlen(variable_key)) == 0)
 		return (head);
 	return (env_find(head->next, variable_key));
 }

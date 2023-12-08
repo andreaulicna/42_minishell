@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/08 13:55:32 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 15:18:09 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ void	free_simple_cmds(t_list **simple_cmds)
 // - frees the entire data struct;
 void	free_data(t_data *data)
 {
-	if (data->env_list)
-		free_envlist(&data->env_list);
+//	if (data->env_list)
+//		free_envlist(&data->env_list);
 	if (data->lexer)
 		free_lexer(&data->lexer);
 	if (data->simple_cmds)

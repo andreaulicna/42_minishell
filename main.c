@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/08 14:20:26 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 15:19:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,13 @@ int main(int argc, char **argv, char *env[])
 		ft_putstr_fd("Correct usage: ./minishell\n\n", 2);
 		return (0);
 	}
+	env_init(env, &data);
 	while(1)
 	{
 		data.prompt = set_prompt(env);
 		data.input = readline((const char *)data.prompt);
-		env_init(env, &data);
+		t_env *content_env = (t_env *) data.env_list->content;
+		printf("content env: %s\n", content_env->value);
 		if (!check_input_null(data.input))
 		{
 			null_input = 1;
