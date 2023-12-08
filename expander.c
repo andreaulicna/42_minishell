@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/07 23:02:54 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 14:26:12 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,64 +19,40 @@ int	is_dollar(char c)
 	return (0);
 }
 
-//void	delete_quotes(char **cmd, int i_cmd)
-//{
-//	char	*tmp;
-//	int	i;
-//	int	j;
-//	char	*str;
-//	char	q;
-//	int s_i;
-//	int d_i;
-//	
-//	str = cmd[i_cmd];
-//	s_i = -1;
-//	d_i = -1;
-//	if (ft_strchr(str, '\''))
-//		s_i = str - ft_strchr(str, '\'');
-//	else if (ft_strchr(str, '"'))
-//		d_i = str - (ft_strchr(str, '"'));
-//	if (s_i == -1 && d_i == -1)
-//		return ;
-//	else if (s_i == -1)
-//		q = '"';
-//	else if (d_i == -1)
-//		q = '\'';
-//	else if (s_i < d_i)
-//		q = '\'';
-//	else
-//		q = '"';
-//	tmp = (char *) malloc(sizeof(char) * (ft_strlen(str) - 1));
-//	i = 1;
-//	j = 0;
-//	while (str[i] && str[i] != q)
-//	{
-//		tmp[j] = str[i];
-//		i++;
-//		j++;
-//	}
-//	tmp[j] = '\0';
-//	cmd[i_cmd] = tmp;
-//	free(str);
-//}
-
 void	delete_quotes(char **cmd, int i_cmd)
 {
-	char	*tmp;
+	char	*str;
 	int	i;
 	int	j;
-	char	*str;
-	char	q;
-	
+	char q;
+	char	*tmp;
+
 	str = cmd[i_cmd];
-	if (str[0] != '\'' && str[0] != '"')
-		return ;
+	i = 0;
+	while (str[i] && str[i] != '\'' && str[i] != '"')
+		i++;
+	if (str[i])
+		q = str[i];
 	else
-		q = str[0];
+		return ;
 	tmp = (char *) malloc(sizeof(char) * (ft_strlen(str) - 1));
-	i = 1;
+	i = 0;
 	j = 0;
-	while (str[i] && str[i] != q)
+	while (str[i] != q)
+	{
+		tmp[j] = str[i];
+		i++;
+		j++;
+	}
+	i++;
+	while (str[i] != q)
+	{
+		tmp[j] = str[i];
+		i++;
+		j++;
+	}
+	i++;
+	while (str[i])
 	{
 		tmp[j] = str[i];
 		i++;
@@ -119,10 +95,10 @@ int	checker_dollar(char *str, int j)
 	return 0;
 }
 
-void	expand_dollar(char **cmd, int i_cmd)
+void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
 {
-	char	*key = "USER";
-	char	*value = "aulicna";
+	//char	*key = "USER";
+	//char	*value = "aulicna";
 	char	*str;
 	int	i;
 	int	j;
@@ -131,6 +107,8 @@ void	expand_dollar(char **cmd, int i_cmd)
 	char	*rest;
 	char	*tmp1;
 	char	*tmp2;
+	t_list	*found;
+	t_env	*content_found;
 
 	str = cmd[i_cmd];
 	i = 0;
@@ -143,16 +121,30 @@ void	expand_dollar(char **cmd, int i_cmd)
 		j++;
 	key_to_find = ft_substr(str, i + 1, j - 1);
 	printf("key to find:%s||\n", key_to_find);
-	rest = ft_substr(str, i + j, ft_strlen(str) - i - j);
+	rest = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	printf("rest:%s||\n", rest);
-	printf("key:%s||\n", key);
-	printf("len %ld\n", ft_strlen(key));
-	if (!ft_strncmp(key, key_to_find, 4))
+	//printf("key:%s||\n", key);
+	found = env_find(env_list, "$USER");
+	if (found)
 	{
-		printf("tu\n");
-		tmp1 = ft_strjoin(until_dollar, value);
+		content_found = (t_env *) found->content;
+		tmp1 = ft_strjoin(until_dollar, content_found->value);
 		printf("tmp1: %s\n", tmp1);
 		tmp2 = ft_strjoin(tmp1, rest);
+		printf("tmp2: %s\n", tmp2);
+		free(tmp1);
+	}
+//	if (!ft_strncmp(key, key_to_find, 4))
+//	{
+//		tmp1 = ft_strjoin(until_dollar, value);
+//		printf("tmp1: %s\n", tmp1);
+//		tmp2 = ft_strjoin(tmp1, rest);
+//		printf("tmp2: %s\n", tmp2);
+//		free(tmp1);
+//	}
+	else
+	{
+		tmp2 = ft_strjoin(until_dollar, rest);
 		printf("tmp2: %s\n", tmp2);
 	}
 	cmd[i_cmd] = tmp2;
@@ -160,10 +152,20 @@ void	expand_dollar(char **cmd, int i_cmd)
 	free(until_dollar);
 	free(key_to_find);
 	free(rest);
-	free(tmp1);
 }
 
-void expander(t_list **simple_cmds)
+void	expand_exit_code(char **cmd, int i_cmd)
+{
+	char *tmp;
+	char *str;
+
+	tmp = ft_strdup("**exit code**");
+	str = cmd[i_cmd];
+	cmd[i_cmd] = tmp;
+	free(str);
+}
+
+void expander(t_list **simple_cmds, t_data *data)
 {
 	t_list	*current;
 	t_simple_cmds	*content;
@@ -191,10 +193,15 @@ void expander(t_list **simple_cmds)
 					}
 					else if (check_dollar == 3)
 						delete_quotes(content->cmd, i);
+					else if (check_dollar == 2)
+					{
+						delete_quotes(content->cmd, i);
+						expand_exit_code(content->cmd, i);
+					}
 					else if (check_dollar == 1)
 					{
 						delete_quotes(content->cmd, i);
-						expand_dollar(content->cmd, i);
+						expand_dollar(content->cmd, i, data->env_list);
 					}
 				}
 				j++;

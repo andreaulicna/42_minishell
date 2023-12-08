@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/07 21:05:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 14:20:26 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,52 +29,9 @@ int	check_input_null(char *input)
 {
 	if (input == NULL)
 		return (0);
-	else if (input[0])
+	else
 		add_history(input);
 	return (1);
-}
-
-void	free_lexer(t_list **lexer)
-{
-	t_list	*tmp;
-	t_lexer	*content;
-
-	if (!*lexer)
-		return ;
-	while (*lexer)
-	{
-		tmp = (*lexer)->next;
-		content = (t_lexer *) (*lexer)->content;
-		if (content->word)
-			free(content->word);
-		free(content);
-		free(*lexer);
-		*lexer = tmp;
-	}
-	lexer = NULL;
-}
-
-
-void	free_simple_cmds(t_list **simple_cmds)
-{
-	t_simple_cmds *content;
-	t_list	*free_redirects;
-	t_list	*tmp;
-
-	if (!simple_cmds)
-		return ;
-	while (*simple_cmds)
-	{
-		tmp = (*simple_cmds)->next;
-		content = (t_simple_cmds *) (*simple_cmds)->content;
-		free_redirects = content->redirects;
-		free_lexer(&free_redirects);
-		free_arr(content->cmd);
-		free(content);
-		free(*simple_cmds);
-		*simple_cmds = tmp;
-	}
-	simple_cmds = NULL;
 }
 
 void	print_lexer(t_list **lexer)
@@ -122,7 +79,7 @@ void	print_simple_cmds(t_list **simple_cmds)
 		{
 			content_redirects = (t_lexer *) current_redirect->content;
 			printf("Redirect token: %d\n", content_redirects->token);
-			printf("Redirect word: %s\n", content_redirects->word + 1);
+			printf("Redirect word: %s\n", content_redirects->word);
 			current_redirect = current_redirect->next;
 		}
 		current = current->next;
@@ -130,71 +87,83 @@ void	print_simple_cmds(t_list **simple_cmds)
 	}
 }
 
+void	init_data(t_data *data)
+{
+	data->env_list = NULL;
+	data->lexer = NULL;
+	data->simple_cmds = NULL;
+	data->prompt = NULL;
+	data->input = NULL;
+	data->input_split = NULL;
+}
+
 int main(int argc, char **argv, char *env[])
 {
+	t_data	data;
+	
 	(void) argc;
 	(void) argv;
-	char	**input_split;
-	char	*prompt;
-	char	*input;
-	// int	i;
+	int	i;
 	unsigned int	null_input;
-	t_list	*lexer;
-	t_list	*simple_cmds;
 
-	prompt = set_prompt(env);
 	null_input = 0;
+	init_data(&data);
+	if (argc > 1)
+	{
+		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
+		ft_putstr_fd("Correct usage: ./minishell\n\n", 2);
+		return (0);
+	}
 	while(1)
 	{
-		input = readline((const char *)prompt);
-		if (!check_input_null(input))
+		data.prompt = set_prompt(env);
+		data.input = readline((const char *)data.prompt);
+		env_init(env, &data);
+		if (!check_input_null(data.input))
 		{
 			null_input = 1;
-			free(input);
+			free(data.input);
 			break ;
 		}
-		if (!check_quotes(input))
+		if (!check_quotes(data.input))
 		{
-			free(input);
+			free(data.input);
 			continue ;
 		}
 		/* Split S*/
-		input_split = ft_split_minishell(input, ' ');
-	//	i = 0;
-	//	printf("Minishell split output:\n");
-	//	while (input_split[i])
-	//	{
-	//		printf("%s\n", input_split[i]);
-	//		i++;
-	//	}
-	//	printf("----------------------\n");
+		data.input_split = ft_split_minishell(data.input, ' ');
+		i = 0;
+		printf("Minishell split output:\n");
+		while (data.input_split[i])
+		{
+			printf("%s\n", data.input_split[i]);
+			i++;
+		}
+		printf("----------------------\n");
 		/* Split E */
 		/* Lexer - Link list S */
-	//	printf("Minishell lexer output:\n");
-		lexer = input_arr_to_lexer_list(input_split);
-		free_arr(input_split);
-	//	print_lexer(&lexer);
-	//	printf("----------------------\n");
-	//	/* Lexer - Link list E */
-	//	/* Parser - Link list S */
-	//	printf("Minishell parser output:\n");
-		simple_cmds = lexer_to_simple_cmds(&lexer);
-	//	printf("Rest of lexer: \n");
-	//	print_lexer(&lexer);
-	//	printf("----------------------\n");
-	//	printf("SIMPLE CMDS - before expander\n");
-	//	print_simple_cmds(&simple_cmds);
+		printf("Minishell lexer output:\n");
+		data.lexer = input_arr_to_lexer_list(data.input_split);
+		print_lexer(&data.lexer);
+		printf("----------------------\n");
+		/* Lexer - Link list E */
+		/* Parser - Link list S */
+		printf("Minishell parser output:\n");
+		data.simple_cmds = lexer_to_simple_cmds(&data.lexer);
+		printf("Rest of lexer: \n");
+		print_lexer(&data.lexer);
+		printf("----------------------\n");
+		printf("SIMPLE CMDS - before expander\n");
+		print_simple_cmds(&data.simple_cmds);
 		printf("----------------------\n");
 		printf("SIMPLE CMDS - after expander\n");
-		expander(&simple_cmds);
-		print_simple_cmds(&simple_cmds);
+		expander(&data.simple_cmds, &data);
+		print_simple_cmds(&data.simple_cmds);
 		printf("----------------------\n");
 		/* Parser - Link list E */
-		free(input);
-		free_lexer(&lexer);
-		free_simple_cmds(&simple_cmds);
+		free_data(&data);
 	}
-	free(prompt);
+	free(data.prompt); // needs to be here, bcs check_input skips the free_data function and the one thing that stays malloced is the prompt
 	if (null_input == 1)
 	{
 		printf("\nexit\n");

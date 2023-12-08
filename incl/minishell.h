@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 11:46:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/08 14:19:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,23 @@
 # include <curses.h>     // For tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 # include <readline/readline.h> // For readline-related functions
 # include <readline/history.h>	// For readline-related functions
+
+typedef struct	s_data
+{
+	t_list	*env_list;
+	t_list	*lexer;
+	t_list	*simple_cmds;
+	char	*prompt;
+	char	*input;
+	char	**input_split;
+}				t_data;
+
+typedef struct	s_env
+{
+	char		*name;
+	char		*value;
+	char		*full_string;
+}				t_env;
 
 typedef enum s_tokens
 {
@@ -94,6 +111,16 @@ int		error_handler(int code);
 int		error_parser_double_token(t_tokens token);
 
 // expander.c
-void expander(t_list **simple_cmds);
+void expander(t_list **simple_cmds, t_data *data);
+
+// free.c
+void	free_lexer(t_list **lexer);
+void	free_simple_cmds(t_list **simple_cmds);
+void	free_data(t_data *data);
+
+// env.c
+int	env_init(char **envp, t_data *data);
+t_list	*env_find(t_list *head, char *variable_key);
+int	env_add(t_list **head, char *env_var);
 
 #endif
