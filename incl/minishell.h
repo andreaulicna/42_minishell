@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/11 15:06:34 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/11 22:29:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ int		check_quotes(char *input);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 
-// manage_quotes.c
+// quotes.c
+void	delete_quotes(char **cmd, int i_cmd);
 void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
 int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
@@ -123,7 +124,12 @@ int		error_handler(int code);
 int		error_parser_double_token(t_tokens token);
 
 // expander.c
-void expander(t_list **simple_cmds, t_data *data);
+void expander(t_data *data);
+void	init_struct_str(t_str *str);
+void	free_struct_str(t_str *str);
+
+// expander_dollar.c
+void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
 
 // free.c
 void	free_lexer(t_list **lexer);
