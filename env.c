@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/08 15:26:34 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/11 11:00:10 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ int	env_add(t_list **head, char *env_var)
 // - finds a variable in the local environment variables list;
 t_list	*env_find(t_list *head, char *variable_key)
 {
+	t_env	*content;
+
 	if (head == NULL)
 		return (NULL);
-	t_env *content = (t_env *) head->content;
+	content = (t_env *) head->content;
 	if (ft_strncmp(content->name, variable_key, ft_strlen(variable_key)) == 0)
 		return (head);
 	return (env_find(head->next, variable_key));

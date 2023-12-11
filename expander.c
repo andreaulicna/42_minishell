@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/08 15:26:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/11 10:52:12 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,10 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
 	{
 		printf("JOU\n");
 	}
-	content_found = (t_env *) found->content;
-	printf("found: %s\n", content_found->value);
 	if (found)
 	{
+		content_found = (t_env *) found->content;
+		printf("found: %s\n", content_found->value);
 		tmp1 = ft_strjoin(until_dollar, content_found->value);
 		printf("tmp1: %s\n", tmp1);
 		tmp2 = ft_strjoin(tmp1, rest);
@@ -170,6 +170,20 @@ void	expand_exit_code(char **cmd, int i_cmd)
 	free(str);
 }
 
+int	contains_dollar(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void expander(t_list **simple_cmds, t_data *data)
 {
 	t_list	*current;
@@ -186,32 +200,37 @@ void expander(t_list **simple_cmds, t_data *data)
 		while (content->cmd[i])
 		{
 			j = 0;
-			while (content->cmd[i][j])
+			if (contains_dollar(content->cmd[i]))
 			{
-				if (is_dollar(content->cmd[i][j]))
+				while (content->cmd[i][j])
 				{
-					check_dollar = checker_dollar(content->cmd[i], j);
-					if (check_dollar == 4)
+					if (is_dollar(content->cmd[i][j]))
 					{
+						check_dollar = checker_dollar(content->cmd[i], j);
 						delete_quotes(content->cmd, i);
-						break ;
+						if (check_dollar == 4)
+						{
+							//delete_quotes(content->cmd, i);
+							break ;
+						}
+						//else if (check_dollar == 3)
+							//delete_quotes(content->cmd, i);
+						else if (check_dollar == 2)
+						{
+							//delete_quotes(content->cmd, i);
+							expand_exit_code(content->cmd, i);
+						}
+						else if (check_dollar == 1)
+						{
+							//delete_quotes(content->cmd, i);
+							expand_dollar(content->cmd, i, data->env_list);
+						}
 					}
-					else if (check_dollar == 3)
-						delete_quotes(content->cmd, i);
-					else if (check_dollar == 2)
-					{
-						delete_quotes(content->cmd, i);
-						expand_exit_code(content->cmd, i);
-					}
-					else if (check_dollar == 1)
-					{
-						delete_quotes(content->cmd, i);
-						expand_dollar(content->cmd, i, data->env_list);
-					}
+					j++;
 				}
-				j++;
 			}
-			delete_quotes(content->cmd, i);
+			else
+				delete_quotes(content->cmd, i);
 			i++;
 		}
 		current = current->next;

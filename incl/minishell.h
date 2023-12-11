@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/08 14:19:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/11 11:28:45 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void expander(t_list **simple_cmds, t_data *data);
 void	free_lexer(t_list **lexer);
 void	free_simple_cmds(t_list **simple_cmds);
 void	free_data(t_data *data);
+int	free_envlist(t_list **head);
 
 // env.c
 int	env_init(char **envp, t_data *data);

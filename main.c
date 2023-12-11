@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/08 15:19:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/11 11:13:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,22 +114,22 @@ int main(int argc, char **argv, char *env[])
 		ft_putstr_fd("Correct usage: ./minishell\n\n", 2);
 		return (0);
 	}
-	env_init(env, &data);
 	while(1)
 	{
+		env_init(env, &data); //either init in every run or change the free function
 		data.prompt = set_prompt(env);
 		data.input = readline((const char *)data.prompt);
-		t_env *content_env = (t_env *) data.env_list->content;
-		printf("content env: %s\n", content_env->value);
 		if (!check_input_null(data.input))
 		{
 			null_input = 1;
-			free(data.input);
+			//free(data.input);
+			free_data(&data);
 			break ;
 		}
 		if (!check_quotes(data.input))
 		{
-			free(data.input);
+			//free(data.input);
+			free_data(&data);
 			continue ;
 		}
 		/* Split S*/
@@ -165,7 +165,7 @@ int main(int argc, char **argv, char *env[])
 		/* Parser - Link list E */
 		free_data(&data);
 	}
-	free(data.prompt); // needs to be here, bcs check_input skips the free_data function and the one thing that stays malloced is the prompt
+	//free(data.prompt); // needs to be here, bcs check_input skips the free_data function and the one thing that stays malloced is the prompt
 	if (null_input == 1)
 	{
 		printf("\nexit\n");
