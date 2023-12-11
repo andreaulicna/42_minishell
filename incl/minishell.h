@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/11 11:28:45 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/11 15:06:34 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,18 @@ typedef struct s_simple_cmds
 	t_list		*redirects;
 	t_builtins	builtin;
 }	t_simple_cmds;
+
+typedef	struct s_str
+{
+	char	*part_1;
+	char	*part_2;
+	char	*part_3;
+	char	*tmp_join;
+	char	*final;
+	t_list	*env_found;
+	t_env	*content;
+}	t_str;
+
 
 // main.c
 void	print_lexer(t_list **lexer);
