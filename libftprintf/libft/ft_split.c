@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 19:08:50 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/20 13:05:20 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/11/29 11:10:34 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,6 @@ char	**ft_split(char const *s, char c)
 		return (0);
 	}
 	ft_alloc_fill_arr(arr, s, c);
-	arr[num_wrds] = 0;
+	arr[num_wrds] = NULL;
 	return (arr);
 }

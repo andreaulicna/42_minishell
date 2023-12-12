@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
+#    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/15 13:02:34 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/23 19:28:54 by aulicna          ###   ########.fr        #
+#    Updated: 2023/12/12 17:16:15 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	ar rc $(NAME) $(OBJ)
+	@ar rc $(NAME) $(OBJ)
 
 .c.o:
 	@gcc $(CFLAGS) -c $< -o $@

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
+#    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 12:42:49 by aulicna           #+#    #+#              #
-#    Updated: 2023/11/23 19:29:22 by aulicna          ###   ########.fr        #
+#    Updated: 2023/12/12 17:15:55 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,11 +51,11 @@ ${NAME}: $(OBJ)
 	@$(GCC) $(CFLAGS) -c $< -o $@
 
 clean:
-	make clean -C $(LIBFT)
+	@make clean -C $(LIBFT)
 	@rm -f $(OBJ)
 
 fclean: clean
-	make fclean -C $(LIBFT)
+	@make fclean -C $(LIBFT)
 	@rm -f $(NAME)
 
 .PHONY: all clean fclean re
