@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:09:39 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/26 17:01:45 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:38:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../incl/minishell.h"
 
 /**
  * @brief	Retrieves the hostname of the system from 
@@ -36,6 +36,8 @@ static char	*get_hostname(void)
 	while (content[i] && content[i] != '.')
 		i++;
 	hostname = (char *) malloc(sizeof(char) * (i + 3));
+	if (!hostname)
+		exit_minishell(NULL, EXIT_MALLOC);
 	i = 0;
 	while (content[i] && content[i] != '.' && content[i] != '\n')
 	{
@@ -49,23 +51,25 @@ static char	*get_hostname(void)
 }
 /**
  * @brief	Extracts the username from the environment variable "USER" and
- * formats it as "username@". The "@" is added at the end of the username
- * to make it easier to construct the whole prompt in contruct_prompt(),
- * especially with regards to using ft_strjoin() repeatedly.
+ * formats it as "username@" using the env_find function. 
+ * 
+ * The "@" is added at the end of the username to make it easier to construct
+ * the whole prompt in contruct_prompt(), especially with regards to using
+ * ft_strjoin() repeatedly.
  *
  * @param	env 	array of environment variables
  * @return	char*	username formatted as "[username]@"
  */
 
-static char	*get_username(char *env[])
+static char	*get_username(t_list *env_list)
 {
-	int		i;
+	t_list	*username_env;
+	t_env	*username_content;
 	char	*username;
 
-	i = 0;
-	while (ft_strncmp("USER=", env[i], 5))
-		i++;
-	username = ft_strjoin(env[i] + 5, "@");
+	username_env = env_find(env_list, "USER");
+	username_content = (t_env *) username_env->content;
+	username = ft_strjoin(username_content->value, "@");
 	return (username);
 }
 
@@ -83,29 +87,23 @@ static char	*get_username(char *env[])
  * preamble that is replaced with ~]>$" or "[cwd in full path format]$
  */
 
-static char	*get_directory(char *env[])
+static char	*get_directory(t_list *env_list)
 {
-	int		i;
 	char	*cwd;
 	char	*home;
 	char	*directory;
-	char	*directory_final;
+	t_list	*cwd_env;
+	t_list	*home_env;
 
-	i = 0;
-	while (ft_strncmp("PWD=", env[i], 4))
-		i++;
-	cwd = env[i] + 4;
-	i = 0;
-	while (ft_strncmp("HOME=", env[i], 5))
-		i++;
-	home = env[i] + 5;
+	cwd_env = env_find(env_list, "PWD");
+	cwd = ((t_env *) cwd_env->content)->value;
+	home_env = env_find(env_list, "HOME");
+	home = ((t_env *) home_env->content)->value;
 	if (ft_strnstr(cwd, home, ft_strlen(cwd)) != NULL)
 		directory = ft_strjoin("~", cwd + ft_strlen(home));
 	else
 		directory = ft_strdup(cwd);
-	directory_final = ft_strjoin(directory, "$ ");
-	free(directory);
-	return (directory_final);
+	return (directory);
 }
 
 /**
@@ -143,16 +141,19 @@ static char	*construct_prompt(char *username, char *hostname, char *directory)
  * with ~]>$" or "[username]@[hostname]:[cwd in full path]>$"
  */
 
-char	*set_prompt(char *env[])
+char	*set_prompt(t_list *env_list)
 {
 	char	*hostname;
 	char	*prompt;
 	char	*username;
+	char	*directory_tmp;
 	char	*directory;
 
-	username = get_username(env);
+	username = get_username(env_list);
 	hostname = get_hostname();
-	directory = get_directory(env);
+	directory_tmp = get_directory(env_list);
+	directory = ft_strjoin(directory_tmp, "$ ");
+	free(directory_tmp);
 	prompt = construct_prompt(username, hostname, directory);
 	free(username);
 	free(hostname);
