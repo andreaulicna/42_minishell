@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:57:51 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:49:45 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	ft_cd_update(char *oldpwd, t_data *data)
 {
 	t_list	*oldpwd_env;
 	t_list	*pwd_env;
+	t_env	*content;
 	char	cwd[PATH_MAX];
 
 	getcwd(cwd, PATH_MAX);
@@ -25,25 +26,26 @@ void	ft_cd_update(char *oldpwd, t_data *data)
 		return ;
 	oldpwd_env = env_find(data->env_list, "OLDPWD");
 	pwd_env = env_find(data->env_list, "PWD");
-	free(oldpwd_env->content);
-	oldpwd_env->content = ft_strjoin("OLDPWD=", oldpwd);
-	free(pwd_env->content);
-	pwd_env->content = ft_strjoin("PWD=", cwd);
+	content = (t_env *) oldpwd_env->content;
+	free(content->value);
+	content->value = ft_strdup(oldpwd);
+	content = (t_env *) pwd_env->content;
+	free(content->value);
+	content->value = ft_strdup(cwd);
 }
 
 // ft_cd_getpath
 // - returns a pointer to a desired path stored in the env variables list;
-// - + len skips the variable key, + 1 skips the '=' sign;
-char	*ft_cd_getpath(char *path_name, size_t len, t_data *data)
+char	*ft_cd_getpath(char *path_name, t_data *data)
 {
 	t_list	*path_env;
-	char	*path;
+	t_env	*content;
 
 	path_env = env_find(data->env_list, path_name);
 	if (path_env == NULL)
 		return (NULL);
-	path = (char *)path_env->content;
-	return (path + len + 1);
+	content = (t_env *) path_env->content;
+	return (content->value);
 }
 
 // ft_cd_home
@@ -52,7 +54,7 @@ int	ft_cd_home(char *oldpwd, t_data *data)
 {
 	int	ret;
 
-	ret = chdir(ft_cd_getpath("HOME", 4, data));
+	ret = chdir(ft_cd_getpath("HOME", data));
 	if (ret != 0)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 	else
@@ -66,7 +68,7 @@ int	ft_cd_previous(char *oldpwd, t_data *data)
 {
 	int	ret;
 
-	ret = chdir(ft_cd_getpath("OLDPWD", 6, data)) != 0;
+	ret = chdir(ft_cd_getpath("OLDPWD", data)) != 0;
 	if (ret != 0)
 		ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
 	else
@@ -85,25 +87,22 @@ int	ft_cd(char **args, t_data *data)
 
 	if (strs_count(args) > 2)
 	{
-		perror("too many arguments");
+		ft_putendl_fd("minishell: cd: too many arguments", STDERR);
 		return (1);
 	}
 	getcwd(cwd, PATH_MAX);
 	if (args[1] == NULL)
-		ret = ft_cd_home(cwd, data);
-	else if (args[1] && ft_strncmp(args[1], "-", 1))
-		ret = ft_cd_previous(cwd, data);
-	else
+		return (ft_cd_home(cwd, data));
+	else if (args[1] && !ft_strncmp(args[1], "-", 1))
+		return (ft_cd_previous(cwd, data));
+	ret = chdir(args[1]);
+	if (ret != 0)
 	{
-		ret = chdir(args[1]);
-		if (ret != 0)
-		{
-			ft_putstr_fd("minishell: cd: ", STDERR);
-			ft_putstr_fd(args[1], STDERR);
-			ft_putendl_fd(": No such file or directory", STDERR);
-		}
-		else
-			ft_cd_update(cwd, data);
+		ft_putstr_fd("minishell: cd: ", STDERR);
+		ft_putstr_fd(args[1], STDERR);
+		ft_putendl_fd(": No such file or directory", STDERR);
 	}
+	else
+		ft_cd_update(cwd, data);
 	return (ret);
 }

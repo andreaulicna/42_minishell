@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 16:26:04 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:59:13 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:07:28 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 int	ft_unset(char **args, t_data *data)
 {
 	int	i;
-	
+
 	if (strs_count(args) == 1)
 		return (0);
 	i = 1;

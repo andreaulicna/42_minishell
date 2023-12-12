@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 14:56:22 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:34:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define STDIN	0
 # define STDOUT	1
 # define STDERR	2
+
+# define EXIT_MALLOC	4
 
 // IMPORT FUNCTIONS
 # include <stdio.h>      // For printf, perror
@@ -43,7 +45,6 @@
 # include "../lib/ft_printf.h"
 
 // STRUCTS
-
 typedef struct	s_data
 {
 	t_list		*env_list;
@@ -67,7 +68,7 @@ int		ft_echo(char **args);
 int		ft_pwd(void);
 int		ft_env(t_data *data);
 int		ft_cd(char **args, t_data *data);
-char	*ft_cd_getpath(char *path_name, size_t len, t_data *data);
+char	*ft_cd_getpath(char *path_name, t_data *data);
 void	ft_cd_update(char *oldpwd, t_data *data);
 int		ft_cd_home(char *oldpwd, t_data *data);
 int		ft_cd_previous(char *oldpwd, t_data *data);

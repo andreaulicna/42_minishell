@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:02:24 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:58:44 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:09:10 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ int	ft_pwd(void)
 		ft_putendl_fd(cwd, STDOUT);
 	else
 		return (1);
-    return (0);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:26:16 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:58:22 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:08:17 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_exit(char **args, t_data *data)
 {
 	int	exit_status;
 
-	exit_status = 0;	
+	exit_status = 0;
 	ft_putendl_fd("exit", STDERR);
 	if (args[2] != NULL)
 	{

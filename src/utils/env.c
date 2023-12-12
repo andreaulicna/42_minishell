@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:59:21 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:06:37 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ int	env_add(t_list **head, char *env_var)
 		equal_pos++;
 	env = malloc(sizeof(t_env));
 	if (!env)
-		return (1);
+		exit_minishell(NULL, EXIT_MALLOC);
 	env->full_string = ft_strdup(env_var);
 	env->name = ft_substr(env_var, 0, equal_pos);
 	if (env_var[equal_pos] == '=')
 		env->value = ft_strdup(env_var + equal_pos + 1);
 	else
-		env->value = NULL;	
+		env->value = NULL;
 	new_var = ft_lstnew(env);
 	ft_lstadd_back(head, new_var);
 	return (0);
@@ -77,7 +77,7 @@ t_list	**env_remove(t_list **head, char *variable_key)
 	t_list	*var_before;
 	t_list	*var_after;
 	t_env	*content;
-	
+
 	var_to_remove = env_find(*head, variable_key);
 	if (var_to_remove == NULL)
 		return (head);

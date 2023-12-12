@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:59:33 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:07:37 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	free_envlist(t_list **head)
 	t_env	*env;
 
 	current = *head;
-	while (current != NULL) 
+	while (current != NULL)
 	{
 		next = current->next;
 		env = (t_env *) current->content;

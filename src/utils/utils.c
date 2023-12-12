@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 11:48:52 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:59:40 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:07:11 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,10 @@
 // init_data
 // - initializes data struct;
 // - first call of exit_minishell initializes static pointer to data struct;
-int		init_data(t_data *data, char **envp)
+int	init_data(t_data *data, char **envp)
 {
 	env_init(envp, data);
 	exit_minishell(data, 0);
-	//parser_init;
-	//lexer_init;
 	return (0);
 }
 
