@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/06 15:01:35 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:21:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,12 @@ int	env_add(t_list **head, char *env_var)
 // - finds a variable in the local environment variables list;
 t_list	*env_find(t_list *head, char *variable_key)
 {
+	t_env	*content;
+
 	if (head == NULL)
 		return (NULL);
-	if (ft_strncmp(head->content, variable_key, ft_strlen(variable_key)) == 0)
+	content = head->content;
+	if (ft_strncmp(content->name, variable_key, ft_strlen(variable_key)) == 0)
 		return (head);
 	return (env_find(head->next, variable_key));
 }
@@ -70,17 +73,16 @@ t_list	*env_find(t_list *head, char *variable_key)
 // - removes a variable from the local envrionment variables list;
 t_list	**env_remove(t_list **head, char *variable_key)
 {
-	t_list *var_to_remove;
-	t_list *var_before;
-	t_list *var_after;
+	t_list	*var_to_remove;
+	t_list	*var_before;
+	t_list	*var_after;
+	t_env	*content;
 	
 	var_to_remove = env_find(*head, variable_key);
 	if (var_to_remove == NULL)
 		return (head);
 	if (var_to_remove == *head)
-	{
 		*head = (*head)->next;
-	}
 	else
 	{
 		var_before = *head;
@@ -89,6 +91,10 @@ t_list	**env_remove(t_list **head, char *variable_key)
 		var_after = var_to_remove->next;
 		var_before->next = var_after;
 	}
+	content = (t_env *) var_to_remove->content;
+	free(content->full_string);
+	free(content->name);
+	free(content->value);
 	free(var_to_remove->content);
 	free(var_to_remove);
 	return (head);
