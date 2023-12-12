@@ -6,11 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:34:21 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:58:37 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../incl/minishell.h"
 
 // ft_export_format
 // - formats and prints all strings in 2D array akin to the export bash builtin;

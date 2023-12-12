@@ -6,11 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:24:31 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:26:30 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:58:14 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../incl/minishell.h"
 
 // ft_env
 // - prints the list of environment variables;

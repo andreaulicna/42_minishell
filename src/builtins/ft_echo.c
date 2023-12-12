@@ -6,11 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/06 10:53:36 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:58:08 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../incl/minishell.h"
 
 // ft_echo
 // - simulates the bash builtin 'echo';

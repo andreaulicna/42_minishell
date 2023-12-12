@@ -6,11 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 16:26:04 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 10:29:02 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:59:13 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../incl/minishell.h"
 
 // ft_unset
 // - removes a variable from the environment variable linked list;

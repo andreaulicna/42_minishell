@@ -6,27 +6,27 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/12/06 10:51:05 by vbartos          ###   ########.fr        #
+#    Updated: 2023/12/12 11:00:15 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = main/minishell.c\
-		main/free.c\
-		main/utils.c\
-		main/env.c\
-		builtins/ft_echo.c\
-		builtins/ft_pwd.c\
-		builtins/ft_env.c\
-		builtins/ft_cd.c\
-		builtins/ft_export.c\
-		builtins/ft_unset.c\
-		builtins/ft_exit.c
+SRC = src/minishell.c\
+		src/utils/free.c\
+		src/utils/utils.c\
+		src/utils/env.c\
+		src/builtins/ft_echo.c\
+		src/builtins/ft_pwd.c\
+		src/builtins/ft_env.c\
+		src/builtins/ft_cd.c\
+		src/builtins/ft_export.c\
+		src/builtins/ft_unset.c\
+		src/builtins/ft_exit.c
 
 OBJ = $(SRC:.c=.o)
 
-HEADER = inc/minishell.h
+HEADER = incl/minishell.h
 
 CFLAGS = -Wall -Werror -Wextra -g
 

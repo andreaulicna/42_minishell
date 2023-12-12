@@ -6,11 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 11:48:52 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/05 18:41:33 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:59:40 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../incl/minishell.h"
 
 // init_data
 // - initializes data struct;
