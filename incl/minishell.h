@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 12:21:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 13:45:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,23 +93,22 @@ void	print_simple_cmds(t_list **simple_cmds);
 int		error_handler(int code);
 int		error_parser_double_token(t_tokens token);
 
+/* Exit */
+// free.c
+void	free_data(t_data *data);
+// free_helpers.c
+int		free_array(char **strs);
+void	free_lexer(t_list **lexer);
+void	free_simple_cmds(t_list **simple_cmds);
+int		free_envlist(t_list **head);
+void	free_struct_str(t_str *str);
+
 /* Expander */
 // expander.c
 void	expander(t_data *data);
 void	init_struct_str(t_str *str);
-void	free_struct_str(t_str *str);
 // expander_dollar.c
 void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
-
-/* Free */
-// free_a.c
-void	free_lexer(t_list **lexer);
-void	free_simple_cmds(t_list **simple_cmds);
-// free_v.c
-int		free_array(char **strs);
-void	free_data(t_data *data);
-int		free_envlist(t_list **head);
-void	exit_minishell(t_data *data, int exit_status);
 
 /* Lexer */
 // ft_split_minishell.c
