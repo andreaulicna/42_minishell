@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   error_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:03:25 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 11:04:36 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:59:28 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../../incl/minishell.h"
 
-// needs updating later
 /**
+ * WARNING: NEEDS UPDATING LATER
+ * 
  * @brief 	Handles syntax error according to the error code sent.
  * 
  * @param	code	integer representing the error code

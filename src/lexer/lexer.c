@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/06 11:46:24 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:38:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../../incl/minishell.h"
 
 /**
  * @brief	Identifies a token from a given string.
@@ -94,6 +94,8 @@ t_list	*input_arr_to_lexer_list(char **input_split)
 	while (input_split[i])
 	{
 		content = malloc(sizeof(t_lexer));
+		if (!content)
+			exit_minishell(NULL, EXIT_MALLOC);
 		content->id = i;
 		if (is_token(input_split[i]))
 			assign_token(content, is_token(input_split[i]));

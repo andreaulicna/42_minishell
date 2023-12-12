@@ -6,25 +6,27 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/12/11 22:25:22 by aulicna          ###   ########.fr        #
+#    Updated: 2023/12/12 12:03:12 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = main.c \
-						prompt.c \
-						input.c \
-						ft_split_minishell.c \
-						quotes.c \
-						lexer.c \
-						parser.c \
-						parser_redirects.c \
-						error.c \
-						expander.c \
-						free.c \
-						env.c \
-						expander_dollar.c
+SRC = main_a.c \
+						src/debug/print.c \
+						src/error/error_token.c \
+						src/expander/expander.c \
+						src/expander/expander_dollar.c \
+						src/free/free_a.c \
+						src/free/free_v.c \
+						src/lexer/ft_split_minishell.c \
+						src/lexer/lexer.c \
+						src/parser/parser_redirects.c \
+						src/parser/parser.c \
+						src/env.c \
+						src/init.c \
+						src/prompt.c \
+						src/quotes.c
 
 OBJ = $(SRC:.c=.o)
 

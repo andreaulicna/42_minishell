@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/07 16:29:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:38:42 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../../incl/minishell.h"
 
 /**
  * @brief	Gets the length of a command within the lexer list. Everything up
@@ -106,6 +106,8 @@ void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
 	cmd = ft_calloc(cmd_len + 1, sizeof(char *));
 	create_cmd(lexer, cmd, cmd_len);
 	content_cmd = malloc(sizeof(t_lexer));
+	if (!content_cmd)
+		exit_minishell(NULL, EXIT_MALLOC);
 	content_cmd->cmd = cmd;
 	content_cmd->redirects = redirects;
 	node_simple_cmds = ft_lstnew(content_cmd);

@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:59:11 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/07 16:28:55 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:39:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../../incl/minishell.h"
 
 /**
  * @brief	Frees a node from the lexer list based on the provided ID.
@@ -71,6 +71,8 @@ void	move_redirect_to_redirects_list(t_list **lexer, t_list *node,
 	node_move = node;
 	content_move = (t_lexer *) node_move->content;
 	content_new = malloc(sizeof(t_lexer));
+	if (!content_new)
+		exit_minishell(NULL, EXIT_MALLOC);
 	content_new->id = content_move->id;
 	content_new->token = content_move->token;
 	content_move_word = (t_lexer *) node_move->next->content;

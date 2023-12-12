@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/11 11:00:10 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:06:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../incl/minishell.h"
 
 // env_init
 // - initialize all environment variables into a linked list;

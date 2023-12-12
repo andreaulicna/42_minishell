@@ -6,54 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/11 22:29:07 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 10:59:51 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
-
-/**
- * @brief 	Initializes the t_str structure with NULL values. 
- * 
- * The main purpose is to avoid conditional jumps based on an uninitialized
- * variable and allow for an easy way of checking whether a particular variable
- * in the struct needs to be freed.
- * 
- * @param	str	pointer to the t_str structure to be initialized
- */
-
-void	init_struct_str(t_str *str)
-{
-	str->part_1 = NULL;
-	str->part_2 = NULL;
-	str->part_3 = NULL;
-	str->tmp_join = NULL;
-	str->final = NULL;
-	str->env_found = NULL;
-	str->content = NULL;
-}
-
-/**
- * @brief 	Frees memory of the dynamically allocated variables
- * in the t_str structure.
- * 
- * The t_str structure is used when a new string needs to be constructed based
- * on the expander rules relating to the dollar sign, $, symbol.
- * 
- * @param	str	pointer to the t_str structure to be freed
- */
-
-void	free_struct_str(t_str *str)
-{
-	if (str->part_1)
-		free(str->part_1);
-	if (str->part_2)
-		free(str->part_2);
-	if (str->part_3)
-		free(str->part_3);
-	if (str->tmp_join)
-		free(str->tmp_join);
-}
+#include "../../incl/minishell.h"
 
 /**
  * @brief 	Checks if a string contains a dollar sign.

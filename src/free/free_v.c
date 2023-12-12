@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   free_v.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/11 11:28:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:00:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../../incl/minishell.h"
 
 // free_array
 // - frees a dynamically allocated 2D array;
@@ -63,49 +63,6 @@ int	free_envlist(t_list **head)
 // 	free(env);
 // 	env = NULL;
 // }
-
-void	free_lexer(t_list **lexer)
-{
-	t_list	*tmp;
-	t_lexer	*content;
-
-	if (!*lexer)
-		return ;
-	while (*lexer)
-	{
-		tmp = (*lexer)->next;
-		content = (t_lexer *) (*lexer)->content;
-		if (content->word)
-			free(content->word);
-		free(content);
-		free(*lexer);
-		*lexer = tmp;
-	}
-	lexer = NULL;
-}
-
-
-void	free_simple_cmds(t_list **simple_cmds)
-{
-	t_simple_cmds *content;
-	t_list	*free_redirects;
-	t_list	*tmp;
-
-	if (!simple_cmds)
-		return ;
-	while (*simple_cmds)
-	{
-		tmp = (*simple_cmds)->next;
-		content = (t_simple_cmds *) (*simple_cmds)->content;
-		free_redirects = content->redirects;
-		free_lexer(&free_redirects);
-		free_array(content->cmd);
-		free(content);
-		free(*simple_cmds);
-		*simple_cmds = tmp;
-	}
-	simple_cmds = NULL;
-}
 
 // free_data
 // - frees the entire data struct;

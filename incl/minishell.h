@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/11 22:29:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:21:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,24 @@
 # define MINISHELL_H
 
 # include "../libftprintf/ft_printf.h"
-# include <stdio.h>      // For printf, perror
-# include <stdlib.h>     // For malloc, free, exit, getenv
-# include <unistd.h>     // For read, write, access, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname, ttyslot
-# include <fcntl.h>      // For open
-# include <sys/wait.h>   // For wait, waitpid, wait3, wait4
-# include <signal.h>     // For signal, sigaction, sigemptyset, sigaddset, kill
-# include <sys/stat.h>   // For stat, lstat, fstat
-# include <termios.h>    // For tcsetattr, tcgetattr
-# include <dirent.h>     // For opendir, readdir, closedir
-# include <string.h>     // For strerror
-# include <sys/ioctl.h>  // For ioctl
-# include <curses.h>     // For tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
+# include <stdio.h>      // printf, perror
+# include <stdlib.h>     // malloc, free, exit, getenv
+# include <unistd.h>     // access, fork, getcwd, chdir, execve, dup(2), pipe
+# include <fcntl.h>      // open
+# include <sys/wait.h>   // wait, waitpid, wait3, wait4
+# include <signal.h>     // signal, sigaction, sigemptyset, sigaddset, kill
+# include <sys/stat.h>   // stat, lstat, fstat
+# include <termios.h>    // tcsetattr, tcgetattr
+# include <dirent.h>     // opendir, readdir, closedir
+# include <string.h>     // strerror
+# include <sys/ioctl.h>  // ioctl
+# include <curses.h>     // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 # include <readline/readline.h> // For readline-related functions
 # include <readline/history.h>	// For readline-related functions
 
-typedef struct	s_data
+# define EXIT_MALLOC 4
+
+typedef struct s_data
 {
 	t_list	*env_list;
 	t_list	*lexer;
@@ -39,7 +41,7 @@ typedef struct	s_data
 	char	**input_split;
 }				t_data;
 
-typedef struct	s_env
+typedef struct s_env
 {
 	char		*name;
 	char		*value;
@@ -55,17 +57,6 @@ typedef enum s_tokens
 	GREATER_2,
 }	t_tokens;
 
-typedef enum s_builtins
-{
-	B_ECHO = 1,
-	B_CD,
-	B_PWD,
-	B_EXPORT,
-	B_UNSET,
-	B_ENV,
-	B_EXIT,
-}	t_builtins;
-
 typedef struct s_lexer
 {
 	int			id;
@@ -77,10 +68,9 @@ typedef struct s_simple_cmds
 {
 	char		**cmd;
 	t_list		*redirects;
-	t_builtins	builtin;
 }	t_simple_cmds;
 
-typedef	struct s_str
+typedef struct s_str
 {
 	char	*part_1;
 	char	*part_2;
@@ -91,55 +81,65 @@ typedef	struct s_str
 	t_env	*content;
 }	t_str;
 
+/* SOURCES */
 
-// main.c
+/* Debug */
+// print.c
 void	print_lexer(t_list **lexer);
+void	print_simple_cmds(t_list **simple_cmds);
 
-// prompt.c
-char	*set_prompt(char *env[]);
-
-// input.c
-int		check_quotes(char *input);
-
-// ft_split_minishell.c
-char	**ft_split_minishell(char const *s, char c);
-
-// quotes.c
-void	delete_quotes(char **cmd, int i_cmd);
-void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
-int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
-
-// lexer.c
-t_list	*input_arr_to_lexer_list(char **input_split);
-
-// parser.c
-t_list	*lexer_to_simple_cmds(t_list **lexer);
-
-// parser_redirects.c
-void	separate_redirects(t_list **lexer, t_list **redirects);
-void	free_lexer_node(t_list **lexer, int id);
-
+/* Error */
 // error.c
 int		error_handler(int code);
 int		error_parser_double_token(t_tokens token);
 
+/* Expander */
 // expander.c
-void expander(t_data *data);
+void	expander(t_data *data);
 void	init_struct_str(t_str *str);
 void	free_struct_str(t_str *str);
-
 // expander_dollar.c
 void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
 
-// free.c
+/* Free */
+// free_a.c
 void	free_lexer(t_list **lexer);
 void	free_simple_cmds(t_list **simple_cmds);
+// free_v.c
+int		free_array(char **strs);
 void	free_data(t_data *data);
-int	free_envlist(t_list **head);
+int		free_envlist(t_list **head);
+void	exit_minishell(t_data *data, int exit_status);
+
+/* Lexer */
+// ft_split_minishell.c
+char	**ft_split_minishell(char const *s, char c);
+// lexer.c
+t_list	*input_arr_to_lexer_list(char **input_split);
+
+/* Parser */
+// parser.c
+t_list	*lexer_to_simple_cmds(t_list **lexer);
+// parser_redirects.c
+void	separate_redirects(t_list **lexer, t_list **redirects);
+void	free_lexer_node(t_list **lexer, int id);
 
 // env.c
-int	env_init(char **envp, t_data *data);
+int		env_init(char **envp, t_data *data);
 t_list	*env_find(t_list *head, char *variable_key);
-int	env_add(t_list **head, char *env_var);
+int		env_add(t_list **head, char *env_var);
+
+// init.c
+void	init_data(t_data *data);
+void	init_struct_str(t_str *str);
+
+// prompt.c
+char	*set_prompt(t_list *env_list);
+
+// quotes.c
+int		check_quotes(char *input);
+void	delete_quotes(char **cmd, int i_cmd);
+void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
+int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 #endif

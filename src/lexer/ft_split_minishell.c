@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 19:23:37 by aulicna           #+#    #+#             */
-/*   Updated: 2023/11/28 12:51:35 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:36:29 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/minishell.h"
+#include "../../incl/minishell.h"
 
 /**
  * @brief	Checks whether a character is a separator or a null terminator.
@@ -85,6 +85,8 @@ static char	*ft_fill_arr(char const *s, unsigned int start,
 	char			*sub_arr;
 
 	sub_arr = (char *) malloc(sizeof(char) * (end - start + 1));
+	if (!sub_arr)
+		return (NULL);
 	i = 0;
 	while (start < end && s[i])
 	{

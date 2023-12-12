@@ -1,29 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_a.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/11 21:09:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/12 12:04:40 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incl/minishell.h"
-
-void	free_arr(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
 
 int	check_input_null(char *input)
 {
@@ -32,69 +19,6 @@ int	check_input_null(char *input)
 	else
 		add_history(input);
 	return (1);
-}
-
-void	print_lexer(t_list **lexer)
-{
-	t_lexer	*content;
-	t_list *current;
-	
-	current = *lexer;
-	while (current != NULL)
-	{
-		content = (t_lexer *) (current->content);
-		if (content->token)
-			ft_printf("token: %d\n", content->token);
-		else
-			ft_printf("word: %s\n", content->word);
-		current = current->next;
-	}
-}
-
-void	print_simple_cmds(t_list **simple_cmds)
-{
-	t_list	*current;
-	t_simple_cmds *content_simple_cmds;
-	t_lexer *content_redirects;
-	t_list	*current_redirect;
-	int	i;
-	int	order;
-
-	current = *simple_cmds;
-	order = 0;
-	while (current)
-	{
-		printf("%s %d\n", "SIMPLE CMDS", order);
-		content_simple_cmds = (t_simple_cmds *) current->content;
-		current_redirect = content_simple_cmds->redirects;
-		printf("\n***Cmds***\n");
-		i = 0;
-		while (content_simple_cmds->cmd[i])
-		{
-			printf("%s\n", content_simple_cmds->cmd[i]);
-			i++;
-		}
-		printf("\n***Redirects***\n");
-		while (current_redirect)
-		{
-			content_redirects = (t_lexer *) current_redirect->content;
-			printf("Redirect token: %d\n", content_redirects->token);
-			printf("Redirect word: %s\n", content_redirects->word);
-			current_redirect = current_redirect->next;
-		}
-		current = current->next;
-		order++;
-	}
-}
-
-void	init_data(t_data *data)
-{
-	data->env_list = NULL;
-	data->lexer = NULL;
-	data->simple_cmds = NULL;
-	data->prompt = NULL;
-	data->input = NULL;
-	data->input_split = NULL;
 }
 
 int main(int argc, char **argv, char *env[])
@@ -117,7 +41,7 @@ int main(int argc, char **argv, char *env[])
 	while(1)
 	{
 		env_init(env, &data); //either init in every run or change the free function
-		data.prompt = set_prompt(env);
+		data.prompt = set_prompt(data.env_list);
 		data.input = readline((const char *)data.prompt);
 		if (!check_input_null(data.input))
 		{
