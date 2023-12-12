@@ -6,14 +6,15 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 08:49:17 by vbartos           #+#    #+#              #
-#    Updated: 2023/12/12 11:00:15 by vbartos          ###   ########.fr        #
+#    Updated: 2023/12/12 15:27:29 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = src/minishell.c\
-		src/utils/free.c\
+SRC = src/debug/test-v1.c\
+		src/exit/exit.c\
+		src/exit/free.c\
 		src/utils/utils.c\
 		src/utils/env.c\
 		src/builtins/ft_echo.c\
