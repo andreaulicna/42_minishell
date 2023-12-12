@@ -2,6 +2,7 @@
 This project is about recreating our own version of bash with limited functionality.
 A miniature shell :).
 
+<<<<<<< HEAD
 ## Progress
 - Display a promt while waiting for a new commmand.
 - Have a working history.
@@ -24,6 +25,18 @@ A miniature shell :).
 	- unset (no flags).
 	- env (no flags or arguments).
 	- exit (no flags).
+=======
+## Valgrind
+```valgrind -s --leak-check=full --show-reachable=yes --error-limit=no --suppressions=minishell.supp ./minishell```
+
+- ```-s```: same as --show-errpr-list=yes that shows detected errors list and suppression count at exit
+- ```--leak-check=full```: shows a full list of memory leaks
+- ```--show-reachable=yes```: same as ```--show-leak-kinds=all``` that shows all kinds of memory leaks
+- ```--error-limit=no```: won't stop showing errors if too many
+- ```--suppressions=minishell.supp```: suppresses memory leaks from in-built functions (readline and add_history)
+
+## Git 
+>>>>>>> main
 
 ## Useful stuff
 ### Git 

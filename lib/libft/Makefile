@@ -3,10 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
+<<<<<<< HEAD:lib/libft/Makefile
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/15 13:02:34 by aulicna           #+#    #+#              #
 #    Updated: 2023/11/27 11:13:44 by vbartos          ###   ########.fr        #
+=======
+#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/01/15 13:02:34 by aulicna           #+#    #+#              #
+#    Updated: 2023/11/23 19:28:54 by aulicna          ###   ########.fr        #
+>>>>>>> main:libftprintf/libft/Makefile
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +73,7 @@ OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
 OBJ_GNL = $(SRC_GNL:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 
