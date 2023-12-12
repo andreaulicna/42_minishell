@@ -3,60 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/12/12 12:34:57 by vbartos          ###   ########.fr       */
-=======
-/*   Updated: 2023/12/12 13:45:13 by aulicna          ###   ########.fr       */
->>>>>>> main
+/*   Updated: 2023/12/12 17:19:19 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-<<<<<<< HEAD
-# define PROMPT "minishell$ "
-
-# define STDIN	0
-# define STDOUT	1
-# define STDERR	2
-
-# define EXIT_MALLOC	4
-
-// IMPORT FUNCTIONS
-# include <stdio.h>      // For printf, perror
-# include <stdlib.h>     // For malloc, free, exit, getenv
-# include <unistd.h>     // For read, write, access, close, fork, getcwd, chdir, execve, dup, dup2, pipe, isatty, ttyname, ttyslot
-# include <fcntl.h>      // For open
-# include <sys/wait.h>   // For wait, waitpid, wait3, wait4
-# include <signal.h>     // For signal, sigaction, sigemptyset, sigaddset, kill
-# include <sys/stat.h>   // For stat, lstat, fstat
-# include <termios.h>    // For tcsetattr, tcgetattr
-# include <dirent.h>     // For opendir, readdir, closedir
-# include <string.h>     // For strerror
-# include <sys/ioctl.h>  // For ioctl
-# include <curses.h>     // For tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-# include <readline/readline.h> // For readline-related functions
-# include <readline/history.h>	// For readline-related functions
-
-// IMPORT MACROS
-// # include <limits.h> 	// For PATH_MAX
-# include <sys/param.h> // For PATH_MAX (different systems)
-
-// IMPORT CUSTOM LIBRARIES
-# include "../lib/ft_printf.h"
-
-// STRUCTS
-typedef struct	s_data
-{
-	t_list		*env_list;
-}				t_data;
-
-typedef struct	s_env
-=======
 # include "../libftprintf/ft_printf.h"
 # include <stdio.h>      // printf, perror
 # include <stdlib.h>     // malloc, free, exit, getenv
@@ -73,6 +29,10 @@ typedef struct	s_env
 # include <readline/readline.h> // For readline-related functions
 # include <readline/history.h>	// For readline-related functions
 
+# define STDIN	0
+# define STDOUT	1
+# define STDERR	2
+
 # define EXIT_MALLOC 4
 
 typedef struct s_data
@@ -86,48 +46,12 @@ typedef struct s_data
 }				t_data;
 
 typedef struct s_env
->>>>>>> main
 {
 	char		*name;
 	char		*value;
 	char		*full_string;
 }				t_env;
 
-<<<<<<< HEAD
-// ENVIRONMENT
-int		env_init(char **envp, t_data *data);
-int		env_add(t_list **head, char *env_var);
-t_list	*env_find(t_list *head, char *variable_key);
-t_list	**env_remove(t_list **head, char *variable_key);
-
-// BUILTINS
-int		ft_echo(char **args);
-int		ft_pwd(void);
-int		ft_env(t_data *data);
-int		ft_cd(char **args, t_data *data);
-char	*ft_cd_getpath(char *path_name, t_data *data);
-void	ft_cd_update(char *oldpwd, t_data *data);
-int		ft_cd_home(char *oldpwd, t_data *data);
-int		ft_cd_previous(char *oldpwd, t_data *data);
-int		ft_export(char **args, t_data *data);
-void	ft_export_list(t_data *data);
-void	ft_export_sort(char **env_arr);
-void	ft_export_format(char *env_var);
-int		ft_unset(char **args, t_data *data);
-void	ft_exit(char **args, t_data *data);
-int		ft_exit_checknum(char *str);
-
-// UTILS
-int		init_data(t_data *data, char **envp);
-size_t	strs_count(char **strs);
-void	exit_minishell(t_data *data, int exit_status);
-
-// FREES
-void	free_data(t_data *data);
-int		free_envlist(t_list **head);
-int		free_array(char **strs);
-
-=======
 typedef enum s_tokens
 {
 	PIPE = 1,
@@ -174,6 +98,8 @@ int		error_handler(int code);
 int		error_parser_double_token(t_tokens token);
 
 /* Exit */
+// exit.c
+void	exit_minishell(t_data *data, int exit_status);
 // free.c
 void	free_data(t_data *data);
 // free_helpers.c
@@ -207,6 +133,8 @@ void	free_lexer_node(t_list **lexer, int id);
 int		env_init(char **envp, t_data *data);
 t_list	*env_find(t_list *head, char *variable_key);
 int		env_add(t_list **head, char *env_var);
+t_list	**env_remove(t_list **head, char *variable_key);
+size_t	strs_count(char **strs);
 
 // init.c
 void	init_data(t_data *data);
@@ -220,6 +148,22 @@ int		check_quotes(char *input);
 void	delete_quotes(char **cmd, int i_cmd);
 void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
 int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
->>>>>>> main
+
+/* Builtins */
+int		ft_echo(char **args);
+int		ft_pwd(void);
+int		ft_env(t_data *data);
+int		ft_cd(char **args, t_data *data);
+char	*ft_cd_getpath(char *path_name, t_data *data);
+void	ft_cd_update(char *oldpwd, t_data *data);
+int		ft_cd_home(char *oldpwd, t_data *data);
+int		ft_cd_previous(char *oldpwd, t_data *data);
+int		ft_export(char **args, t_data *data);
+void	ft_export_list(t_data *data);
+void	ft_export_sort(char **env_arr);
+void	ft_export_format(char *env_var);
+int		ft_unset(char **args, t_data *data);
+void	ft_exit(char **args, t_data *data);
+int		ft_exit_checknum(char *str);
 
 #endif

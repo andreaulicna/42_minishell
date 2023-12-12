@@ -6,11 +6,7 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 12:42:49 by aulicna           #+#    #+#              #
-<<<<<<< HEAD:lib/Makefile
-#    Updated: 2023/11/27 11:13:57 by vbartos          ###   ########.fr        #
-=======
-#    Updated: 2023/11/23 19:29:22 by aulicna          ###   ########.fr        #
->>>>>>> main:libftprintf/Makefile
+#    Updated: 2023/12/12 17:15:55 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
