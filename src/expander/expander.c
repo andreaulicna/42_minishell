@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 10:59:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/13 22:14:51 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
  * @param	str	input string to be checked
  * @return	int	returns 1 if the string contains a dollar sign; 0 otherwise
  */
-
 int	contains_dollar(char *str)
 {
 	int	i;
@@ -31,6 +30,67 @@ int	contains_dollar(char *str)
 		i++;
 	}
 	return (0);
+}
+
+/**
+ * @brief	Expands dollar signs in a command string based on specific
+ * conditions.
+ * 
+ * This function iterates through a command string 'content->cmd[i]', determines
+ * whether or not to expand a dollar sign based on the predefined conditions
+ * represented by the checker_dollar function and does so where appropriate.
+ * 
+ * @param	content		pointer to t_simple_cmds struct
+ * @param	i			index of the command string in the array to process
+ * @param	env_list	linked list containing environment variables
+ */
+void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list)
+{
+	int	j;
+	int	dollar_flag;
+
+	j = 0;
+	while (content->cmd[i][j])
+	{
+		if (content->cmd[i][j] == '$')
+		{
+			dollar_flag = checker_dollar(content->cmd[i], j);
+			delete_quotes(content->cmd, i);
+			if (dollar_flag == 5)
+				break ;
+			else if (dollar_flag == 3)
+				delete_backslash(content->cmd, i);
+			else if (dollar_flag == 1)
+				expand_exit_code(content->cmd, i);
+			else if (dollar_flag == 0)
+				expand_dollar(content->cmd, i, env_list);
+		}
+		j++;
+	}
+}
+
+/**
+ * @brief	Handles a string that doesn't contain a dollar signs.
+ * 
+ * First, quotes from the command string 'content->cmd[i]' are deleted. Then
+ * the function iterates through the string and deletes any backslash
+ * encountered.
+ * 
+ * @param	content		pointer to t_simple_cmds struct
+ * @param	i			index of the command string in the array to process
+ */
+void	expander_loop_no_dollar(t_simple_cmds *content, int i)
+{
+	int	j;
+
+	delete_quotes(content->cmd, i);
+	j = 0;
+	while (content->cmd[i][j])
+	{
+		if (content->cmd[i][j] == '\\')
+			delete_backslash(content->cmd, i);
+		j++;
+	}
 }
 
 /**
@@ -47,7 +107,6 @@ int	contains_dollar(char *str)
  *  
  * @param	data	pointer to the t_data structure containing
  */
-
 void	expander(t_data *data)
 {
 	t_list			*current;
@@ -64,7 +123,7 @@ void	expander(t_data *data)
 			if (contains_dollar(content->cmd[i]))
 				expander_loop_dollar(content, i, data->env_list);
 			else
-				delete_quotes(content->cmd, i);
+				expander_loop_no_dollar(content, i);
 			i++;
 		}
 		current = current->next;

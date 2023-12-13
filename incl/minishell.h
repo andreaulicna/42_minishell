@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 16:43:24 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/13 21:44:06 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,11 @@ void	free_struct_str(t_str *str);
 /* Expander */
 // expander.c
 void	expander(t_data *data);
-void	init_struct_str(t_str *str);
 // expander_dollar.c
-void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
-
+int		checker_dollar(char *str, int j);
+void	expand_exit_code(char **cmd, int i_cmd);
+void	expand_dollar(char **cmd, int i_cmd, t_list *env_list);
+void	delete_backslash(char **cmd, int i_cmd);
 /* Lexer */
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
