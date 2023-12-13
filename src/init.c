@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 12:06:21 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:53:00 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:40:45 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	init_data(t_data *data)
 	data->prompt = NULL;
 	data->input = NULL;
 	data->input_split = NULL;
+	exit_minishell(data, 0);
 }
 
 /**

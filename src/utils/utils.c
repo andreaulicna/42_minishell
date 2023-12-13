@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 11:48:52 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 15:21:24 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/12 16:40:23 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 // init_data
 // - initializes data struct;
 // - first call of exit_minishell initializes static pointer to data struct;
-int	init_data(t_data *data, char **envp)
-{
-	env_init(envp, data);
-	exit_minishell(data, 0);
-	return (0);
-}
+//int	init_data(t_data *data, char **envp)
+//{
+//	env_init(envp, data);
+//	exit_minishell(data, 0);
+//	return (0);
+//}
 
 // strs_count
 // - counts the amount of strings in a 2D array;
