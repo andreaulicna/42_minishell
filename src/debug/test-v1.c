@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test-v1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:26:36 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 15:28:00 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:41:43 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
-	init_data(&data, envp);
+	init_data(&data);
+	env_init(envp, &data);
 
 	(void) argc;
 	(void) argv;

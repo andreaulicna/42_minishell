@@ -6,11 +6,46 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:36:25 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/13 22:15:03 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+/**
+ * @brief	Checks the context of the dollar sign in a string.
+ * 
+ * This function analyzes the context of a dollar sign ('$') in a string 'str'
+ * at position 'j'. It examines nearby characters to determine the context
+ * of the dollar sign within the string.
+ * 
+ * @param	str	input string to check
+ * @param	j	index of the dollar sign in the string
+ * @return	int	returns a flag representing the context:
+ *              5:	$ is enclosed in single quotes
+ * 				4:	$ is followed by \ and enclosed in double quotes
+ * 				3:	$ is followed or preceded with \ (not in double quotes)
+ *              2:	$ is followed by a space, a quote (' or ")
+ * 					or there is nothing else following it
+ *              1:	$ is followed by a question mark (?)
+ *              0: 	$ appears in a context that can be expanded
+ */
+int	checker_dollar(char *str, int j)
+{
+	if ((str[0] == '\'' && str[ft_strlen(str) - 1] == '\''))
+		return (5);
+	else if (str[0] == '"' && str[ft_strlen(str) - 1] == '"'
+		&& str[j + 1] == '\\')
+		return (4);
+	else if (str[j - 1] == '\\' || str[j + 1] == '\\')
+		return (3);
+	else if (!str[j + 1] || str[j + 1] == ' ' || str[j + 1] == '\''
+		|| str[j + 1] == '"')
+		return (2);
+	else if (str[j + 1] == '?')
+		return (1);
+	return (0);
+}
 
 /**
  * WARNING: NOT FULLY IMPLEMENTED - exit code hardcoded
@@ -36,7 +71,6 @@
  * @param 	cmd		array of strings containing input commands
  * @param	i_cmd	index of the command string in the array to modify
  */
-
 void	expand_exit_code(char **cmd, int i_cmd)
 {
 	char	*str;
@@ -69,7 +103,6 @@ void	expand_exit_code(char **cmd, int i_cmd)
  * 
  * @param	new_str	pointer to a t_str structure containing parsed string parts
  */
-
 void	expand_dollar_found(t_str *new_str)
 {
 	new_str->content = (t_env *) new_str->env_found->content;
@@ -105,7 +138,6 @@ void	expand_dollar_found(t_str *new_str)
  * @param	i_cmd		index of the command string in the array to modify
  * @param	env_list	linked list containing environment variables
  */
-
 void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
 {
 	char	*str;
@@ -135,72 +167,42 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
 }
 
 /**
- * @brief	Checks the context of the dollar sign in a string.
+ * @brief	Deletes a backslash that follows or precedes a dollar sign ($).
  * 
- * This function analyzes the context of a dollar sign ('$') in a string 'str'
- * at position 'j'. It examines nearby characters to determine the context
- * of the dollar sign within the string.
+ * It breaks down the input string into 2 parts, leaving the backslash out,
+ * and then it constructs the final string by joining the 2 parts.
  * 
- * @param	str	input string to check
- * @param	j	index of the dollar sign in the string
- * @return	int	returns a flag representing the context:
- *              4:	the dollar sign is enclosed in single quotes
- *              3:	the dollar sign is followed by a space, a quote (' or ")
- * 					or there is nothing else following it
- *              2:	the dollar sign is followed by a question mark (?)
- *              1: 	the dollar sign appears in a context that can be expanded
- *              0:	the dollar sign doesn't match any defined context
+ * Finally, the appropriate string in the 2D input array is pointed to the final
+ * string. All of the dynamically allocated memory is then freed with the
+ * exception of the final string that is not freed until after the whole command
+ * is processed and the program reaches the free_simple_cmds function.
+ * 
+ * Examples:
+ * \$USER -> $USER 
+ * $\USER -> $USER 
+ * "$\USER" -> $\USER 
+ * "\$USER" -> $USER 
+ * '$\USER' -> $\USER 
+ * '\$USER' -> \$USER 
+ * 
+ * @param	cmd			array of strings containing input commands
+ * @param	i_cmd		index of the command string in the array to modify
  */
-
-int	checker_dollar(char *str, int j)
+void	delete_backslash(char **cmd, int i_cmd)
 {
-	if ((str[0] == '\'' && str[ft_strlen(str) - 1] == '\''))
-		return (4);
-	else if (!str[j + 1] || str[j + 1] == ' ' || str[j + 1] == '\''
-		|| str[j + 1] == '"')
-		return (3);
-	else if (str[j + 1] == '?')
-		return (2);
-	else if (j != 0 && str[j - 1] != '\\' && str[j - 1] != '\''
-		&& str[j + 1] != ' ')
-		return (1);
-	else if (str[j + 1] && str[j + 1] != '\'' && str[j + 1] != '"'
-		&& str[j + 1] != '\\' && str[j + 1] != ' ')
-		return (1);
-	return (0);
-}
+	char	*str;
+	int		i;
+	t_str	new_str;
 
-/**
- * @brief	Expands dollar signs in a command string based on specific conditions.
- * 
- * This function iterates through a command string 'content->cmd[i]', determines
- * whether or not to expand a dollar sign based on the predefined conditions
- * represented by the checker_dollar function and does so where appropriate.
- * 
- * @param	content		pointer to t_simple_cmds struct
- * @param	i			index of the command string in the array to process
- * @param	env_list	linked list containing environment variables
- */
-
-void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list)
-{
-	int	j;
-	int	dollar_flag;
-
-	j = 0;
-	while (content->cmd[i][j])
-	{
-		if (content->cmd[i][j] == '$')
-		{
-			dollar_flag = checker_dollar(content->cmd[i], j);
-			delete_quotes(content->cmd, i);
-			if (dollar_flag == 4)
-				break ;
-			else if (dollar_flag == 2)
-				expand_exit_code(content->cmd, i);
-			else if (dollar_flag == 1)
-				expand_dollar(content->cmd, i, env_list);
-		}
-		j++;
-	}
+	str = cmd[i_cmd];
+	i = 0;
+	while (str[i] && str[i] != '\\')
+		i++;
+	init_struct_str(&new_str);
+	new_str.part_1 = ft_substr(str, 0, i);
+	new_str.part_2 = ft_substr(str, i + 1, ft_strlen(str) - 1);
+	new_str.final = ft_strjoin(new_str.part_1, new_str.part_2);
+	free_struct_str(&new_str);
+	cmd[i_cmd] = new_str.final;
+	free(str);
 }

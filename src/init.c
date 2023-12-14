@@ -6,12 +6,15 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 12:06:21 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:53:00 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/13 18:58:20 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/minishell.h"
 
+// init_data
+// - initializes all elements of the data struct to NULL;
+// - first call of exit_minishell initializes static pointer to data struct;
 void	init_data(t_data *data)
 {
 	data->env_list = NULL;
@@ -20,6 +23,7 @@ void	init_data(t_data *data)
 	data->prompt = NULL;
 	data->input = NULL;
 	data->input_split = NULL;
+	exit_minishell(data, 0);
 }
 
 /**
@@ -31,7 +35,6 @@ void	init_data(t_data *data)
  * 
  * @param	str	pointer to the t_str structure to be initialized
  */
-
 void	init_struct_str(t_str *str)
 {
 	str->part_1 = NULL;
