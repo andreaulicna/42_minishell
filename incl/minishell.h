@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/13 21:44:06 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/16 09:07:25 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@
 # define STDOUT	1
 # define STDERR	2
 
-# define EXIT_MALLOC 4
+# define EXIT_MALLOC		4
+# define EXIT_EXECVE 		5
+# define EXIT_EXECNOTFOUND	6
 
 typedef struct s_data
 {
