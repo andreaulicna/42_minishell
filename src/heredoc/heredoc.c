@@ -6,43 +6,46 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/16 13:07:52 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/16 15:37:49 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
+void    create_heredoc_dollar_line(int fd, char *line, t_list *env_list)
+{
+    t_simple_cmds   *tmp_node;
+	
+    tmp_node = malloc(sizeof(t_lexer));
+    tmp_node->cmd = ft_calloc(2, sizeof(char *));
+    tmp_node->cmd[0] = ft_strdup(line);
+    tmp_node->cmd[1] = NULL;
+    tmp_node->redirects = NULL;
+    tmp_node->hd_file = NULL;
+    expander_loop_dollar(tmp_node, 0, env_list);
+    ft_putstr_fd(tmp_node->cmd[0], fd);
+    free_array(tmp_node->cmd);
+    free(tmp_node);
+}
+
 void    create_heredoc(t_list *heredoc, char *hd_file_name, t_list *env_list)
 {
-    int fd;
-    char    *line;
-    t_lexer *content_heredoc;
-    t_simple_cmds   *node;
+    int             fd;
+    char            *line;
+    t_lexer         *content_heredoc;
 
     fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
     line = readline("> ");
     content_heredoc = (t_lexer *) heredoc->content;
-    while (line && ft_strncmp(content_heredoc->word, line, ft_strlen(content_heredoc->word)))
+    while (line && ft_strncmp(content_heredoc->word, line,
+        ft_strlen(line)))
     {
         if (contains_dollar(line))
-        {
-            node = malloc(sizeof(t_lexer));
-            node->cmd = ft_calloc(2, sizeof(char *));
-            node->cmd[0] = line;
-            node->cmd[1] = NULL;
-            node->redirects = NULL;
-            node->hd_file = NULL;
-            expander_loop_dollar(node, 0, env_list);
-            ft_putstr_fd(node->cmd[0], fd);
-            free_array(node->cmd);
-            free(node);
-        }
+			create_heredoc_dollar_line(fd, line, env_list);
         else
-        {
             ft_putstr_fd(line, fd);
-            free(line);
-        }
         ft_putstr_fd("\n", fd);
+        free(line);
         line = readline("> ");
     }
     free(line);
