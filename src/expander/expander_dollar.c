@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/16 15:38:15 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/18 12:47:24 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,9 @@ void	expand_dollar_found(t_str *new_str)
  * whether or not the env variable was found in the env list.
  * If the env variable is found, the join happens in the expand_dollar_found
  * function. Otherwise, the part_2 is skipped in the join and the final str
- * includes only the part_1 and part_3.
+ * includes only the part_1 and part_3. When there is no env value, j_cmd is
+ * reset to -1 to avoid invalid read size error when the control is returned
+ * back to the expander_loop_dolar function.
  * 
  * Finally, the appropriate string in the 2D input array is pointed to the final
  * string. All of the dynamically allocated memory is then freed with the
@@ -143,7 +145,7 @@ void	expand_dollar_found(t_str *new_str)
  * @param	i_cmd		index of the command string in the array to modify
  * @param	env_list	linked list containing environment variables
  */
-void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
+void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
 {
 	char	*str;
 	int		i;
@@ -162,10 +164,13 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list)
 	new_str.part_2 = ft_substr(str, i + 1, j - 1);
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	new_str.env_found = env_find(env_list, new_str.part_2);
-	if (new_str.env_found)
+	if (new_str.env_found != NULL)
 		expand_dollar_found(&new_str);
 	else
+	{
 		new_str.final = ft_strjoin(new_str.part_1, new_str.part_3);
+		*j_cmd = -1;
+	}
 	cmd[i_cmd] = new_str.final;
 	free(str);
 	free_struct_str(&new_str);
