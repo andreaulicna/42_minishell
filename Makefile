@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/12/14 11:42:15 by aulicna          ###   ########.fr        #
+#    Updated: 2023/12/18 14:35:55 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,10 +63,10 @@ $(NAME): $(OBJ) $(HEADER)
 
 clean:
 	@rm -f $(OBJ)
+	@rm -f src/heredoc/.tmp_files/.tmp*
 	@make clean -C $(LIBFTPRINTF)
 
-fclean:
-	@rm -f $(OBJ)
+fclean: clean
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFTPRINTF)
 

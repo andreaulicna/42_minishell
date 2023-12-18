@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/18 12:47:24 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/18 14:51:34 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	checker_dollar(char *str, int j)
 			return (3);
 	}
 	else if (str[j + 1] == '\\')
-			return (3);
+		return (3);
 	else if (!str[j + 1] || str[j + 1] == ' ' || str[j + 1] == '\''
 		|| str[j + 1] == '"')
 		return (2);
@@ -100,19 +100,33 @@ void	expand_exit_code(char **cmd, int i_cmd)
 }
 
 /**
- * @brief	Expands a found environment variable represented by a dollar sign.
- * 
- * This is a helper function to the expand_dollar function that helps with
- * constructing the final string based on the different parts of the input
+ * @brief	This is a helper function to the expand_dollar function that helps
+ * with constructing the final string based on the different parts of the input
  * string and the value of the env variable that was found.
  * 
+ * If the env variable is found, the join happens in the expand_dollar_found
+ * function. Otherwise, the part_2 is skipped in the join and the final str
+ * includes only the part_1 and part_3. When there is no env value, j_cmd is
+ * reset to -1 to avoid invalid read size error when the control is returned
+ * back to the expander_loop_dolar function.
+ * 
  * @param	new_str	pointer to a t_str structure containing parsed string parts
+ * @param	j_cmd		index of the dollar sign in string to modify
  */
-void	expand_dollar_found(t_str *new_str)
+void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
 {
-	new_str->content = (t_env *) new_str->env_found->content;
-	new_str->tmp_join = ft_strjoin(new_str->part_1, new_str->content->value);
-	new_str->final = ft_strjoin(new_str->tmp_join, new_str->part_3);
+	if (new_str->env_found != NULL)
+	{
+		new_str->content = (t_env *) new_str->env_found->content;
+		new_str->tmp_join = ft_strjoin(new_str->part_1,
+				new_str->content->value);
+		new_str->final = ft_strjoin(new_str->tmp_join, new_str->part_3);
+	}
+	else
+	{
+		new_str->final = ft_strjoin(new_str->part_1, new_str->part_3);
+		*j_cmd = -1;
+	}
 }
 
 /**
@@ -129,12 +143,8 @@ void	expand_dollar_found(t_str *new_str)
  * is no space in the string after the dollar sign
  * 
  * Then it constructs the final string, which can happen in 2 ways depending on
- * whether or not the env variable was found in the env list.
- * If the env variable is found, the join happens in the expand_dollar_found
- * function. Otherwise, the part_2 is skipped in the join and the final str
- * includes only the part_1 and part_3. When there is no env value, j_cmd is
- * reset to -1 to avoid invalid read size error when the control is returned
- * back to the expander_loop_dolar function.
+ * whether or not the env variable was found in the env list. This part is done
+ * in the expand_dollar_construct_final helper function.
  * 
  * Finally, the appropriate string in the 2D input array is pointed to the final
  * string. All of the dynamically allocated memory is then freed with the
@@ -144,6 +154,7 @@ void	expand_dollar_found(t_str *new_str)
  * @param	cmd			array of strings containing input commands
  * @param	i_cmd		index of the command string in the array to modify
  * @param	env_list	linked list containing environment variables
+ * @param	j_cmd		index of the dollar sign in string to modify
  */
 void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
 {
@@ -164,13 +175,7 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
 	new_str.part_2 = ft_substr(str, i + 1, j - 1);
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	new_str.env_found = env_find(env_list, new_str.part_2);
-	if (new_str.env_found != NULL)
-		expand_dollar_found(&new_str);
-	else
-	{
-		new_str.final = ft_strjoin(new_str.part_1, new_str.part_3);
-		*j_cmd = -1;
-	}
+	expand_dollar_construct_final(&new_str, j_cmd);
 	cmd[i_cmd] = new_str.final;
 	free(str);
 	free_struct_str(&new_str);

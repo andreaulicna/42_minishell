@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/16 10:58:00 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/18 14:20:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv, char *env[])
 		print_simple_cmds(&data.simple_cmds);
 		printf("----------------------\n");
 		printf("Heredoc output:\n");
-		executor(&data);
+		heredoc(&data);
 		printf("----------------------\n");
 		/* Parser - Link list E */
 		free_data(&data);
