@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/19 18:49:06 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/19 19:46:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_cmd_len(t_list **lexer)
 	t_list	*current;
 	t_lexer	*content;
 
-	if (!lexer)
+	if (*lexer == NULL)
 		return (0);
 	current = *lexer;
 	content = (t_lexer *) current->content;
