@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/14 12:38:38 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/19 18:49:06 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,14 @@ void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
  * 					of the simple_cmds list is created	
  * 
  * @param	lexer	pointer to the lexer list
- * @return	t_list*	returns the list of simple commands
+ * @return	int		returns 0 upon successfully creating simple_cmds
  */
 
-t_list	*lexer_to_simple_cmds(t_list **lexer)
+int	lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds)
 {
-	t_list	*simple_cmds;
 	t_list	*current;
 	t_lexer	*content;
 
-	simple_cmds = NULL;
 	current = *lexer;
 	content = (t_lexer *) current->content;
 	if (content->token == PIPE)
@@ -152,10 +150,12 @@ t_list	*lexer_to_simple_cmds(t_list **lexer)
 		{
 			free_lexer_node(lexer, content->id);
 			current = *lexer;
-			continue ;
 		}
-		create_simple_cmds(lexer, &simple_cmds);
+		content = (t_lexer *) current->content;
+		if (content->token == PIPE)
+			error_parser_double_token(1);
+		create_simple_cmds(lexer, simple_cmds);
 		current = *lexer;
 	}
-	return (simple_cmds);
+	return (EXIT_SUCCESS);
 }
