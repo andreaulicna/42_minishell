@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/19 18:53:43 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/20 00:08:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct s_str
 // main_a.c
 int		minishell_loop(t_data *data);
 // print.c
+void	print_input_split(t_data *data);
 void	print_lexer(t_list **lexer);
 void	print_simple_cmds(t_list **simple_cmds);
 

@@ -6,11 +6,23 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 10:28:47 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 12:01:32 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/20 00:07:56 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+void	print_input_split(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (data->input_split[i])
+	{
+		printf("%s\n", data->input_split[i]);
+		i++;
+	}
+}
 
 void	print_lexer(t_list **lexer)
 {
