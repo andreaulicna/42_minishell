@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/13 21:44:06 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/18 14:52:02 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_simple_cmds
 {
 	char		**cmd;
 	t_list		*redirects;
+	char		*hd_file;
 }	t_simple_cmds;
 
 typedef struct s_str
@@ -112,11 +113,17 @@ void	free_struct_str(t_str *str);
 /* Expander */
 // expander.c
 void	expander(t_data *data);
+int		contains_dollar(char *str);
+void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
 // expander_dollar.c
 int		checker_dollar(char *str, int j);
 void	expand_exit_code(char **cmd, int i_cmd);
-void	expand_dollar(char **cmd, int i_cmd, t_list *env_list);
+void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd);
 void	delete_backslash(char **cmd, int i_cmd);
+
+/* Heredoc */
+int		heredoc(t_data *data);
+
 /* Lexer */
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);

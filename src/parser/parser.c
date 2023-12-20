@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:38:42 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/14 12:38:38 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
 		exit_minishell(NULL, EXIT_MALLOC);
 	content_cmd->cmd = cmd;
 	content_cmd->redirects = redirects;
+	content_cmd->hd_file = NULL;
 	node_simple_cmds = ft_lstnew(content_cmd);
 	ft_lstadd_back(simple_cmds, node_simple_cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 19:23:37 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:36:29 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/18 14:52:24 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,8 @@ static void	ft_alloc_fill_arr(char **arr, char const *s, char c)
 		else if ((ft_is_sep(s[i], c) || i == (int)ft_strlen(s)) && in_wrd >= 0
 			&& quotes_pair(s_quotes, d_quotes))
 		{
-				arr[wrds++] = ft_fill_arr(s, in_wrd, i);
-				in_wrd = -1;
+			arr[wrds++] = ft_fill_arr(s, in_wrd, i);
+			in_wrd = -1;
 		}
 		i++;
 	}

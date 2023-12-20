@@ -6,13 +6,14 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2023/12/13 18:45:27 by aulicna          ###   ########.fr        #
+#    Updated: 2023/12/18 14:35:55 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRC = src/debug/main_a.c\
+		src/debug/print.c\
 		src/utils/utils.c\
 		src/utils/env.c\
 		src/builtins/ft_echo.c\
@@ -22,13 +23,13 @@ SRC = src/debug/main_a.c\
 		src/builtins/ft_export.c\
 		src/builtins/ft_unset.c\
 		src/builtins/ft_exit.c\
-		src/debug/print.c\
 		src/error/error_token.c\
 		src/exit/exit.c\
 		src/exit/free.c\
 		src/exit/free_helpers.c\
 		src/expander/expander.c\
 		src/expander/expander_dollar.c\
+		src/heredoc/heredoc.c\
 		src/lexer/ft_split_minishell.c\
 		src/lexer/lexer.c\
 		src/parser/parser_redirects.c\
@@ -62,10 +63,10 @@ $(NAME): $(OBJ) $(HEADER)
 
 clean:
 	@rm -f $(OBJ)
+	@rm -f src/heredoc/.tmp_files/.tmp*
 	@make clean -C $(LIBFTPRINTF)
 
-fclean:
-	@rm -f $(OBJ)
+fclean: clean
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFTPRINTF)
 
