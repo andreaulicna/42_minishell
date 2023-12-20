@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/16 09:07:25 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/20 16:58:19 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,5 +168,16 @@ void	ft_export_format(char *env_var);
 int		ft_unset(char **args, t_data *data);
 void	ft_exit(char **args, t_data *data);
 int		ft_exit_checknum(char *str);
+
+/* Execution */
+int	exec(t_data *data, t_list *simple_cmds);
+void exec_singlecmd(t_data *data, t_list *simple_cmds);
+// void exec_multicmds(t_data *data, t_list *simple_cmds, size_t cmd_num);
+char	*exec_findpath(t_data *data, char *cmd);
+int	exec_isbuiltin(char *cmd);
+void exec_runbuiltin(t_data *data, char **cmd);
+void	exec_handleredirect(t_list *redirects);
+char	**exec_copyenv(t_data *data);
+
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/16 11:43:38 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/20 16:57:09 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/minishell.h"
+#include "../../incl/minishell.h"
 
 // exec_findpath
 // - searches for the path of an executable command;
@@ -27,7 +27,7 @@ char	*exec_findpath(t_data *data, char *cmd)
 	path_arr = ft_split(ft_strdup(content->value), ':');
 	while (path_arr != NULL)
 	{
-		temp = ft_strjoin(path_arr, "/");
+		temp = ft_strjoin(*path_arr, "/");
 		working_path = ft_strjoin(temp, cmd);
 		free(temp);
 		if (access(working_path, F_OK) == 0)
@@ -39,13 +39,35 @@ char	*exec_findpath(t_data *data, char *cmd)
 		path_arr++;
 	}
 	free_array(path_arr);
-	ft_putstrd_fd(cmd, STDERR);
+	ft_putstr_fd(cmd, STDERR);
 	ft_putendl_fd(": command not found", STDERR);
 	return (NULL);
 }
 
 // exec_copyenv
 // - copies the env linked list into char array for the purposes of 'execve';
+char	**exec_copyenv(t_data *data)
+{
+	char	**arr;
+	t_list	*current;
+	int		i;
+	t_env	*content;
+
+	arr = (char **)malloc(sizeof(char *) * (ft_lstsize(data->env_list) + 1));
+	if (!arr)
+		exit_minishell(NULL, EXIT_MALLOC);
+	current = data->env_list;
+	i = 0;
+	while (i < ft_lstsize(data->env_list) && current != NULL)
+	{
+		content = (t_env *)current->content;
+		arr[i] = content->full_string;
+		i++;
+		current = current->next;
+	}
+	arr[i] = NULL;
+	return (arr);
+}
 
 // exec_isbuiltin
 // - returns 0 if provided command is builtin;
@@ -58,28 +80,28 @@ int	exec_isbuiltin(char *cmd)
 		|| ft_strncmp(cmd, "export", 6) == 0
 		|| ft_strncmp(cmd, "pwd", 3) == 0
 		|| ft_strncmp(cmd, "unset", 5) == 0)
-		return (0);
-	else
 		return (1);
+	else
+		return (0);
 }
 
 // exec_runbuiltin
 // - runs provided builtin;
-void	exec_isbuiltin(t_data *data, char **cmd)
+void exec_runbuiltin(t_data *data, char **cmd)
 {
-	if (ft_strncmp(cmd[0], "cd", 2))
+	if (ft_strncmp(cmd[0], "cd", 2) == 0)
 		ft_cd(cmd, data);
-	else if (ft_strncmp(cmd[0], "echo", 4))
+	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
 		ft_echo(cmd);
-	else if (ft_strncmp(cmd[0], "env", 3))
+	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		ft_env(data);
-	else if (ft_strncmp(cmd[0], "exit", 4))
+	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
 		ft_exit(cmd, data);
-	else if (ft_strncmp(cmd[0], "export", 6))
+	else if (ft_strncmp(cmd[0], "export", 6) == 0)
 		ft_export(cmd, data);
-	else if (ft_strncmp(cmd[0], "pwd", 3))
+	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
 		ft_pwd();
-	else if (ft_strncmp(cmd[0], "unset", 5))
+	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 		ft_unset(cmd, data);
 }
 

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/16 10:30:06 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/20 16:21:20 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int main(int argc, char **argv, char *env[])
 		data.lexer = input_arr_to_lexer_list(data.input_split);
 		data.simple_cmds = lexer_to_simple_cmds(&data.lexer);
 		expander(&data);
-		// execute cmds
+		exec(&data, data.simple_cmds);
 		free_data(&data);
 	}
 	//free(data.prompt); // needs to be here, bcs check_input skips the free_data function and the one thing that stays malloced is the prompt
