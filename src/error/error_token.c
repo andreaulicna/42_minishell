@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:03:25 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 10:59:28 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/19 13:37:29 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@
  * 					1: nothing following a redirection (or a pipe?)
  * @return	int		returns the exit status code (EXIT_FAILURE)
  */
-
 int	error_handler(int code)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (code == 1)
 		ft_putstr_fd("syntax error near unexpected token `newline'\n",
 			STDERR_FILENO);
-	return (EXIT_FAILURE);
+	exit_current_prompt(NULL);
+	return (1);
 }
 
 /**
@@ -37,7 +37,6 @@ int	error_handler(int code)
 * @param	token	token from the defined enum representing different symbols
 * @return	int		returns the exit status code (EXIT_FAILURE)
 */
-
 int	error_parser_double_token(t_tokens token)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `",
@@ -53,5 +52,6 @@ int	error_parser_double_token(t_tokens token)
 	else if (token == GREATER_2)
 		ft_putstr_fd(">>", STDERR_FILENO);
 	ft_putstr_fd("'\n", STDERR_FILENO);
-	return (EXIT_FAILURE);
+	exit_current_prompt(NULL);
+	return (1);
 }

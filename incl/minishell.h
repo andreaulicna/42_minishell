@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/18 14:52:02 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/20 00:08:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,10 @@ typedef struct s_str
 /* SOURCES */
 
 /* Debug */
+// main_a.c
+int		minishell_loop(t_data *data);
 // print.c
+void	print_input_split(t_data *data);
 void	print_lexer(t_list **lexer);
 void	print_simple_cmds(t_list **simple_cmds);
 
@@ -101,8 +104,10 @@ int		error_parser_double_token(t_tokens token);
 /* Exit */
 // exit.c
 void	exit_minishell(t_data *data, int exit_status);
+void	exit_current_prompt(t_data *data);
 // free.c
 void	free_data(t_data *data);
+void	free_data_current_prompt(t_data *data);
 // free_helpers.c
 int		free_array(char **strs);
 void	free_lexer(t_list **lexer);
@@ -128,11 +133,11 @@ int		heredoc(t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 // lexer.c
-t_list	*input_arr_to_lexer_list(char **input_split);
+int		input_arr_to_lexer_list(char **input_split, t_list **lexer);
 
 /* Parser */
 // parser.c
-t_list	*lexer_to_simple_cmds(t_list **lexer);
+int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
 void	free_lexer_node(t_list **lexer, int id);
