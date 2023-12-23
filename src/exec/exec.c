@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/20 17:36:42 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/23 12:42:44 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,13 @@
 
 // get a number of commands
 // - for each command, create a child process
-// - before that, check it command is builtin, not executable
 int	exec(t_data *data, t_list *simple_cmds)
 {
 	size_t			cmd_num;
-	t_simple_cmds	*content;
 
-	content = (t_simple_cmds *) simple_cmds->content;
 	cmd_num = ft_lstsize(simple_cmds);
 	if (cmd_num == 1)
-		if (exec_isbuiltin(content->cmd[0]))
-			exec_runbuiltin(data, content->cmd);
-		else
-			exec_singlecmd(data, simple_cmds);
+		exec_singlecmd(data, simple_cmds);
 	else if (cmd_num > 1)
 		// exec_multicmds(data, simple_cmds, cmd_num);
 		return (1);
@@ -35,47 +29,58 @@ int	exec(t_data *data, t_list *simple_cmds)
 
 void exec_singlecmd(t_data *data, t_list *simple_cmds)
 {
-	pid_t	pid;
+	pid_t			pid;
 	t_simple_cmds	*content;
-	// int		status;
-	char	*path;
+	char			*path;
+	char			**env_copy;
 
+	env_copy = exec_copyenv(data);
 	pid = fork();
 	if (pid == -1)
-		perror("fork");
+	{
+		free(env_copy);
+		exit_current_prompt(NULL);
+	}
 	content = (t_simple_cmds *) simple_cmds->content;
 	if (pid == 0)
 	{
 		if (content->redirects)
 			exec_handleredirect(content->redirects);
-		path = exec_findpath(data, content->cmd[0]);
-		if (path != NULL)
+		if (exec_isbuiltin(content->cmd[0]))
+			exec_runbuiltin(data, content->cmd);
+		else
 		{
-			execve(path, content->cmd, exec_copyenv(data));
-			free(path);
+			path = exec_findpath(data, content->cmd[0]);
+			if (path != NULL)
+			{
+				execve(path, content->cmd, env_copy);
+				free(path);
+			}
+			free(env_copy);
+			exit_current_prompt(NULL);
 		}
-		exit_minishell(NULL, EXIT_EXECVE);
 	}
 	else
-		wait(NULL);
+	{
+		waitpid(pid, NULL, 0);
+		free(env_copy);
+	}
 }
 
 // void exec_multicmds(t_data *data, t_list *simple_cmds, size_t cmd_num)
 // {
-// 	int	tmpin = dup(0);
-// 	int	tmpout = dup(1);
+// 	int	tmpin = dup(STDIN);
+// 	int	tmpout = dup(STDOUT);
 // 	int	fdin = dup(tmpin);
 //     int ret;
 //     int fdout;
 // 	(int) cmd_num;
+// 	int	i;
 
-// 	for (int i = 0; i < cmd_num; i++)
+// 	i = 0;
+// 	while (i < cmd_num)
 // 	{
-// 		dup2(fdin, 0);
-// 		close(fdin);
-// 		if (i == cmd_num - 1)
-// 			fdout = dup(tmpout);
-// 		else
+// 		if (i != (cmd_num - 1))
 // 		{
 // 			int fdpipe[2];
 // 			pipe(fdpipe);
@@ -92,6 +97,7 @@ void exec_singlecmd(t_data *data, t_list *simple_cmds)
 // 			execvp(simple_cmds[i]->cmd[0], simple_cmds[i]->cmd);
 // 			exit_minishell(NULL, EXIT_EXECVE);
 // 		}
+// 		i++;
 // 	}
 // 	dup2(tmpin, 0);
 // 	dup2(tmpout, 1);

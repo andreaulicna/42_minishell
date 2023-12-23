@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/20 16:57:09 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/23 13:13:23 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ char	*exec_findpath(t_data *data, char *cmd)
 	char	**path_arr;
 	char	*temp;
 	char	*working_path;
+	int		i;
 	
 	path_env = env_find(data->env_list, "PATH");
-	content = (t_env *)path_env;
+	content = (t_env *) (path_env->content);
 	path_arr = ft_split(ft_strdup(content->value), ':');
+	i = 0;
 	while (path_arr != NULL)
 	{
-		temp = ft_strjoin(*path_arr, "/");
+		temp = ft_strjoin(path_arr[i], "/");
 		working_path = ft_strjoin(temp, cmd);
 		free(temp);
 		if (access(working_path, F_OK) == 0)
@@ -36,7 +38,7 @@ char	*exec_findpath(t_data *data, char *cmd)
 			return (working_path);
 		}
 		free(working_path);
-		path_arr++;
+		i++;
 	}
 	free_array(path_arr);
 	ft_putstr_fd(cmd, STDERR);
@@ -46,6 +48,7 @@ char	*exec_findpath(t_data *data, char *cmd)
 
 // exec_copyenv
 // - copies the env linked list into char array for the purposes of 'execve';
+// - doesn't create new strings, but copies POINTERS (for easier env mngmt);
 char	**exec_copyenv(t_data *data)
 {
 	char	**arr;
@@ -110,25 +113,29 @@ void exec_runbuiltin(t_data *data, char **cmd)
 // - function is called from inside a child process;
 void	exec_handleredirect(t_list *redirects)
 {
-	char	**redirect_arr;
+	t_lexer	*content;
+	int		redirection;
+	char	*filename;
 	int		fd;
 
-	redirect_arr = (char **)redirects->content;
-	if (ft_strncmp(redirect_arr[0], ">", 1) == 0)
+	content = (t_lexer *) redirects->content;
+	redirection = content->token;
+	filename = content->word;
+	if (redirection == 4)
 	{
-		fd = open(redirect_arr[1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		dup2(fd, STDOUT);
 		close(fd);
 	}
-	else if (ft_strncmp(redirect_arr[0], ">>", 2) == 0)
+	else if (redirection == 5)
 	{
-		fd = open(redirect_arr[1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		dup2(fd, STDOUT);
 		close(fd);
 	}
-	else if (ft_strncmp(redirect_arr[0], "<", 1) == 0)
+	else if (redirection == 2)
 	{
-		fd = open(redirect_arr[1], O_RDONLY);
+		fd = open(filename, O_RDONLY);
 		dup2(fd, STDIN);
 		close(fd);
 	}
