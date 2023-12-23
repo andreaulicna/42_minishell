@@ -6,11 +6,7 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2023/12/20 16:09:53 by vbartos          ###   ########.fr        #
-=======
-#    Updated: 2023/12/18 14:35:55 by aulicna          ###   ########.fr        #
->>>>>>> origin/main
+#    Updated: 2023/12/23 10:20:52 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,12 +23,7 @@ SRC = src/debug/main_a.c\
 		src/builtins/ft_export.c\
 		src/builtins/ft_unset.c\
 		src/builtins/ft_exit.c\
-<<<<<<< HEAD
-		src/exec/exec.c\
-		src/exec/exec_utils.c\
 		src/debug/print.c\
-=======
->>>>>>> origin/main
 		src/error/error_token.c\
 		src/exit/exit.c\
 		src/exit/free.c\
@@ -46,7 +37,9 @@ SRC = src/debug/main_a.c\
 		src/parser/parser.c\
 		src/init.c\
 		src/prompt.c\
-		src/quotes.c
+		src/quotes.c\
+		src/exec/exec.c\
+		src/exec/exec_utils.c\
 
 OBJ = $(SRC:.c=.o)
 
