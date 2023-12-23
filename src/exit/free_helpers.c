@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 13:42:40 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/19 14:58:41 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	free_simple_cmds(t_list **simple_cmds)
 		free_redirects = content->redirects;
 		free_lexer(&free_redirects);
 		free_array(content->cmd);
+		free(content->hd_file);
 		free(content);
 		free(*simple_cmds);
 		*simple_cmds = tmp;

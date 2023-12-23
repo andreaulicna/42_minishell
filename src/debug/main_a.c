@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/20 16:21:20 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/23 10:03:21 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,50 +21,90 @@ int	check_input_null(char *input)
 	return (1);
 }
 
-int main(int argc, char **argv, char *env[])
+int	check_enter_space(char *input)
+{
+	if (!ft_strncmp(input, " ", ft_strlen_custom(input)) || input[0] == '\0')
+		return (0);
+	return (1);
+}
+
+int	minishell_loop(t_data *data)
+{
+	data->input = readline((const char *)data->prompt);
+	if (!check_input_null(data->input))
+	{
+		printf("exit\n");
+		exit_minishell(NULL, 50);
+	}
+	if (!check_quotes(data->input) || !check_enter_space(data->input))
+		exit_current_prompt(data);
+	data->input_split = ft_split_minishell(data->input, ' ');
+	input_arr_to_lexer_list(data->input_split, &data->lexer);
+	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
+	expander(data);
+	heredoc(data);
+	print_simple_cmds(&data->simple_cmds);
+	exit_current_prompt(data);
+	return (1);
+}
+
+//int	minishell_loop(t_data *data)
+//{
+//	data->input = readline((const char *)data->prompt);
+//	if (!check_input_null(data->input))
+//	{
+//		printf("exit\n");
+//		exit_minishell(NULL, 50);
+//	}
+//	if (!check_quotes(data->input) || !check_enter_space(data->input))
+//		exit_current_prompt(data);
+//	/* Split S*/
+//	data->input_split = ft_split_minishell(data->input, ' ');
+//	printf("Minishell split output:\n");
+//	print_input_split(data);
+//	printf("----------------------\n");
+//	/* Split E */
+//	/* Lexer - Link list S */
+//	printf("Minishell lexer output:\n");
+//	input_arr_to_lexer_list(data->input_split, &data->lexer);
+//	print_lexer(&data->lexer);
+//	printf("----------------------\n");
+//	/* Lexer - Link list E */
+//	/* Parser - Link list S */
+//	printf("Minishell parser output:\n");
+//	printf("----------------------\n");
+//	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
+//	printf("Rest of lexer: \n");
+//	print_lexer(&data->lexer);
+//	printf("----------------------\n");
+//	printf("SIMPLE CMDS - before expander\n");
+//	print_simple_cmds(&data->simple_cmds);
+//	printf("----------------------\n");
+//	printf("SIMPLE CMDS - after expander\n");
+//	expander(data);
+//	print_simple_cmds(&data->simple_cmds);
+//	printf("----------------------\n");
+//	printf("Heredoc output:\n");
+//	heredoc(data);
+//	printf("----------------------\n");
+//	/* Parser - Link list E */
+//	exit_current_prompt(data);
+//	return (1); //should never reach this
+//}
+
+int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
-	
-	(void) argc;
-	(void) argv;
-	unsigned int	null_input;
 
-	null_input = 0;
-	init_data(&data);
-	if (argc > 1)
+	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
 		ft_putstr_fd("Correct usage: ./minishell\n\n", 2);
 		return (0);
 	}
-	while(1)
-	{
-		env_init(env, &data); //either init in every run or change the free function
-		data.prompt = set_prompt(data.env_list);
-		data.input = readline((const char *)data.prompt);
-		if (!check_input_null(data.input))
-		{
-			null_input = 1;
-			free_data(&data);
-			break ;
-		}
-		if (!check_quotes(data.input))
-		{
-			free_data(&data);
-			continue ;
-		}
-		data.input_split = ft_split_minishell(data.input, ' ');
-		data.lexer = input_arr_to_lexer_list(data.input_split);
-		data.simple_cmds = lexer_to_simple_cmds(&data.lexer);
-		expander(&data);
-		exec(&data, data.simple_cmds);
-		free_data(&data);
-	}
-	//free(data.prompt); // needs to be here, bcs check_input skips the free_data function and the one thing that stays malloced is the prompt
-	if (null_input == 1)
-	{
-		printf("\nexit\n");
-		exit(0);
-	}
+	init_data(&data);
+	env_init(env, &data);
+	data.prompt = set_prompt(data.env_list);
+	minishell_loop(&data);
 	return (0);
 }

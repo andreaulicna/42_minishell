@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:38:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/19 18:53:25 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
  * @return	t_tokens	returns the corresponding token enum value if found;
  * otherwise, returns 0
  */
-
 t_tokens	is_token(char *check)
 {
 	unsigned int	len;
@@ -50,7 +49,6 @@ t_tokens	is_token(char *check)
  * @param	content	pointer to the content of the node to assign the token to	
  * @param	token	token to assign
 */
-
 void	assign_token(t_lexer *content, t_tokens token)
 {
 	content->word = NULL;
@@ -64,7 +62,6 @@ void	assign_token(t_lexer *content, t_tokens token)
  * @param	content	pointer to the content of the node to assign the word to	
  * @param	token	word to assign
 */
-
 void	assign_word(t_lexer *content, char *word)
 {
 	content->word = ft_strdup(word);
@@ -78,17 +75,14 @@ void	assign_word(t_lexer *content, char *word)
  * For each node of the lexer list, either the word or the token is filled in.
  * 
  * @param	input_split	array of strings obtained from ft_split_minishell
- * @return	t_list*		returns a pointer to the head of the lexer-linked list.
+ * @return	int			returns 0 upon successfully creating lexer
  */
-
-t_list	*input_arr_to_lexer_list(char **input_split)
+int	input_arr_to_lexer_list(char **input_split, t_list **lexer)
 {
-	t_list	*lexer;
 	t_list	*current;
 	t_lexer	*content;
 	int		i;
 
-	lexer = NULL;
 	current = NULL;
 	i = 0;
 	while (input_split[i])
@@ -102,8 +96,8 @@ t_list	*input_arr_to_lexer_list(char **input_split)
 		else
 			assign_word(content, input_split[i]);
 		current = ft_lstnew(content);
-		ft_lstadd_back(&lexer, current);
+		ft_lstadd_back(lexer, current);
 		i++;
 	}
-	return (lexer);
+	return (EXIT_SUCCESS);
 }

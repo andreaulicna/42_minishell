@@ -6,7 +6,11 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/12/20 16:58:19 by vbartos          ###   ########.fr       */
+=======
+/*   Updated: 2023/12/20 00:08:27 by aulicna          ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +78,7 @@ typedef struct s_simple_cmds
 {
 	char		**cmd;
 	t_list		*redirects;
+	char		*hd_file;
 }	t_simple_cmds;
 
 typedef struct s_str
@@ -90,7 +95,10 @@ typedef struct s_str
 /* SOURCES */
 
 /* Debug */
+// main_a.c
+int		minishell_loop(t_data *data);
 // print.c
+void	print_input_split(t_data *data);
 void	print_lexer(t_list **lexer);
 void	print_simple_cmds(t_list **simple_cmds);
 
@@ -102,8 +110,10 @@ int		error_parser_double_token(t_tokens token);
 /* Exit */
 // exit.c
 void	exit_minishell(t_data *data, int exit_status);
+void	exit_current_prompt(t_data *data);
 // free.c
 void	free_data(t_data *data);
+void	free_data_current_prompt(t_data *data);
 // free_helpers.c
 int		free_array(char **strs);
 void	free_lexer(t_list **lexer);
@@ -114,20 +124,26 @@ void	free_struct_str(t_str *str);
 /* Expander */
 // expander.c
 void	expander(t_data *data);
+int		contains_dollar(char *str);
+void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
 // expander_dollar.c
 int		checker_dollar(char *str, int j);
 void	expand_exit_code(char **cmd, int i_cmd);
-void	expand_dollar(char **cmd, int i_cmd, t_list *env_list);
+void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd);
 void	delete_backslash(char **cmd, int i_cmd);
+
+/* Heredoc */
+int		heredoc(t_data *data);
+
 /* Lexer */
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 // lexer.c
-t_list	*input_arr_to_lexer_list(char **input_split);
+int		input_arr_to_lexer_list(char **input_split, t_list **lexer);
 
 /* Parser */
 // parser.c
-t_list	*lexer_to_simple_cmds(t_list **lexer);
+int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
 void	free_lexer_node(t_list **lexer, int id);

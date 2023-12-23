@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 13:37:39 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 17:03:50 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/19 18:53:59 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,30 @@ void	free_data(t_data *data)
 	if (data->lexer)
 		free_lexer(&data->lexer);
 	if (data->simple_cmds)
+	{
 		free_simple_cmds(&data->simple_cmds);
+		data->simple_cmds = NULL;
+	}
 	if (data->input)
 		free(data->input);
 	if (data->prompt)
 		free(data->prompt);
+	if (data->input_split)
+		free_array(data->input_split);
+}
+
+void	free_data_current_prompt(t_data *data)
+{
+	if (data->lexer)
+	{
+		free_lexer(&data->lexer);
+		data->lexer = NULL;
+	}
+	if (data->simple_cmds)
+	{
+		free_simple_cmds(&data->simple_cmds);
+		data->simple_cmds = NULL;
+	}
 	if (data->input_split)
 	{
 		free_array(data->input_split);

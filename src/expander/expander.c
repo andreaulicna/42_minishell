@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/13 22:14:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/18 14:34:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list)
 			else if (dollar_flag == 1)
 				expand_exit_code(content->cmd, i);
 			else if (dollar_flag == 0)
-				expand_dollar(content->cmd, i, env_list);
+				expand_dollar(content->cmd, i, env_list, &j);
 		}
 		j++;
 	}
@@ -105,7 +105,7 @@ void	expander_loop_no_dollar(t_simple_cmds *content, int i)
  * ("1st level detail") while the expander_loop_dollar function traverses
  * through each character of a string ("2nd level detail").
  *  
- * @param	data	pointer to the t_data structure containing
+ * @param	data	pointer to the t_data structure
  */
 void	expander(t_data *data)
 {
