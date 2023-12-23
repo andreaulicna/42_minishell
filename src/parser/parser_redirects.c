@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirects.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:59:11 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/19 19:46:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/23 12:34:52 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
  * @param	lexer	pointer to the lexer list
  * @param	id		ID of the node to be removed
  */
-
 void	free_lexer_node(t_list **lexer, int id)
 {
 	t_list	*current;
@@ -58,7 +57,6 @@ void	free_lexer_node(t_list **lexer, int id)
  * @param	node		pointer to the node to be moved
  * @param	redirects	pointer to the list to which the node will be added
  */
-
 void	move_redirect_to_redirects_list(t_list **lexer, t_list *node,
 	t_list **redirects)
 {
@@ -102,7 +100,6 @@ void	move_redirect_to_redirects_list(t_list **lexer, t_list *node,
  * @param	lexer		pointer to the lexer list
  * @param	redirects	pointer to the redirects list
  */
-
 void	separate_redirects(t_list **lexer, t_list **redirects)
 {
 	t_list	*current;
