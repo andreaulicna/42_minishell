@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 10:28:47 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/20 00:07:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2023/12/20 21:55:06 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ void	print_redirects(t_list *current_redirect)
 void	print_simple_cmds(t_list **simple_cmds)
 {
 	t_list			*current;
-	t_simple_cmds	*content_simple_cmds;
-	t_list			*current_redirect;
+	t_simple_cmds	*content_simple_cmd;
 	int				i;
 	int				order;
 
@@ -67,18 +66,19 @@ void	print_simple_cmds(t_list **simple_cmds)
 	order = 0;
 	while (current)
 	{
-		printf("%s %d\n", "SIMPLE CMDS", order);
-		content_simple_cmds = (t_simple_cmds *) current->content;
-		current_redirect = content_simple_cmds->redirects;
-		printf("\n***Cmds***\n");
+		printf("\n%s %d\n\n%s\n", "SIMPLE CMDS", order, "***Cmds***");
+		content_simple_cmd = (t_simple_cmds *) current->content;
 		i = 0;
-		while (content_simple_cmds->cmd[i])
+		while (content_simple_cmd->cmd[i])
 		{
-			printf("%s\n", content_simple_cmds->cmd[i]);
+			printf("%s\n", content_simple_cmd->cmd[i]);
 			i++;
 		}
-		printf("\n***Redirects***\n");
-		print_redirects(current_redirect);
+		print_redirects(content_simple_cmd->redirects);
+		printf("\n***Hd_file***\n");
+		if (content_simple_cmd->hd_file)
+			printf("%s\n", content_simple_cmd->hd_file);
+		printf("\n");
 		current = current->next;
 		order++;
 	}
