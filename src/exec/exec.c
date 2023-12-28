@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/28 10:56:40 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/28 18:09:09 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,19 @@ void exec_multicmds(t_data *data, t_list *simple_cmds, size_t cmd_num)
 
 	env_copy = exec_copyenv(data);
 	i = 0;
-	printf("number of cmds: %d\n", cmd_num_int);
 	while (i < cmd_num_int)
 	{
+		content = (t_simple_cmds *) simple_cmds->content;
 		dup2(fdin, STDIN);
 		close(fdin);
+		// if (content->redirects)
+		// 	exec_handleredirect(content->redirects);
 		if (i == (cmd_num_int - 1))
 		{
 			fdout = dup(tmpout);
 		}
 		else 
 		{
-			printf("pipes created\n");
 			int fdpipe[2];
 			pipe(fdpipe);
 			fdout = fdpipe[1];
@@ -100,23 +101,22 @@ void exec_multicmds(t_data *data, t_list *simple_cmds, size_t cmd_num)
 		}
 		dup2(fdout, 1);
 		close(fdout);
-		ret = fork();
-		if (ret == -1)
+		if (exec_isbuiltin(content->cmd[0]))
+			exec_runbuiltin(data, content->cmd);
+		else
 		{
-			free(env_copy);
-			exit_current_prompt(NULL);
-		}
-		if (ret == 0)
-		{
-			printf("child process created\n");
-			content = (t_simple_cmds *) simple_cmds->content;
-			if (exec_isbuiltin(content->cmd[0]))
-				exec_runbuiltin(data, content->cmd);
-			else
+			ret = fork();
+			if (ret == -1)
+			{
+				free(env_copy);
+				exit_current_prompt(NULL);
+			}
+			if (ret == 0)
 			{
 				path = exec_findpath(data, content->cmd[0]);
 				if (path != NULL)
 				{
+					// fprintf(stdout, "HERE\n");
 					execve(path, content->cmd, env_copy);
 					free(path);
 				}
