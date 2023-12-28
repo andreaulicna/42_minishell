@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/23 12:54:55 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/23 13:15:41 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	minishell_loop(t_data *data)
 	expander(data);
 	heredoc(data);
 	exec(data, data->simple_cmds);
-	print_simple_cmds(&data->simple_cmds);
+	// print_simple_cmds(&data->simple_cmds);
 	exit_current_prompt(data);
 	return (1);
 }
