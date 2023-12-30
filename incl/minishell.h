@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/30 15:30:23 by vbartos          ###   ########.fr       */
+/*   Updated: 2023/12/30 17:24:59 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ int		ft_exit_checknum(char *str);
 int	exec(t_data *data, t_list *simple_cmds);
 void exec_cmd(t_data *data, t_simple_cmds *content);
 void exec_singlecmd(t_data *data, t_list *simple_cmds);
-void exec_multicmds(t_data *data, t_list *simple_cmds);
+void exec_multicmds(t_data *data, t_list *simple_cmds, size_t cmd_num);
 char	*exec_findpath(t_data *data, char *cmd);
 int	exec_isbuiltin(char *cmd);
 void exec_runbuiltin(t_data *data, char **cmd);
