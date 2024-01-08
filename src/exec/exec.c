@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/08 14:23:22 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 19:48:12 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	exec(t_data *data, t_list *simple_cmds)
 		if (simple_cmds->next != NULL)
 			fd_input = pipe_close(fd_pipe);
 		if (simple_cmds->next == NULL && ft_lstsize(simple_cmds) > 1)
-			close(fd_pipe[PIPE_READ]);
+			close(fd_input);
 		simple_cmds = simple_cmds->next;
 	}
 	orig_fds_restore(data->orig_fdin, data->orig_fdout);
