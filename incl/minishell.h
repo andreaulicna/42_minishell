@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/30 17:24:59 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 12:58:29 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@
 # define STDOUT	1
 # define STDERR	2
 
+# define PIPE_READ	0
+# define PIPE_WRITE	1
+
 # define EXIT_MALLOC		4
 # define EXIT_EXECVE 		5
 # define EXIT_EXECNOTFOUND	6
@@ -45,6 +48,8 @@ typedef struct s_data
 	char	*prompt;
 	char	*input;
 	char	**input_split;
+	int		orig_fdin;
+	int		orig_fdout;
 }				t_data;
 
 typedef struct s_env
@@ -182,15 +187,25 @@ void	ft_exit(char **args, t_data *data);
 int		ft_exit_checknum(char *str);
 
 /* Execution */
-int	exec(t_data *data, t_list *simple_cmds);
-void exec_cmd(t_data *data, t_simple_cmds *content);
-void exec_singlecmd(t_data *data, t_list *simple_cmds);
-void exec_multicmds(t_data *data, t_list *simple_cmds, size_t cmd_num);
-char	*exec_findpath(t_data *data, char *cmd);
-int	exec_isbuiltin(char *cmd);
-void exec_runbuiltin(t_data *data, char **cmd);
-void	exec_handleredirect(t_list *redirects);
-char	**exec_copyenv(t_data *data);
+int		exec(t_data *data, t_list *simple_cmds);
+void	run_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output);
+void	run_builtin(t_data *data, char **cmd, int fd_input, int fd_output);
+void	run_exec(t_data *data, t_list *cmd, int fd_input, int fd_output);
+char	*find_exe_path(t_data *data, char *cmd);
+int		is_builtin(char *cmd);
+void	handle_redirect(t_list *redirects);
+void	handle_output_single(char *filename);
+void	handle_output_append(char *filename);
+void	handle_input_single(char *filename);
+void	handle_input_heredoc(char *filename);
+char	**env_copy(t_data *data);
+int		pipe_create(int fd_pipe[2]);
+int		pipe_close(int fd_pipe[2]);
+void	pipe_redirect(int fd_input, int fd_output);
+void	orig_fds_save(int *orig_input, int *orig_output);
+void	orig_fds_restore(int orig_input, int orig_output);
 
+/* Signals */
+void	handle_sigint(int sig_num);
 
 #endif

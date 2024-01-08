@@ -1,5 +1,8 @@
 {
 	"files.associations": {
-		"minishell.h": "c"
+		"minishell.h": "c",
+		"array": "c",
+		"string": "c",
+		"string_view": "c"
 	}
 }

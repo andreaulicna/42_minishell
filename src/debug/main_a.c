@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/23 13:15:41 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 11:51:17 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	minishell_loop(t_data *data)
 	data->input = readline((const char *)data->prompt);
 	if (!check_input_null(data->input))
 	{
-		printf("exit\n");
+		ft_putendl_fd("exit", STDOUT);
 		exit_minishell(NULL, 50);
 	}
 	if (!check_quotes(data->input) || !check_enter_space(data->input))
@@ -97,6 +97,7 @@ int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
 
+	signal(SIGINT, handle_sigint);
 	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);

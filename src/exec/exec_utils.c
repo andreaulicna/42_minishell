@@ -6,15 +6,21 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/28 10:14:56 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 13:03:03 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-// exec_findpath
-// - searches for the path of an executable command;
-char	*exec_findpath(t_data *data, char *cmd)
+/**
+ * Finds the executable path for a given command by searching through the PATH
+ * environment variable.
+ * 
+ * @param data The data structure containing the environment list.
+ * @param cmd The command to find the executable path for.
+ * @return The executable path if found, NULL otherwise.
+ */
+char	*find_exe_path(t_data *data, char *cmd)
 {
 	t_list	*path_env;
 	t_env	*content;
@@ -46,10 +52,13 @@ char	*exec_findpath(t_data *data, char *cmd)
 	return (NULL);
 }
 
-// exec_copyenv
-// - copies the env linked list into char array for the purposes of 'execve';
-// - doesn't create new strings, but copies POINTERS (for easier env mngmt);
-char	**exec_copyenv(t_data *data)
+/**
+ * Creates a copy of the environment list as an array of strings.
+ * 
+ * @param data The data structure containing the environment list.
+ * @return The copied environment list as an array of strings.
+ */
+char	**env_copy(t_data *data)
 {
 	char	**arr;
 	t_list	*current;
@@ -72,9 +81,13 @@ char	**exec_copyenv(t_data *data)
 	return (arr);
 }
 
-// exec_isbuiltin
-// - returns 0 if provided command is builtin;
-int	exec_isbuiltin(char *cmd)
+/**
+ * Checks if a command is a built-in command.
+ * 
+ * @param cmd The command to check.
+ * @return 1 if the command is a built-in command, 0 otherwise.
+ */
+int is_builtin(char *cmd)
 {
 	if (ft_strncmp(cmd, "cd", 2) == 0
 		|| ft_strncmp(cmd, "echo", 4) == 0
@@ -86,57 +99,4 @@ int	exec_isbuiltin(char *cmd)
 		return (1);
 	else
 		return (0);
-}
-
-// exec_runbuiltin
-// - runs provided builtin;
-void exec_runbuiltin(t_data *data, char **cmd)
-{
-	if (ft_strncmp(cmd[0], "cd", 2) == 0)
-		ft_cd(cmd, data);
-	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
-		ft_echo(cmd);
-	else if (ft_strncmp(cmd[0], "env", 4) == 0)
-		ft_env(data);
-	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
-		ft_exit(cmd, data);
-	else if (ft_strncmp(cmd[0], "export", 6) == 0)
-		ft_export(cmd, data);
-	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
-		ft_pwd();
-	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
-		ft_unset(cmd, data);
-}
-
-// exec_handleredirect
-// - handles the redirection accordingly to specified symbol and file;
-// - function is called from inside a child process;
-void	exec_handleredirect(t_list *redirects)
-{
-	t_lexer	*content;
-	int		redirection;
-	char	*filename;
-	int		fd;
-
-	content = (t_lexer *) redirects->content;
-	redirection = content->token;
-	filename = content->word;
-	if (redirection == 4)
-	{
-		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		dup2(fd, STDOUT);
-		close(fd);
-	}
-	else if (redirection == 5)
-	{
-		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
-		dup2(fd, STDOUT);
-		close(fd);
-	}
-	else if (redirection == 2)
-	{
-		fd = open(filename, O_RDONLY);
-		dup2(fd, STDIN);
-		close(fd);
-	}
 }
