@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/08 18:06:28 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 18:11:04 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,13 @@ char	**env_copy(t_data *data)
  */
 int is_builtin(char *cmd)
 {
-	if (ft_strncmp(cmd, "cd", 2) == 0
-		|| ft_strncmp(cmd, "echo", 4) == 0
-		|| ft_strncmp(cmd, "env", 3) == 0
-		|| ft_strncmp(cmd, "exit", 4) == 0
-		|| ft_strncmp(cmd, "export", 6) == 0
-		|| ft_strncmp(cmd, "pwd", 3) == 0
-		|| ft_strncmp(cmd, "unset", 5) == 0)
+	if ((ft_strncmp(cmd, "cd", 2) == 0 && ft_strlen(cmd) == 2)
+		|| (ft_strncmp(cmd, "echo", 4) == 0 && ft_strlen(cmd) == 4)
+		|| (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
+		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4)
+		|| (ft_strncmp(cmd, "export", 6) == 0 && ft_strlen(cmd) == 6)
+		|| (ft_strncmp(cmd, "pwd", 3) == 0 && ft_strlen(cmd) == 3)
+		|| (ft_strncmp(cmd, "unset", 5) == 0 && ft_strlen(cmd) == 5))
 		return (1);
 	else
 		return (0);
