@@ -2,29 +2,6 @@
 This project is about recreating our own version of bash with limited functionality.
 A miniature shell :).
 
-## Progress
-- Display a promt while waiting for a new commmand.
-- Have a working history.
-- Find and launch executables (using the PATH variable or an absolute path).
-- Handle ' (single) and " (double) quotes like in bash.
-- Implement redirections such as:
-	- '<' redirect input.
-	- '>' redirect output.
-	- '<<' heredoc (doesn't affect history).
-	- '>>' redirect output in append mode.
-- Implement | (pipes).
-- Handle environment variables.
-- Handle $?.
-- ctrl-C, ctrl-D, and ctrl-\ should behave like in bash.
-- Recreate the following builtins:
-	- ✅ echo with option -n.
-	- cd with only a relative or absolute path.
-	- ✅ pwd (no flags).
-	- export (no flags).
-	- unset (no flags).
-	- env (no flags or arguments).
-	- exit (no flags).
-
 ## Valgrind
 ```valgrind -s --leak-check=full --show-reachable=yes --error-limit=no --suppressions=minishell.supp ./minishell```
 
@@ -33,14 +10,6 @@ A miniature shell :).
 - ```--show-reachable=yes```: same as ```--show-leak-kinds=all``` that shows all kinds of memory leaks
 - ```--error-limit=no```: won't stop showing errors if too many
 - ```--suppressions=minishell.supp```: suppresses memory leaks from in-built functions (readline and add_history)
-
-## Useful stuff
-### Git 
-- Switch to a branch: ```git checkout [my-branch-name]```
-- Create and switch to a branch: ```git checkout -b [my-branch-name]```
-
-### Reminder - things to free
-- linked list storing env variables;
 
 ### Permitted functions and their descriptionu
 | Function        | Description                                                                 |
