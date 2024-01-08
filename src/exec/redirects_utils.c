@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/08 13:01:09 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:34:16 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * 
  * @param redirects The list of redirects to handle.
  */
-void handle_redirect(t_list *redirects)
+void handle_redirect(t_list *redirects, char *hd_file)
 {
 	t_list	*curr_redirect = redirects;
 	t_lexer	*content;
@@ -41,9 +41,9 @@ void handle_redirect(t_list *redirects)
 		else if (redirection == 5)
 			handle_output_append(filename);
 		else if (redirection == 2)
-			handle_input_single(filename);
-		else if (redirection == 3)
-			handle_input_heredoc(filename);
+			handle_input(filename);
+		else if (hd_file)
+			handle_input(hd_file);
 		curr_redirect = curr_redirect->next;
 	}
 }
@@ -79,25 +79,11 @@ void handle_output_append(char *filename)
 }
 
 /**
- * @brief Handles redirecting standard input from a file.
+ * @brief Handles redirecting standard input from a file or heredoc.
  * 
  * @param filename The name of the file to redirect the input from.
  */
-void handle_input_single(char *filename)
-{
-	int fd;
-	
-	fd = open(filename, O_RDONLY);
-	dup2(fd, STDIN);
-	close(fd);
-}
-
-/**
- * @brief Handles redirecting standard input from a file using a here document.
- * 
- * @param filename The name of the file to redirect the input from.
- */
-void handle_input_heredoc(char *filename)
+void handle_input(char *filename)
 {
 	int fd;
 	

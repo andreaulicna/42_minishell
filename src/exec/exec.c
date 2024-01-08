@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/08 13:08:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:23:22 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void run_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 
 	content = (t_simple_cmds *) simple_cmds->content;
 	if (content->redirects)
-			handle_redirect(content->redirects);
+			handle_redirect(content->redirects, content->hd_file);
 	if (is_builtin(content->cmd[0]))
 		run_builtin(data, content->cmd, fd_input, fd_output);
 	else
@@ -96,7 +96,7 @@ void run_exec(t_data *data, t_list *cmd, int fd_input, int fd_output)
 	content = (t_simple_cmds *) cmd->content;
 	if (pid == 0)
 	{
-		pipe_redirect(fd_input, fd_output);
+		pipe_redirect(fd_input, fd_output);	
 		env_cpy = env_copy(data);
 		path = find_exe_path(data, content->cmd[0]);
 		if (path != NULL)
@@ -125,7 +125,7 @@ void run_builtin(t_data *data, char **cmd, int fd_input, int fd_output)
 		ft_cd(cmd, data);
 	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
 		ft_echo(cmd);
-	else if (ft_strncmp(cmd[0], "env", 4) == 0)
+	else if (ft_strncmp(cmd[0], "env", 3) == 0)
 		ft_env(data);
 	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
 		ft_exit(cmd, data);
