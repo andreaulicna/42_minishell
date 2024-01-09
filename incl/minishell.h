@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/09 20:25:19 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/09 23:51:46 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ void	ft_cd_update(char *oldpwd, t_data *data);
 int		ft_cd_home(char *oldpwd, t_data *data);
 int		ft_cd_previous(char *oldpwd, t_data *data);
 int		ft_export(char **args, t_data *data);
+void	ft_export_add(char **args, t_data *data, int i);
 void	ft_export_list(t_data *data);
 void	ft_export_sort(char **env_arr);
 void	ft_export_format(char *env_var);
