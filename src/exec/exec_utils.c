@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/08 18:11:04 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/09 20:29:55 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,21 @@ int is_builtin(char *cmd)
 		return (1);
 	else
 		return (0);
+}
+
+/**
+ * Waits for all processes in the pipeline to finish.
+ *
+ * @param pid_list An array of process IDs representing the pipeline.
+ */
+void wait_for_pipeline(int pid_list[])
+{
+	int i;
+
+	i = 0;
+	while (pid_list[i])
+	{
+		waitpid(pid_list[i], NULL, 0);
+		i++;
+	}
 }

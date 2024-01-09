@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/08 19:48:19 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/09 20:25:19 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,9 +188,10 @@ int		ft_exit_checknum(char *str);
 
 /* Execution */
 int		exec(t_data *data, t_list *simple_cmds);
-void	run_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output);
-void	run_builtin(t_data *data, char **cmd, int fd_input, int fd_output);
-void	run_exec(t_data *data, t_list *cmd, int fd_input, int fd_output);
+void	exec_pipeline(t_data *data, t_list *simple_cmds);
+int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output);
+void	run_builtin(t_data *data, char **cmd);
+void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
 int		is_builtin(char *cmd);
 void	handle_redirect(t_list *redirects, char *hd_file);
@@ -198,6 +199,7 @@ void	handle_output_single(char *filename);
 void	handle_output_append(char *filename);
 void	handle_input(char *filename);
 char	**env_copy(t_data *data);
+void	 wait_for_pipeline(int pid_list[]);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
 void	pipe_redirect(int fd_input, int fd_output);
