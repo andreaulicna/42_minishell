@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/08 18:01:48 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/10 12:24:47 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	check_enter_space(char *input)
 
 int	minishell_loop(t_data *data)
 {
+	data->prompt = set_prompt(data->env_list);
 	data->input = readline((const char *)data->prompt);
 	if (!check_input_null(data->input))
 	{
@@ -106,7 +107,6 @@ int	main(int argc, char **argv, char *env[])
 	}
 	init_data(&data);
 	env_init(env, &data);
-	data.prompt = set_prompt(data.env_list);
 	minishell_loop(&data);
 	return (0);
 }
