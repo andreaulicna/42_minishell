@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/10 12:24:47 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 22:01:28 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
 
-	signal(SIGINT, handle_sigint);
+	init_signals();
 	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
