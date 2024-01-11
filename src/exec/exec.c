@@ -6,12 +6,22 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 14:38:43 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 21:02:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
+/**
+ * Executes a list of simple commands.
+ * 
+ * Saves the STDIN and STDOUT file descriptors for later restoration.
+ * If there is only one command and it's a builtin, runs it in the main process.
+ * For all other cases, runs a pipeline with child processes.
+ * 
+ * @param data The data structure containing the shell's state and settings.
+ * @param simple_cmds The linked list of simple commands to execute.
+ */
 int exec(t_data *data, t_list *simple_cmds)
 {
 	t_simple_cmds	*content;
@@ -32,6 +42,20 @@ int exec(t_data *data, t_list *simple_cmds)
 	return (0);
 }
 
+/**
+ * Executes a pipeline of simple commands.
+ *
+ * This function takes a data structure, a linked list of simple commands,
+ * and the number of commands in the pipeline. It creates pipes for
+ * inter-process communication and forks child processes to execute each
+ * command in the pipeline. The input and output file descriptors are managed
+ * accordingly to redirect the input and output of each command.
+ * The function waits for all child processes to complete before returning.
+ *
+ * @param data The data structure containing information about the shell environment.
+ * @param simple_cmds The linked list of simple commands in the pipeline.
+ * @param cmds_num The number of commands in the pipeline.
+ */
 void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
 	int	fd_pipe[2];
@@ -61,12 +85,21 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 	wait_for_pipeline(data, pid_list, cmds_num);
 }
 
+/**
+ * Forks a new process to execute a command.
+ *
+ * @param data The data structure containing the shell's state.
+ * @param simple_cmds The list of simple commands to execute.
+ * @param fd_input The file descriptor for input redirection.
+ * @param fd_output The file descriptor for output redirection.
+ * @return The process ID of the child process.
+ */
 int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 {
 	int				pid;
 	t_simple_cmds	*content;
-	
-	content = (t_simple_cmds *) simple_cmds->content;
+
+	content = (t_simple_cmds *)simple_cmds->content;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -75,7 +108,6 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 	}
 	if (pid == 0)
 	{
-		// fprintf(stderr, "Child process created\n");
 		pipe_redirect(fd_input, fd_output);
 		if (content->redirects)
 			handle_redirect(content->redirects, content->hd_file);
@@ -91,10 +123,18 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 	return (pid);
 }
 
+/**
+ * Executes the given command. First checks if the command was given in and
+ * absolute path. If so, executes it. If not, parses the command name and
+ * attempts to generate a path for the executable.
+ * 
+ * @param data The data structure containing the shell's state.
+ * @param content The structure containing the parsed command.
+ */
 void run_exec(t_data *data, t_simple_cmds *content)
 {
-	char	**env_cpy;
-	char	*path;
+	char    **env_cpy;
+	char    *path;
 
 	env_cpy = env_copy(data);
 	if (access(content->cmd[0], F_OK) == 0)
@@ -110,6 +150,12 @@ void run_exec(t_data *data, t_simple_cmds *content)
 	exit(data->exit_status);
 }
 
+/**
+ * Executes the appropriate built-in command based on the given command.
+ *
+ * @param data The data structure containing the shell's state.
+ * @param cmd The command to be executed.
+ */
 void run_builtin(t_data *data, char **cmd)
 {
 	if (ft_strncmp(cmd[0], "cd", 2) == 0)
