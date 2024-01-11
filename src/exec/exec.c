@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 09:20:30 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 12:00:54 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,10 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 	int	pid_list[cmds_num];
 	int	i;
 
-	fprintf(stderr, "num of cmds: %d\n", cmds_num);
 	fd_input = STDIN;
 	i = 0;
 	while(i < cmds_num && simple_cmds != NULL)
 	{
-		fprintf(stderr, "enter loop %d\n", i);
 		if (simple_cmds->next != NULL)
 			fd_output = pipe_create(fd_pipe);
 		else
@@ -69,7 +67,6 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 	t_simple_cmds	*content;
 	
 	content = (t_simple_cmds *) simple_cmds->content;
-	fprintf(stderr, "forked\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -83,14 +80,13 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 			handle_redirect(content->redirects, content->hd_file);
 		if (is_builtin(content->cmd[0]))
 		{
-			fprintf(stderr, "builtin\n");
 			run_builtin(data, content->cmd);
-			_exit(0);
+			exit(0);
 		}
 		else
 		{
-			fprintf(stderr, "executable\n");
 			run_exec(data, content);
+			// exit(1);
 		}
 	}
 	return (pid);
@@ -109,7 +105,7 @@ void run_exec(t_data *data, t_simple_cmds *content)
 		free(path);
 	}
 	free(env_cpy);
-	exit_current_prompt(NULL);
+	exit(1);
 }
 
 void run_builtin(t_data *data, char **cmd)

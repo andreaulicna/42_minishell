@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/09 20:29:55 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 12:33:17 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ char	*find_exe_path(t_data *data, char *cmd)
 	char	*temp;
 	char	*working_path;
 	int		i;
-	
+
 	path_env = env_find(data->env_list, "PATH");
 	content = (t_env *) (path_env->content);
 	path_arr = ft_split(ft_strdup(content->value), ':');
 	i = 0;
-	while (path_arr != NULL)
+	while (path_arr[i] != NULL)
 	{
 		temp = ft_strjoin(path_arr[i], "/");
 		working_path = ft_strjoin(temp, cmd);
