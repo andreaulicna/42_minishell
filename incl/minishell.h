@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/20 00:08:27 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/11 18:56:31 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef struct s_str
 // main_a.c
 int		minishell_loop(t_data *data);
 // print.c
-void	print_input_split(t_data *data);
+void	print_input_split(char **input_split);
 void	print_lexer(t_list **lexer);
 void	print_simple_cmds(t_list **simple_cmds);
 
@@ -128,12 +128,18 @@ void	delete_backslash(char **cmd, int i_cmd);
 
 /* Heredoc */
 int		heredoc(t_data *data);
+void	heredoc_no_space(t_data *data);
 
 /* Lexer */
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
+//	no_space_split.c
+int		contains_space(char *s);
+t_tokens	contains_token_with_no_space(char *s);
+char	**no_space_split(char **input_split, int index, t_tokens token);
 // lexer.c
-int		input_arr_to_lexer_list(char **input_split, t_list **lexer);
+t_tokens	is_token(char *check);
+int		input_arr_to_lexer_list(t_data *data);
 
 /* Parser */
 // parser.c

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/19 18:53:25 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/11 18:46:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_tokens	is_token(char *check)
 		return (LESS_2);
 	else if (!ft_strncmp(">", check, len))
 		return (GREATER);
-	else if (!ft_strncmp(">>", check, 2))
+	else if (!ft_strncmp(">>", check, len))
 		return (GREATER_2);
 	return (0);
 }
@@ -69,34 +69,65 @@ void	assign_word(t_lexer *content, char *word)
 }
 
 /**
+ * @brief	Handles redirections without spaces by detecting them and
+ * reconstructing the input_split accordingly.
+ *
+ * @param	data	pointer to the t_data structure (for input_split)
+ */
+void	handle_redirect_no_space(t_data *data)
+{
+	int			i;
+	char		**input_split;
+	t_tokens	token;
+
+	i = 0;
+	input_split = data->input_split;
+	while (input_split[i])
+	{
+		token = contains_token_with_no_space(input_split[i]);
+		if (!contains_space(input_split[i]) && token != 0)
+		{
+			data->input_split = no_space_split(input_split, i, token);
+			input_split = data->input_split;
+			i++;
+		}
+		i++;
+	}
+}
+
+/**
  * @brief	Converts an input string array into a lexer-linked list where each
  * node represents either a token or a word from the input.
  * 
+ * At the beginning, it checks for the case of heredoc being passed without
+ * space, i.e. '<<EOF', and recreates the input_split to cater for it.
+ * 
  * For each node of the lexer list, either the word or the token is filled in.
  * 
- * @param	input_split	array of strings obtained from ft_split_minishell
- * @return	int			returns 0 upon successfully creating lexer
+ * @param	data	pointer to the t_data structure (for input_split, lexer)
+ * @return	int		returns 0 upon successfully creating lexer
  */
-int	input_arr_to_lexer_list(char **input_split, t_list **lexer)
+int	input_arr_to_lexer_list(t_data *data)
 {
 	t_list	*current;
 	t_lexer	*content;
 	int		i;
 
+	handle_redirect_no_space(data);
 	current = NULL;
 	i = 0;
-	while (input_split[i])
+	while (data->input_split[i])
 	{
 		content = malloc(sizeof(t_lexer));
 		if (!content)
 			exit_minishell(NULL, EXIT_MALLOC);
 		content->id = i;
-		if (is_token(input_split[i]))
-			assign_token(content, is_token(input_split[i]));
+		if (is_token(data->input_split[i]))
+			assign_token(content, is_token(data->input_split[i]));
 		else
-			assign_word(content, input_split[i]);
+			assign_word(content, data->input_split[i]);
 		current = ft_lstnew(content);
-		ft_lstadd_back(lexer, current);
+		ft_lstadd_back(&data->lexer, current);
 		i++;
 	}
 	return (EXIT_SUCCESS);
