@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 13:55:17 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:38:43 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	wait_for_pipeline(pid_list, cmds_num);
+	wait_for_pipeline(data, pid_list, cmds_num);
 }
 
 int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
@@ -82,13 +82,11 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
-			exit(0);
+			data->exit_status = 0;
+			exit(data->exit_status);
 		}
 		else
-		{
 			run_exec(data, content);
-			// exit(1);
-		}
 	}
 	return (pid);
 }
@@ -108,7 +106,8 @@ void run_exec(t_data *data, t_simple_cmds *content)
 		free(path);
 	}
 	free(env_cpy);
-	exit(1);
+	data->exit_status = 126;
+	exit(data->exit_status);
 }
 
 void run_builtin(t_data *data, char **cmd)

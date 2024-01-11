@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 13:54:18 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:37:09 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ char	*find_exe_path(t_data *data, char *cmd)
 	free_array(path_arr);
 	ft_putstr_fd(cmd, STDERR);
 	ft_putendl_fd(": command not found", STDERR);
+	data->exit_status = 127;
+	exit(data->exit_status);
 	return (NULL);
 }
 
@@ -106,14 +108,17 @@ int is_builtin(char *cmd)
  *
  * @param pid_list An array of process IDs representing the pipeline.
  */
-void wait_for_pipeline(int pid_list[], int cmds_num)
+void wait_for_pipeline(t_data *data, int pid_list[], int cmds_num)
 {
 	int i;
+	int	status;
 
 	i = 0;
 	while (i < cmds_num)
 	{
-		waitpid(pid_list[i], NULL, 0);
+		waitpid(pid_list[i], &status, 0);
+		if (WIFEXITED(status))
+			data->exit_status = WEXITSTATUS(status);
 		i++;
 	}
 }
