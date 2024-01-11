@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_a.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/20 21:50:10 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/10 12:24:47 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ int	check_enter_space(char *input)
 
 int	minishell_loop(t_data *data)
 {
+	data->prompt = set_prompt(data->env_list);
 	data->input = readline((const char *)data->prompt);
 	if (!check_input_null(data->input))
 	{
-		printf("exit\n");
+		ft_putendl_fd("exit", STDOUT);
 		exit_minishell(NULL, 50);
 	}
 	if (!check_quotes(data->input) || !check_enter_space(data->input))
@@ -43,7 +44,8 @@ int	minishell_loop(t_data *data)
 	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
 	expander(data);
 	heredoc(data);
-	print_simple_cmds(&data->simple_cmds);
+	exec(data, data->simple_cmds);
+	// print_simple_cmds(&data->simple_cmds);
 	exit_current_prompt(data);
 	return (1);
 }
@@ -96,6 +98,7 @@ int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
 
+	signal(SIGINT, handle_sigint);
 	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
@@ -104,7 +107,6 @@ int	main(int argc, char **argv, char *env[])
 	}
 	init_data(&data);
 	env_init(env, &data);
-	data.prompt = set_prompt(data.env_list);
 	minishell_loop(&data);
 	return (0);
 }
