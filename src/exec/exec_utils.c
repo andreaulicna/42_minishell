@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 13:44:30 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 13:54:18 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,13 @@ int is_builtin(char *cmd)
  *
  * @param pid_list An array of process IDs representing the pipeline.
  */
-void wait_for_pipeline(int pid_list[])
+void wait_for_pipeline(int pid_list[], int cmds_num)
 {
 	int i;
 
 	i = 0;
-	while (pid_list[i])
+	while (i < cmds_num)
 	{
-		// fprintf(stderr, "waiting[%d] = %d\n", i, pid_list[i]);
 		waitpid(pid_list[i], NULL, 0);
 		i++;
 	}

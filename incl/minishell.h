@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/10 16:14:59 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 13:54:35 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void	handle_output_single(char *filename);
 void	handle_output_append(char *filename);
 void	handle_input(char *filename);
 char	**env_copy(t_data *data);
-void	 wait_for_pipeline(int pid_list[]);
+void	 wait_for_pipeline(int pid_list[], int cmds_num);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
 void	pipe_redirect(int fd_input, int fd_output);

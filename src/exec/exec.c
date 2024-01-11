@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 13:44:26 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 13:55:17 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,7 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	// fprintf(stderr, "cmds_num[%d]\n", cmds_num);
-	// for (int j = 0; pid_list[j]; j++)
-	// 	fprintf(stderr, "pid_list[%d] = %d\n", j, pid_list[j]);
-	wait_for_pipeline(pid_list);
+	wait_for_pipeline(pid_list, cmds_num);
 }
 
 int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
