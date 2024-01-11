@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 12:00:54 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 13:44:26 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 
 	fd_input = STDIN;
 	i = 0;
-	while(i < cmds_num && simple_cmds != NULL)
+	while(i < cmds_num)
 	{
 		if (simple_cmds->next != NULL)
 			fd_output = pipe_create(fd_pipe);
@@ -58,6 +58,9 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
+	// fprintf(stderr, "cmds_num[%d]\n", cmds_num);
+	// for (int j = 0; pid_list[j]; j++)
+	// 	fprintf(stderr, "pid_list[%d] = %d\n", j, pid_list[j]);
 	wait_for_pipeline(pid_list);
 }
 
@@ -75,6 +78,7 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 	}
 	if (pid == 0)
 	{
+		// fprintf(stderr, "Child process created\n");
 		pipe_redirect(fd_input, fd_output);
 		if (content->redirects)
 			handle_redirect(content->redirects, content->hd_file);
@@ -98,6 +102,8 @@ void run_exec(t_data *data, t_simple_cmds *content)
 	char	*path;
 
 	env_cpy = env_copy(data);
+	if (access(content->cmd[0], F_OK) == 0)
+		execve(content->cmd[0], content->cmd, env_cpy);
 	path = find_exe_path(data, content->cmd[0]);
 	if (path != NULL)
 	{

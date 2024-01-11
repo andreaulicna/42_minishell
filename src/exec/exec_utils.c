@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 12:33:17 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 13:44:30 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void wait_for_pipeline(int pid_list[])
 	i = 0;
 	while (pid_list[i])
 	{
+		// fprintf(stderr, "waiting[%d] = %d\n", i, pid_list[i]);
 		waitpid(pid_list[i], NULL, 0);
 		i++;
 	}
