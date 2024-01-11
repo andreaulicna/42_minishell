@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/09 23:51:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/10 16:14:59 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ int		ft_exit_checknum(char *str);
 
 /* Execution */
 int		exec(t_data *data, t_list *simple_cmds);
-void	exec_pipeline(t_data *data, t_list *simple_cmds);
+void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num);
 int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output);
 void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);

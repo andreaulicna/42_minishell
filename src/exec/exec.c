@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/09 20:43:08 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/11 09:20:30 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 int exec(t_data *data, t_list *simple_cmds)
 {
 	t_simple_cmds	*content;
+	int				cmds_num;
 
 	orig_fds_save(&data->orig_fdin, &data->orig_fdout);
 	content = (t_simple_cmds *) simple_cmds->content;
+	cmds_num = ft_lstsize(simple_cmds);
 	if (simple_cmds->next == NULL && is_builtin(content->cmd[0]))
 	{
 		if (content->redirects)
@@ -25,28 +27,30 @@ int exec(t_data *data, t_list *simple_cmds)
 		run_builtin(data, content->cmd);
 	}
 	else
-		exec_pipeline(data, simple_cmds);
+		exec_pipeline(data, simple_cmds, cmds_num);
 	orig_fds_restore(data->orig_fdin, data->orig_fdout);
 	return (0);
 }
 
-void exec_pipeline(t_data *data, t_list *simple_cmds)
+void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
 	int	fd_pipe[2];
 	int	fd_input;
 	int	fd_output;
-	int	pid_list[ft_lstsize(simple_cmds)];
+	int	pid_list[cmds_num];
 	int	i;
 
+	fprintf(stderr, "num of cmds: %d\n", cmds_num);
 	fd_input = STDIN;
 	i = 0;
-	while(simple_cmds != NULL)
+	while(i < cmds_num && simple_cmds != NULL)
 	{
+		fprintf(stderr, "enter loop %d\n", i);
 		if (simple_cmds->next != NULL)
 			fd_output = pipe_create(fd_pipe);
 		else
 			fd_output = STDOUT;
-		pid_list[i++] = fork_cmd(data, simple_cmds, fd_input, fd_output);
+		pid_list[i] = fork_cmd(data, simple_cmds, fd_input, fd_output);
 		if (fd_input != STDIN)
 			close(fd_input);
 		if (simple_cmds->next != NULL)
@@ -54,6 +58,7 @@ void exec_pipeline(t_data *data, t_list *simple_cmds)
 		if (simple_cmds->next == NULL && ft_lstsize(simple_cmds) > 1)
 			close(fd_input);
 		simple_cmds = simple_cmds->next;
+		i++;
 	}
 	wait_for_pipeline(pid_list);
 }
@@ -64,6 +69,7 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 	t_simple_cmds	*content;
 	
 	content = (t_simple_cmds *) simple_cmds->content;
+	fprintf(stderr, "forked\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -76,9 +82,16 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 		if (content->redirects)
 			handle_redirect(content->redirects, content->hd_file);
 		if (is_builtin(content->cmd[0]))
+		{
+			fprintf(stderr, "builtin\n");
 			run_builtin(data, content->cmd);
+			_exit(0);
+		}
 		else
+		{
+			fprintf(stderr, "executable\n");
 			run_exec(data, content);
+		}
 	}
 	return (pid);
 }
