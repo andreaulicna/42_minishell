@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 09:42:35 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:35:29 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,11 @@ int	minishell_loop(t_data *data)
 
 //int	minishell_loop(t_data *data)
 //{
+//	data->prompt = set_prompt(data->env_list);
 //	data->input = readline((const char *)data->prompt);
 //	if (!check_input_null(data->input))
 //	{
-//		printf("exit\n");
+//		ft_putendl_fd("exit", STDOUT);
 //		exit_minishell(NULL, 50);
 //	}
 //	if (!check_quotes(data->input) || !check_enter_space(data->input))
@@ -78,6 +79,7 @@ int	minishell_loop(t_data *data)
 //	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
 //	printf("Rest of lexer: \n");
 //	print_lexer(&data->lexer);
+//	/* Parser - Link list E */
 //	printf("----------------------\n");
 //	printf("SIMPLE CMDS - before expander\n");
 //	print_simple_cmds(&data->simple_cmds);
@@ -90,8 +92,8 @@ int	minishell_loop(t_data *data)
 //	heredoc(data);
 //	printf("----------------------\n");
 //	printf("SIMPLE CMDS - after heredoc\n");
-//	print_simple_cmds(&data->simple_cmds);
-//	/* Parser - Link list E */
+////	print_simple_cmds(&data->simple_cmds);
+//	exec(data, data->simple_cmds);
 //	exit_current_prompt(data);
 //	return (1); //should never reach this
 //}
