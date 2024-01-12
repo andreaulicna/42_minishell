@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 10:18:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/12 10:54:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
  * 
  * @param	fd			file descriptor of the temporary heredoc file
  * @param	line		the line to expand and then write to the heredoc
- * @param	env_list	linked list containing environment variables
+ * @param	data		pointer to the t_data structure (sent to $ expander)
  */
-void	create_heredoc_dollar_line(int fd, char *line, t_list *env_list)
+void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
 {
 	t_simple_cmds	*tmp_node;
 
@@ -37,7 +37,7 @@ void	create_heredoc_dollar_line(int fd, char *line, t_list *env_list)
 	tmp_node->cmd[1] = NULL;
 	tmp_node->redirects = NULL;
 	tmp_node->hd_file = NULL;
-	expander_loop_dollar(tmp_node, 0, env_list);
+	expander_loop_dollar(tmp_node, 0, data);
 	ft_putstr_fd(tmp_node->cmd[0], fd);
 	free_array(tmp_node->cmd);
 	free(tmp_node);
@@ -54,9 +54,9 @@ void	create_heredoc_dollar_line(int fd, char *line, t_list *env_list)
  * 
  * @param	heredoc			list containing heredoc content
  * @param	hd_file_name	name of the temporary heredoc file
- * @param	env_list		list containing environment variables for expansion
+ * @param	data		pointer to the t_data structure (sent to $ expander)
  */
-void	create_heredoc(t_list *heredoc, char *hd_file_name, t_list *env_list)
+void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 {
 	int		fd;
 	char	*line;
@@ -71,7 +71,7 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_list *env_list)
 			&& line[ft_strlen(limiter)] == '\0')
 			break;
 		else if (contains_dollar(line))
-			create_heredoc_dollar_line(fd, line, env_list);
+			create_heredoc_dollar_line(fd, line, data);
 		else
 			ft_putstr_fd(line, fd);
 		ft_putstr_fd("\n", fd);
@@ -115,8 +115,9 @@ char	*get_hd_file_name(void)
  * 
  * @param	simple_cmd	list containing simple command data
  * @param	env_list	list containing environment variables for expansion
+ * @param	data		pointer to the t_data structure (sent to $ expander)
  */
-void	process_heredoc(t_list *simple_cmd, t_list *env_list)
+void	process_heredoc(t_list *simple_cmd, t_data *data)
 {
 	t_simple_cmds	*content_simple_cmd;
 	t_list			*current_redirect;
@@ -132,8 +133,7 @@ void	process_heredoc(t_list *simple_cmd, t_list *env_list)
 			if (content_simple_cmd->hd_file)
 				free(content_simple_cmd->hd_file);
 			content_simple_cmd->hd_file = get_hd_file_name();
-			create_heredoc(current_redirect, content_simple_cmd->hd_file,
-				env_list);
+			create_heredoc(current_redirect, content_simple_cmd->hd_file, data);
 		}
 		current_redirect = current_redirect->next;
 	}
@@ -156,7 +156,7 @@ int	heredoc(t_data *data)
 	current = data->simple_cmds;
 	while (current)
 	{
-		process_heredoc(current, data->env_list);
+		process_heredoc(current, data);
 		current = current->next;
 	}
 	return (0);
