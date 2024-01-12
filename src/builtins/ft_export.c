@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 13:05:52 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/09 23:52:36 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	ft_export_list(t_data *data)
 // - if args, add varible into the env linked list;
 int	ft_export(char **args, t_data *data)
 {
-	int	i;
+	int		i;
 
 	if (strs_count(args) == 1)
 	{
@@ -118,8 +118,32 @@ int	ft_export(char **args, t_data *data)
 	i = 1;
 	while (args[i] != NULL)
 	{
-		env_add(&data->env_list, args[i]);
+		ft_export_add(args, data, i);
 		i++;
 	}
 	return (0);
+}
+
+void ft_export_add(char **args, t_data *data, int i)
+{
+	t_list	*possible_duplicate;
+	size_t	equal_pos;
+	char	*var_name;
+
+	equal_pos = 0;
+	while (args[i][equal_pos] != '=' && args[i][equal_pos] != '\0')
+		equal_pos++;
+	var_name = ft_substr(args[i], 0, equal_pos);
+	possible_duplicate = env_find(data->env_list, var_name);
+	if (possible_duplicate == NULL)
+		env_add(&data->env_list, args[i]);
+	else
+	{
+		if (args[i][equal_pos] == '=')
+		{
+			env_remove(&data->env_list, var_name);
+			env_add(&data->env_list, args[i]);
+		}
+	}
+	free(var_name);
 }

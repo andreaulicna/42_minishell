@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 12:49:45 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/10 14:56:59 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	ft_cd(char **args, t_data *data)
 		return (1);
 	}
 	getcwd(cwd, PATH_MAX);
-	if (args[1] == NULL)
+	if (args[1] == NULL || (args[1][0] == '~' && !args[1][1]))
 		return (ft_cd_home(cwd, data));
 	else if (args[1] && !ft_strncmp(args[1], "-", 1))
 		return (ft_cd_previous(cwd, data));

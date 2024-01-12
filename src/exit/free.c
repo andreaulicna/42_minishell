@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 13:37:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/11 16:31:43 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/12 08:54:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ void	free_data(t_data *data)
 		free(data->prompt);
 	if (data->input_split)
 		free_array(data->input_split);
+	if (data->orig_fdin)
+		close(data->orig_fdin);
+	if (data->orig_fdout)
+		close(data->orig_fdout);
 }
 
 void	free_data_current_prompt(t_data *data)

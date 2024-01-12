@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/11 18:56:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/12 08:54:02 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,12 @@
 # define STDOUT	1
 # define STDERR	2
 
-# define EXIT_MALLOC 4
+# define PIPE_READ	0
+# define PIPE_WRITE	1
+
+# define EXIT_MALLOC		4
+# define EXIT_EXECVE 		5
+# define EXIT_EXECNOTFOUND	127
 
 typedef struct s_data
 {
@@ -43,6 +48,9 @@ typedef struct s_data
 	char	*prompt;
 	char	*input;
 	char	**input_split;
+	int		orig_fdin;
+	int		orig_fdout;
+	int		exit_status;
 }				t_data;
 
 typedef struct s_env
@@ -178,11 +186,35 @@ void	ft_cd_update(char *oldpwd, t_data *data);
 int		ft_cd_home(char *oldpwd, t_data *data);
 int		ft_cd_previous(char *oldpwd, t_data *data);
 int		ft_export(char **args, t_data *data);
+void	ft_export_add(char **args, t_data *data, int i);
 void	ft_export_list(t_data *data);
 void	ft_export_sort(char **env_arr);
 void	ft_export_format(char *env_var);
 int		ft_unset(char **args, t_data *data);
 void	ft_exit(char **args, t_data *data);
 int		ft_exit_checknum(char *str);
+
+/* Execution */
+int		exec(t_data *data, t_list *simple_cmds);
+void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num);
+int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output);
+void	run_builtin(t_data *data, char **cmd);
+void	run_exec(t_data *data, t_simple_cmds *content);
+char	*find_exe_path(t_data *data, char *cmd);
+int		is_builtin(char *cmd);
+void	handle_redirect(t_list *redirects, char *hd_file);
+void	handle_output_single(char *filename);
+void	handle_output_append(char *filename);
+void	handle_input(char *filename);
+char	**env_copy(t_data *data);
+void	wait_for_pipeline(t_data *data, int pid_list[], int cmds_num);
+int		pipe_create(int fd_pipe[2]);
+int		pipe_close(int fd_pipe[2]);
+void	pipe_redirect(int fd_input, int fd_output);
+void	orig_fds_save(int *orig_input, int *orig_output);
+void	orig_fds_restore(int orig_input, int orig_output);
+
+/* Signals */
+void	handle_sigint(int sig_num);
 
 #endif
