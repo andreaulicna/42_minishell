@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/18 14:34:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:33:21 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ int	contains_dollar(char *str)
  * whether or not to expand a dollar sign based on the predefined conditions
  * represented by the checker_dollar function and does so where appropriate.
  * 
- * @param	content		pointer to t_simple_cmds struct
- * @param	i			index of the command string in the array to process
- * @param	env_list	linked list containing environment variables
+ * @param	content	pointer to t_simple_cmds struct
+ * @param	i		index of the command string in the array to process
+ * @param	data	pointer to the t_data structure (for env_list, exit_status)
  */
-void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list)
+void	expander_loop_dollar(t_simple_cmds *content, int i, t_data *data)
 {
 	int	j;
 	int	dollar_flag;
@@ -61,9 +61,9 @@ void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list)
 			else if (dollar_flag == 3)
 				delete_backslash(content->cmd, i);
 			else if (dollar_flag == 1)
-				expand_exit_code(content->cmd, i);
+				expand_exit_status(content->cmd, i, data->exit_status);
 			else if (dollar_flag == 0)
-				expand_dollar(content->cmd, i, env_list, &j);
+				expand_dollar(content->cmd, i, data->env_list, &j);
 		}
 		j++;
 	}
@@ -105,7 +105,7 @@ void	expander_loop_no_dollar(t_simple_cmds *content, int i)
  * ("1st level detail") while the expander_loop_dollar function traverses
  * through each character of a string ("2nd level detail").
  *  
- * @param	data	pointer to the t_data structure
+ * @param	data	pointer to the t_data structure (for simple_cmds, env_list)
  */
 void	expander(t_data *data)
 {
@@ -121,7 +121,7 @@ void	expander(t_data *data)
 		while (content->cmd[i])
 		{
 			if (contains_dollar(content->cmd[i]))
-				expander_loop_dollar(content, i, data->env_list);
+				expander_loop_dollar(content, i, data);
 			else
 				expander_loop_no_dollar(content, i);
 			i++;

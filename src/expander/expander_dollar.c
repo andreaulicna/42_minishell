@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/18 14:51:34 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:34:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,35 +34,33 @@ int	checker_dollar(char *str, int j)
 {
 	if ((str[0] == '\'' && str[ft_strlen_custom(str) - 1] == '\''))
 		return (5);
-	else if (str[0] == '"' && str[ft_strlen_custom(str) - 1] == '"'
+	if (str[0] == '"' && str[ft_strlen_custom(str) - 1] == '"'
 		&& str[j + 1] == '\\')
 		return (4);
-	else if (j - 1 >= 0)
+	if (j - 1 >= 0)
 	{
 		if (str[j - 1] == '\\')
 			return (3);
 	}
-	else if (str[j + 1] == '\\')
+	if (str[j + 1] == '\\')
 		return (3);
-	else if (!str[j + 1] || str[j + 1] == ' ' || str[j + 1] == '\''
+	if (!str[j + 1] || str[j + 1] == ' ' || str[j + 1] == '\''
 		|| str[j + 1] == '"')
 		return (2);
-	else if (str[j + 1] == '?')
+	if (str[j + 1] == '?')
 		return (1);
 	return (0);
 }
 
 /**
- * WARNING: NOT FULLY IMPLEMENTED - exit code hardcoded
+ * @brief Expands a dollar sign followed by the exit status in a string.
  * 
- * @brief Expands a dollar sign followed by the exit code in a string.
- * 
- * It replaces the exit code placeholder with the exit status of the most
+ * It replaces the exit status placeholder with the exit status of the most
  * recently executed foreground pipeline.
  * 
  * It breaks down the input string into 3 parts:
  * part_1: up until, but not including, the dollar sign
- * part_2: the exit code
+ * part_2: the exit status
  * part_3: after, not including, the question mark that follows the dollar sign
  * 
  * Then it constructs the final string in 2 steps, first joining part_1 and
@@ -73,10 +71,12 @@ int	checker_dollar(char *str, int j)
  * exception of the final string that is not freed until after the whole command
  * is processed and the program reaches the free_simple_cmds function.
  * 
- * @param 	cmd		array of strings containing input commands
- * @param	i_cmd	index of the command string in the array to modify
+ * @param 	cmd			array of strings containing input commands
+ * @param	i_cmd		index of the command string in the array to modify
+ * @param	exit_status	exit status of the most recently executed foreground
+ * 						pipeline
  */
-void	expand_exit_code(char **cmd, int i_cmd)
+void	expand_exit_status(char **cmd, int i_cmd, int exit_status)
 {
 	char	*str;
 	int		i;
@@ -89,7 +89,7 @@ void	expand_exit_code(char **cmd, int i_cmd)
 		i++;
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(str, 0, i);
-	new_str.part_2 = ft_itoa(125);
+	new_str.part_2 = ft_itoa(exit_status);
 	j = 2;
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	new_str.tmp_join = ft_strjoin(new_str.part_1, new_str.part_2);

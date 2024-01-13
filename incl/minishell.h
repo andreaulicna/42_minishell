@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/11 14:31:58 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/12 10:36:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_str
 // main_a.c
 int		minishell_loop(t_data *data);
 // print.c
-void	print_input_split(t_data *data);
+void	print_input_split(char **input_split);
 void	print_lexer(t_list **lexer);
 void	print_simple_cmds(t_list **simple_cmds);
 
@@ -127,21 +127,27 @@ void	free_struct_str(t_str *str);
 // expander.c
 void	expander(t_data *data);
 int		contains_dollar(char *str);
-void	expander_loop_dollar(t_simple_cmds *content, int i, t_list *env_list);
+void	expander_loop_dollar(t_simple_cmds *content, int i, t_data *data);
 // expander_dollar.c
 int		checker_dollar(char *str, int j);
-void	expand_exit_code(char **cmd, int i_cmd);
+void	expand_exit_status(char **cmd, int i_cmd, int exit_status);
 void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd);
 void	delete_backslash(char **cmd, int i_cmd);
 
 /* Heredoc */
 int		heredoc(t_data *data);
+void	heredoc_no_space(t_data *data);
 
 /* Lexer */
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
+//	no_space_split.c
+int		contains_space(char *s);
+t_tokens	contains_token_with_no_space(char *s);
+char	**no_space_split(char **input_split, int index, t_tokens token);
 // lexer.c
-int		input_arr_to_lexer_list(char **input_split, t_list **lexer);
+t_tokens	is_token(char *check);
+int		input_arr_to_lexer_list(t_data *data);
 
 /* Parser */
 // parser.c
