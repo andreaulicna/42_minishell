@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 13:37:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/08 19:05:20 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/12 10:41:14 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void	free_data(t_data *data)
 	if (data->prompt)
 		free(data->prompt);
 	if (data->input_split)
+	{
 		free_array(data->input_split);
+		data->input_split = NULL;
+	}
 	if (data->orig_fdin)
 		close(data->orig_fdin);
 	if (data->orig_fdout)
@@ -39,6 +42,8 @@ void	free_data(t_data *data)
 
 void	free_data_current_prompt(t_data *data)
 {
+	if (data->prompt)
+		free(data->prompt);
 	if (data->lexer)
 	{
 		free_lexer(&data->lexer);
