@@ -3,7 +3,7 @@ This project is about recreating our own version of bash with limited functional
 A miniature shell :).
 
 ## Valgrind
-```valgrind -s --leak-check=full --show-reachable=yes --error-limit=no --suppressions=minishell.supp ./minishell```
+```valgrind -s --leak-check=full --show-reachable=yes --error-limit=no --suppressions=minishell.supp --trace-children=yes ./minishell```
 
 - ```-s```: same as --show-errpr-list=yes that shows detected errors list and suppression count at exit
 - ```--leak-check=full```: shows a full list of memory leaks

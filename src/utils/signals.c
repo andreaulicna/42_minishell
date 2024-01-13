@@ -6,13 +6,13 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 09:39:59 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:50:12 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-void handle_sigint(int sig_num)
+void	handle_sigint(int sig_num)
 {
 	(void) sig_num;
 	write(STDOUT, "\n", 1);

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 10:54:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:49:37 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 	limiter = ((t_lexer *) heredoc->content)->word;
 	while (line)
 	{
-		if (!ft_strncmp(line, limiter, ft_strlen(limiter)) 
+		if (!ft_strncmp(line, limiter, ft_strlen(limiter))
 			&& line[ft_strlen(limiter)] == '\0')
-			break;
+			break ;
 		else if (contains_dollar(line))
 			create_heredoc_dollar_line(fd, line, data);
 		else

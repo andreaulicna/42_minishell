@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:27:08 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/19 14:58:41 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:41:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	free_simple_cmds(t_list **simple_cmds)
 	simple_cmds = NULL;
 }
 
-void	free_struct_str(t_str *str)
+void	free_struct_str(t_str *str, char *old_str)
 {
 	if (str->part_1)
 		free(str->part_1);
@@ -101,4 +101,5 @@ void	free_struct_str(t_str *str)
 		free(str->part_3);
 	if (str->tmp_join)
 		free(str->tmp_join);
+	free(old_str);
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/13 15:35:38 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:40:08 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,36 +115,7 @@ void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
 	ft_lstadd_back(simple_cmds, node_simple_cmds);
 }
 
-void	delete_quotes_from_redirects(t_lexer *content_redirect)
-{
-	int		i;
-	int		j;
-	char	q;
-	t_str	new_word;
-
-	if (has_quotes(content_redirect->word, &q))
-	{
-		i = 0;
-		while (content_redirect->word[i] != q)
-			i++;
-		init_struct_str(&new_word);
-		new_word.part_1 = ft_substr(content_redirect->word, 0, i);
-		j = 0;
-		i++;
-		while (content_redirect->word[i + j] != q)
-			j++;
-		new_word.part_2 = ft_substr(content_redirect->word, i, j);
-		new_word.part_3 = ft_substr(content_redirect->word, i + j + 1,
-				ft_strlen_custom(content_redirect->word) - i - j);
-		new_word.tmp_join = ft_strjoin(new_word.part_1, new_word.part_2);
-		new_word.final = ft_strjoin(new_word.tmp_join, new_word.part_3);
-		free(content_redirect->word);
-		content_redirect->word = new_word.final;
-		free_struct_str(&new_word);
-	}
-}
-
-void	detect_quotes_from_redirects(t_list **simple_cmds)
+void	detect_quotes_in_redirects(t_list **simple_cmds)
 {
 	t_list			*current_simple_cmd;
 	t_simple_cmds	*content_simple_cmd;
@@ -164,7 +135,7 @@ void	detect_quotes_from_redirects(t_list **simple_cmds)
 		while (current_redirect)
 		{
 			content_redirect = (t_lexer *) current_redirect->content;
-			delete_quotes_from_redirects(content_redirect);
+			content_redirect->word = delete_quotes(content_redirect->word);
 			current_redirect = current_redirect->next;
 		}
 		current_simple_cmd = current_simple_cmd->next;
@@ -213,6 +184,6 @@ int	lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds)
 		create_simple_cmds(lexer, simple_cmds);
 		current = *lexer;
 	}
-	detect_quotes_from_redirects(simple_cmds);
+	detect_quotes_in_redirects(simple_cmds);
 	return (EXIT_SUCCESS);
 }
