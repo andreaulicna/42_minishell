@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 21:02:57 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/13 12:11:20 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 		{
 			run_builtin(data, content->cmd);
 			data->exit_status = 0;
-			exit(data->exit_status);
+			exit_minishell(NULL, data->exit_status);
 		}
 		else
 			run_exec(data, content);
@@ -145,9 +145,17 @@ void run_exec(t_data *data, t_simple_cmds *content)
 		execve(path, content->cmd, env_cpy);
 		free(path);
 	}
+	else if (path == NULL)
+	{
+		free(env_cpy);
+		ft_putstr_fd(content->cmd[0], STDERR);
+		ft_putendl_fd(": command not found", STDERR);
+		data->exit_status = 127;
+		exit_minishell(NULL, data->exit_status);
+	}
 	free(env_cpy);
 	data->exit_status = 126;
-	exit(data->exit_status);
+	exit_minishell(NULL, data->exit_status);
 }
 
 /**
