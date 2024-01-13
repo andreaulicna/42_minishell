@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 12:35:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:41:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 15:05:10 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	has_quotes(char *str, char *q)
 		return (1);
 	}
 	else
+	{
 		return (0);
+	}
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 10:36:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 14:50:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void	init_struct_str(t_str *str);
 char	*set_prompt(t_list *env_list);
 
 // quotes.c
+int		has_quotes(char *str, char *q);
 int		check_quotes(char *input);
 void	delete_quotes(char **cmd, int i_cmd);
 void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
