@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
+#    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/12 08:53:44 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/14 17:53:13 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRC = src/debug/main_a.c\
 		src/utils/utils.c\
 		src/utils/env.c\
 		src/utils/signals.c\
+		src/builtins/builtins_utils.c\
 		src/builtins/ft_echo.c\
 		src/builtins/ft_pwd.c\
 		src/builtins/ft_env.c\

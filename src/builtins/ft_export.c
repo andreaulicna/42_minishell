@@ -6,14 +6,18 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/09 23:52:36 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 17:59:13 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-// ft_export_format
-// - formats and prints all strings in 2D array akin to the export bash builtin;
+/**
+ * Formats and prints an environment variable in the format
+ * "declare -x VARNAME="VALUE""
+ *
+ * @param env_var The environment variable to format and print
+ */
 void	ft_export_format(char *env_var)
 {
 	int		equalsign_pos;
@@ -39,8 +43,12 @@ void	ft_export_format(char *env_var)
 	ft_putstr_fd("\n", 1);
 }
 
-// ft_export_sort
-// - bubble sorts the 2D array into alphabetical order;
+/**
+ * Sorts an array of environment variables in ascending order based on
+ * their length and lexicographical order.
+ * 
+ * @param env_arr The array of environment variables to be sorted.
+ */
 void	ft_export_sort(char **env_arr)
 {
 	long unsigned int	i;
@@ -70,12 +78,16 @@ void	ft_export_sort(char **env_arr)
 	}
 }
 
-// ft_export_list
-// - mallocs the env linked list into a 2D array for sorting purposes;
-// - sorts the array alphabetically via ft_export_sort;
-// - formats and prints the entire array via ft_export_format;
-// - frees the 2D array (not the strings themselves,
-// 		as they are part of the linked list);
+/**
+ * @brief Export the environment variables as an array of strings.
+ * 
+ * This function takes a pointer to a data structure containing the
+ * environment variables and exports them as an array of strings.
+ * The exported array is sorted and formatted before being printed.
+ * 
+ * @param data A pointer to the data structure containing the environment
+ * variables.
+ */
 void	ft_export_list(t_data *data)
 {
 	char	**arr;
@@ -103,27 +115,15 @@ void	ft_export_list(t_data *data)
 	free(arr);
 }
 
-// ft_export
-// - if no args, prints a list of env variables ALPHABETICALLY;
-// - if args, add varible into the env linked list;
-int	ft_export(char **args, t_data *data)
-{
-	int		i;
-
-	if (strs_count(args) == 1)
-	{
-		ft_export_list(data);
-		return (0);
-	}
-	i = 1;
-	while (args[i] != NULL)
-	{
-		ft_export_add(args, data, i);
-		i++;
-	}
-	return (0);
-}
-
+/**
+ * Adds a new environment variable to the environment list.
+ * If the variable already exists, it updates its value.
+ * 
+ * @param args The array of arguments containing the variable to be
+ * added/updated.
+ * @param data The data structure containing the environment list.
+ * @param i The index of the argument in the args array.
+ */
 void ft_export_add(char **args, t_data *data, int i)
 {
 	t_list	*possible_duplicate;
@@ -146,4 +146,47 @@ void ft_export_add(char **args, t_data *data, int i)
 		}
 	}
 	free(var_name);
+}
+
+/**
+ * @brief Export environment variables or display the current environment
+ * variables.
+ *
+ * This function is responsible for exporting environment variables to the
+ * environment variables list or displaying the current environment variables.
+ * If no arguments are provided, it displays the current environment variables.
+ * If arguments are provided, it validates each argument and adds it to the
+ * environment variables if it is valid.
+ * If an argument is not a valid identifier, it displays an error message and
+ * returns an error status.
+ *
+ * @param args The arguments passed to the ft_export command.
+ * @param data The data structure containing the environment variables.
+ * @return Returns 0 on success, 1 on failure.
+ */
+int	ft_export(char **args, t_data *data)
+{
+	int		i;
+
+	if (strs_count(args) == 1)
+	{
+		ft_export_list(data);
+		return (0);
+	}
+	i = 1;
+	while (args[i] != NULL)
+	{
+		if (ft_export_validate(args[i]) == 0)
+			ft_export_add(args, data, i);
+		else
+		{
+			ft_putstr_fd("minishell: export: ", STDERR);
+			ft_putstr_fd(args[i], STDERR);
+			ft_putendl_fd(": not a valid identifier", STDERR);
+			data->exit_status = 1;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }
