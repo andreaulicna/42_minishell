@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/14 18:41:30 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 20:47:16 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,10 +203,10 @@ void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
 int		is_builtin(char *cmd);
-void	handle_redirect(t_list *redirects, char *hd_file);
-void	handle_output_single(char *filename);
+void	handle_redirect(t_data *data, t_list *redirects, char *hd_file);
+void	handle_output_single(t_data *data, char *filename);
 void	handle_output_append(char *filename);
-void	handle_input(char *filename);
+void	handle_input(t_data *data, char *filename);
 char	**env_copy(t_data *data);
 void	wait_for_pipeline(t_data *data, int pid_list[], int cmds_num);
 int		pipe_create(int fd_pipe[2]);

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/14 19:07:57 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 20:45:47 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int exec(t_data *data, t_list *simple_cmds)
 	if (simple_cmds->next == NULL && is_builtin(content->cmd[0]))
 	{
 		if (content->redirects)
-			handle_redirect(content->redirects, content->hd_file);
+			handle_redirect(data, content->redirects, content->hd_file);
 		run_builtin(data, content->cmd);
 	}
 	else
@@ -110,7 +110,7 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 	{
 		pipe_redirect(fd_input, fd_output);
 		if (content->redirects)
-			handle_redirect(content->redirects, content->hd_file);
+			handle_redirect(data, content->redirects, content->hd_file);
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
