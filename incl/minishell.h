@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/13 16:46:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/14 17:54:21 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,10 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd);
 void	delete_backslash(char **cmd, int i_cmd);
 
 /* Heredoc */
+// heredoc.c
 int		heredoc(t_data *data);
-void	heredoc_no_space(t_data *data);
+// heredoc_lines.c
+void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 
 /* Lexer */
 // ft_split_minishell.c
