@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/13 12:11:20 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 19:07:57 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,7 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output)
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
-			data->exit_status = 0;
-			exit_minishell(NULL, data->exit_status);
+			exit_minishell(NULL, 0);
 		}
 		else
 			run_exec(data, content);
@@ -150,12 +149,10 @@ void run_exec(t_data *data, t_simple_cmds *content)
 		free(env_cpy);
 		ft_putstr_fd(content->cmd[0], STDERR);
 		ft_putendl_fd(": command not found", STDERR);
-		data->exit_status = 127;
-		exit_minishell(NULL, data->exit_status);
+		exit_minishell(NULL, 127);
 	}
 	free(env_cpy);
-	data->exit_status = 126;
-	exit_minishell(NULL, data->exit_status);
+	exit_minishell(NULL, 126);
 }
 
 /**
@@ -169,7 +166,7 @@ void run_builtin(t_data *data, char **cmd)
 	if (ft_strncmp(cmd[0], "cd", 2) == 0)
 		ft_cd(cmd, data);
 	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
-		ft_echo(cmd);
+		ft_echo(cmd, data);
 	else if (ft_strncmp(cmd[0], "env", 3) == 0)
 		ft_env(data);
 	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
@@ -177,7 +174,7 @@ void run_builtin(t_data *data, char **cmd)
 	else if (ft_strncmp(cmd[0], "export", 6) == 0)
 		ft_export(cmd, data);
 	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
-		ft_pwd();
+		ft_pwd(data);
 	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 		ft_unset(cmd, data);
 }

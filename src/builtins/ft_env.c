@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:24:31 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/09 20:50:08 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 18:31:14 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // ft_env
 // - prints the list of environment variables;
 // - only prints variables with assigned values;
-int	ft_env(t_data *data)
+void ft_env(t_data *data)
 {
 	t_list	*current;
 	t_env	*env;
@@ -32,5 +32,5 @@ int	ft_env(t_data *data)
 		}
 		current = current->next;
 	}
-	return (0);
+	data->exit_status = 0;
 }

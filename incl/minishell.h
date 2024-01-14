@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/14 17:47:18 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 18:41:30 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,21 +177,21 @@ void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
 int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Builtins */
-int		ft_echo(char **args);
-int		ft_pwd(void);
-int		ft_env(t_data *data);
-int		ft_cd(char **args, t_data *data);
+void	ft_echo(char **args, t_data *data);
+void	ft_pwd(t_data *data);
+void	ft_env(t_data *data);
+void	ft_cd(char **args, t_data *data);
 char	*ft_cd_getpath(char *path_name, t_data *data);
 void	ft_cd_update(char *oldpwd, t_data *data);
-int		ft_cd_home(char *oldpwd, t_data *data);
-int		ft_cd_previous(char *oldpwd, t_data *data);
-int		ft_export(char **args, t_data *data);
+void	ft_cd_home(char *oldpwd, t_data *data);
+void	ft_cd_previous(char *oldpwd, t_data *data);
+void	ft_export(char **args, t_data *data);
 void	ft_export_add(char **args, t_data *data, int i);
 void	ft_export_list(t_data *data);
 void	ft_export_sort(char **env_arr);
 void	ft_export_format(char *env_var);
 int		ft_export_validate(char *arg);
-int		ft_unset(char **args, t_data *data);
+void	ft_unset(char **args, t_data *data);
 void	ft_exit(char **args, t_data *data);
 int		ft_exit_checknum(char *str);
 

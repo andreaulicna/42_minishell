@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/14 17:59:13 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 19:58:55 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,14 +164,15 @@ void ft_export_add(char **args, t_data *data, int i)
  * @param data The data structure containing the environment variables.
  * @return Returns 0 on success, 1 on failure.
  */
-int	ft_export(char **args, t_data *data)
+void ft_export(char **args, t_data *data)
 {
 	int		i;
 
 	if (strs_count(args) == 1)
 	{
 		ft_export_list(data);
-		return (0);
+		data->exit_status = 0;
+		return;
 	}
 	i = 1;
 	while (args[i] != NULL)
@@ -184,9 +185,9 @@ int	ft_export(char **args, t_data *data)
 			ft_putstr_fd(args[i], STDERR);
 			ft_putendl_fd(": not a valid identifier", STDERR);
 			data->exit_status = 1;
-			return (1);
+			return;
 		}
 		i++;
 	}
-	return (0);
+	data->exit_status = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:26:16 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/10 14:17:15 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 20:17:06 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_exit_checknum(char *str)
 	int	i;
 
 	i = 0;
-	if (str[0] == '-')
+	if (str[0] == '-' || str[0] == '+')
 		i++;
 	while (str[i])
 	{
@@ -44,17 +44,17 @@ void ft_exit(char **args, t_data *data)
 	while(args[arg_num] != NULL)
 		arg_num++;
 	exit_status = 0;
-	ft_putendl_fd("exit", STDERR);
+	ft_putendl_fd("exit", STDOUT);
 	if (arg_num > 2)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		exit_status = 1;
+		data->exit_status = 1;
 		return ;
 	}
 	else if (arg_num == 2 && ft_exit_checknum(args[1]) == 1)
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR);
-		ft_putstr_fd(args[0], STDERR);
+		ft_putstr_fd(args[1], STDERR);
 		ft_putendl_fd(": numeric argument required", STDERR);
 		exit_status = 255;
 	}
