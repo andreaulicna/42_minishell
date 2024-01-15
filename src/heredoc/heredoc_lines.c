@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/14 17:53:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/15 13:59:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ int	check_line_null(char *line, char *limiter)
 {
 	if (line == NULL)
 	{
-		ft_putstr_fd("minishell: warning: here-document delimited by ", 1);
-		ft_putstr_fd("end-of-file (wanted `", 1);
-		ft_putstr_fd(limiter, 1);
-		ft_putstr_fd("')\n", 1);
+		ft_putstr_fd("minishell: warning: here-document delimited by ", STDOUT);
+		ft_putstr_fd("end-of-file (wanted `", STDOUT);
+		ft_putstr_fd(limiter, STDOUT);
+		ft_putstr_fd("')\n", STDOUT);
 		return (0);
 	}
 	return (1);

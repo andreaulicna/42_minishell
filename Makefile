@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/12 08:53:44 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/15 10:47:39 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC = src/debug/main_a.c\
 		src/expander/expander.c\
 		src/expander/expander_dollar.c\
 		src/heredoc/heredoc.c\
+		src/heredoc/heredoc_lines.c\
 		src/lexer/ft_split_minishell.c\
 		src/lexer/no_space_split.c\
 		src/lexer/lexer.c\
