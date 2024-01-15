@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 13:59:09 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/15 16:55:55 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	minishell_loop(t_data *data)
 
 //int	minishell_loop(t_data *data)
 //{
+//	signal(SIGINT, handle_sigint);
 //	data->prompt = set_prompt(data->env_list);
 //	data->input = readline((const char *)data->prompt);
 //	if (!check_input_null(data->input))

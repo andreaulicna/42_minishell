@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 13:59:14 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/15 17:03:37 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_data
 	char	**input_split;
 	int		orig_fdin;
 	int		orig_fdout;
+	int		hd_fd;
 	int		exit_status;
 }				t_data;
 
@@ -113,6 +114,7 @@ int		error_parser_double_token(t_tokens token);
 // exit.c
 void	exit_minishell(t_data *data, int exit_status);
 void	exit_current_prompt(t_data *data);
+void	exit_current_prompt_new(t_data *data, int exit_status);
 // free.c
 void	free_data(t_data *data);
 void	free_data_current_prompt(t_data *data);
@@ -220,5 +222,6 @@ void	orig_fds_restore(int orig_input, int orig_output);
 
 /* Signals */
 void	handle_sigint(int sig_num);
+void	handle_sigint_heredoc(int sig_num);
 
 #endif

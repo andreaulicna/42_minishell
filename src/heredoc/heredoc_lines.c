@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 13:59:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/15 16:03:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,13 @@ int	check_line_null(char *line, char *limiter)
  */
 void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 {
-	int		fd;
 	char	*line;
 	char	*limiter;
 
-	fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	data->hd_fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	line = readline("> ");
 	limiter = ((t_lexer *) heredoc->content)->word;
+	signal(SIGINT, handle_sigint_heredoc);
 	while (42)
 	{
 		if (!check_line_null(line, limiter))
@@ -96,13 +96,13 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 			&& line[ft_strlen(limiter)] == '\0')
 			break ;
 		else if (contains_dollar(line))
-			create_heredoc_dollar_line(fd, line, data);
+			create_heredoc_dollar_line(data->hd_fd, line, data);
 		else
-			ft_putstr_fd(line, fd);
-		ft_putstr_fd("\n", fd);
+			ft_putstr_fd(line, data->hd_fd);
+		ft_putstr_fd("\n", data->hd_fd);
 		free(line);
 		line = readline("> ");
 	}
 	free(line);
-	close(fd);
+	close(data->hd_fd);
 }

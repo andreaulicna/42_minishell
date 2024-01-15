@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 13:59:14 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/15 16:45:39 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_hd_file_name(void)
 	char		*hd_file_name;
 
 	str_i = ft_itoa(i++);
-	hd_file_name = ft_strjoin("./src/heredoc/.tmp_files/.tmp_heredoc_", str_i);
+	hd_file_name = ft_strjoin("./src/heredoc/.tmp_heredoc_", str_i);
 	free(str_i);
 	return (hd_file_name);
 }
@@ -52,9 +52,20 @@ void	process_heredoc(t_list *simple_cmd, t_data *data)
 	t_simple_cmds	*content_simple_cmd;
 	t_list			*current_redirect;
 	t_lexer			*content_redirect;
+//	int				pid;
+//	int				status;
 
 	content_simple_cmd = (t_simple_cmds *) simple_cmd->content;
 	current_redirect = content_simple_cmd->redirects;
+//	status = 0;
+//	pid = fork();
+//	if (pid == -1)
+//	{
+//		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
+//		exit_current_prompt(NULL);
+//	}
+//	if (pid == 0)
+//	{
 	while (current_redirect)
 	{
 		content_redirect = (t_lexer *) current_redirect->content;
@@ -67,6 +78,11 @@ void	process_heredoc(t_list *simple_cmd, t_data *data)
 		}
 		current_redirect = current_redirect->next;
 	}
+//	}
+//	waitpid(pid, &status, 0);
+//	if (WIFEXITED(status))
+//		data->exit_status = WEXITSTATUS(status);
+//	exit_current_prompt(NULL);
 }
 
 /**
