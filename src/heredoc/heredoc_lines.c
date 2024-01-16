@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 16:03:54 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/16 17:35:29 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
 /**
  * @brief	Checks whether the read line is null.
  * 
- * If so, a warning message is printed and an int to indicate that the creation
- * of the heredoc should be interrupted.
+ * If so, a warning message is printed and an int returned to indicate that
+ * the creation of the heredoc should be interrupted.
  * 
  * @param	line	read line
  * @param	limiter	string that was expected to end the creation of the heredoc
@@ -81,28 +81,28 @@ int	check_line_null(char *line, char *limiter)
  */
 void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 {
-	char	*line;
 	char	*limiter;
 
-	data->hd_fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	line = readline("> ");
-	limiter = ((t_lexer *) heredoc->content)->word;
 	signal(SIGINT, handle_sigint_heredoc);
+	signal(SIGUSR1, SIG_IGN);
+	data->hd_fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	data->line = readline("> ");
+	limiter = ((t_lexer *) heredoc->content)->word;
 	while (42)
 	{
-		if (!check_line_null(line, limiter))
+		if (!check_line_null(data->line, limiter))
 			break ;
-		else if (!ft_strncmp(line, limiter, ft_strlen(limiter))
-			&& line[ft_strlen(limiter)] == '\0')
+		else if (!ft_strncmp(data->line, limiter, ft_strlen(limiter))
+			&& data->line[ft_strlen(limiter)] == '\0')
 			break ;
-		else if (contains_dollar(line))
-			create_heredoc_dollar_line(data->hd_fd, line, data);
+		else if (contains_dollar(data->line))
+			create_heredoc_dollar_line(data->hd_fd, data->line, data);
 		else
-			ft_putstr_fd(line, data->hd_fd);
+			ft_putstr_fd(data->line, data->hd_fd);
 		ft_putstr_fd("\n", data->hd_fd);
-		free(line);
-		line = readline("> ");
+		free(data->line);
+		data->line = readline("> ");
 	}
-	free(line);
+	free(data->line);
 	close(data->hd_fd);
 }

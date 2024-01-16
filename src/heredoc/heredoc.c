@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 16:45:39 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/16 17:48:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ char	*get_hd_file_name(void)
 }
 
 /**
- * @brief   Searches for heredoc content in the provided commands and executes
- * the heredoc process.
+ * @brief   Searches for heredoc content in the whole simple_cmds sequence and
+ * executes the heredoc process for each command.
+ *
+ * The function traverses the simple commands list and for each noe of that it
+ * traverses the redirects list via a nested while loop. 
  * 
- * The function traverses the redirects list in the provided simple_cmd node.
  * For each heredoc redirection, <<, a temporary heredoc file is
  * generated and filled in with user input, expanding variables where
  * appropriate.
@@ -43,67 +45,71 @@ char	*get_hd_file_name(void)
  * make space for the new (just now encountered) heredoc because only the last
  * heredoc should be taken into account.
  * 
- * @param	simple_cmd	list containing simple command data
- * @param	env_list	list containing environment variables for expansion
- * @param	data		pointer to the t_data structure (sent to $ expander)
+ * @param	data		pointer to the t_data structure (for simple_cmds)
  */
-void	process_heredoc(t_list *simple_cmd, t_data *data)
+void	process_heredoc(t_data *data)
 {
+	t_list			*current_simple_cmd;
 	t_simple_cmds	*content_simple_cmd;
 	t_list			*current_redirect;
 	t_lexer			*content_redirect;
-//	int				pid;
-//	int				status;
 
-	content_simple_cmd = (t_simple_cmds *) simple_cmd->content;
-	current_redirect = content_simple_cmd->redirects;
-//	status = 0;
-//	pid = fork();
-//	if (pid == -1)
-//	{
-//		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
-//		exit_current_prompt(NULL);
-//	}
-//	if (pid == 0)
-//	{
-	while (current_redirect)
+	current_simple_cmd = data->simple_cmds;
+	while (current_simple_cmd)
 	{
-		content_redirect = (t_lexer *) current_redirect->content;
-		if (content_redirect->token == LESS_2)
+		content_simple_cmd = (t_simple_cmds *) data->simple_cmds->content;
+		current_redirect = content_simple_cmd->redirects;
+		while (current_redirect)
 		{
-			if (content_simple_cmd->hd_file)
-				free(content_simple_cmd->hd_file);
-			content_simple_cmd->hd_file = get_hd_file_name();
-			create_heredoc(current_redirect, content_simple_cmd->hd_file, data);
+			content_redirect = (t_lexer *) current_redirect->content;
+			if (content_redirect->token == LESS_2)
+			{
+				if (content_simple_cmd->hd_file)
+					free(content_simple_cmd->hd_file);
+				content_simple_cmd->hd_file = get_hd_file_name();
+				create_heredoc(current_redirect, content_simple_cmd->hd_file,
+					data);
+			}
+			current_redirect = current_redirect->next;
 		}
-		current_redirect = current_redirect->next;
+		current_simple_cmd = current_simple_cmd->next;
 	}
-//	}
-//	waitpid(pid, &status, 0);
-//	if (WIFEXITED(status))
-//		data->exit_status = WEXITSTATUS(status);
-//	exit_current_prompt(NULL);
 }
 
 /**
- * @brief   Executes the heredoc process for the entire command sequence.
+ * @brief   Creates a child process that executes the heredoc process for
+ * the entire command sequence.
  * 
- * The function traverses the simple commands list, sending each node into
- * the process_heredoc which takes care of running the whole heredoc process if
- * a heredoc redirection, <<, is encountered.
+ * The function waits for the child to exit and saved the exit status into
+ * the main t_data structure.
  * 
  * @param	data	pointer to the t_data structure
  * @return	int		returns 0 on successful execution
  */
+
 int	heredoc(t_data *data)
 {
-	t_list	*current;
+	int		pid;
+	int		status;
 
-	current = data->simple_cmds;
-	while (current)
+	pid = fork();
+	if (pid == -1)
 	{
-		process_heredoc(current, data);
-		current = current->next;
+		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
+		exit_current_prompt(NULL);
+	}
+	if (pid == 0)
+	{
+		process_heredoc(data);
+		exit_minishell(NULL, 0);
+	}
+	else
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGUSR1, handle_sigint_heredoc);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			data->exit_status = WEXITSTATUS(status);
 	}
 	return (0);
 }

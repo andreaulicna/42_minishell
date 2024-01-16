@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:20:49 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/15 17:03:42 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/16 13:25:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,6 @@ void	exit_current_prompt(t_data *data)
 		static_data = data;
 	else
 	{
-		free_data_current_prompt(static_data);
-		minishell_loop(static_data);
-	}
-}
-
-void	exit_current_prompt_new(t_data *data, int exit_status)
-{
-	static t_data	*static_data;
-
-	if (!static_data)
-		static_data = data;
-	else
-	{
-		static_data->exit_status = exit_status;
 		free_data_current_prompt(static_data);
 		minishell_loop(static_data);
 	}

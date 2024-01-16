@@ -6,11 +6,13 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/15 16:55:55 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/16 18:00:39 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+int	global_signal = 0;
 
 int	check_input_null(char *input)
 {
@@ -30,6 +32,9 @@ int	check_enter_space(char *input)
 
 int	minishell_loop(t_data *data)
 {
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	global_signal = 0;
 	data->prompt = set_prompt(data->env_list);
 	data->input = readline((const char *)data->prompt);
 	if (!check_input_null(data->input))
@@ -44,7 +49,8 @@ int	minishell_loop(t_data *data)
 	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
 	expander(data);
 	heredoc(data);
-	exec(data, data->simple_cmds);
+	if (global_signal == 0)
+		exec(data, data->simple_cmds);
 	// print_simple_cmds(&data->simple_cmds);
 	exit_current_prompt(data);
 	return (1);
@@ -52,7 +58,6 @@ int	minishell_loop(t_data *data)
 
 //int	minishell_loop(t_data *data)
 //{
-//	signal(SIGINT, handle_sigint);
 //	data->prompt = set_prompt(data->env_list);
 //	data->input = readline((const char *)data->prompt);
 //	if (!check_input_null(data->input))
@@ -103,7 +108,10 @@ int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
 
-	signal(SIGINT, handle_sigint);
+//	struct sigaction	sa;
+//
+//	sa.sa_sigaction = &handle_sigint;
+//	sigaction(SIGINT, &sa, NULL);
 	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
