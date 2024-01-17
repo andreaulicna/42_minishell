@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/26 19:23:37 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/16 17:59:48 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 19:53:37 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ static void	ft_alloc_fill_arr(char **arr, char const *s, char c)
 		}
 		i++;
 	}
-	arr[wrds] = '\0';
+	arr[wrds] = 0;
 }
 
 /**

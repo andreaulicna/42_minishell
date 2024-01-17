@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:09:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 14:29:15 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 19:47:40 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,39 +48,6 @@ static char	*get_hostname(void)
 	hostname[i + 1] = '\0';
 	free(content);
 	return (hostname);
-}
-/**
- * @brief	Extracts the username from the environment variable "USER" and
- * formats it as "username@".
- * 
- * The default is to use the env_find function. However, when that returns NULL
- * (meaning that the variable has been unset in the current session, which is
- * our minishell), we fall back on the getenv function that the searches
- * the environment list, not our minishell copy of it.
- * 
- * The "@" is added at the end of the username to make it easier to construct
- * the whole prompt in contruct_prompt(), especially with regards to using
- * ft_strjoin() repeatedly.
- *
- * @param	env_list	array of environment variables
- * @return	char*		username formatted as "[username]@"
- */
-
-static char	*get_username(t_list *env_list)
-{
-	t_list	*username_env;
-	t_env	*username_content;
-	char	*username;
-
-	username_env = env_find(env_list, "USER");
-	if (username_env == NULL)
-		username = ft_strjoin(getenv("USER"), "@");
-	else	
-	{
-		username_content = (t_env *) username_env->content;
-		username = ft_strjoin(username_content->value, "@");
-	}
-	return (username);
 }
 
 /**
@@ -180,7 +147,7 @@ char	*set_prompt(t_list *env_list)
 	char	*directory_tmp;
 	char	*directory;
 
-	username = get_username(env_list);
+	username = ft_strjoin(getenv("USER"), "@");
 	hostname = get_hostname();
 	directory_tmp = get_directory(env_list);
 	directory = ft_strjoin(directory_tmp, "$ ");

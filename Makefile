@@ -6,13 +6,13 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/17 12:46:38 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/17 19:52:49 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = src/debug/main_a.c\
+SRC = src/debug/main.c\
 		src/debug/print.c\
 		src/utils/utils.c\
 		src/utils/env.c\
@@ -24,7 +24,6 @@ SRC = src/debug/main_a.c\
 		src/builtins/ft_export.c\
 		src/builtins/ft_unset.c\
 		src/builtins/ft_exit.c\
-		src/debug/print.c\
 		src/error/error_token.c\
 		src/exit/exit.c\
 		src/exit/free.c\
@@ -46,9 +45,10 @@ SRC = src/debug/main_a.c\
 		src/exec/pipe_utils.c\
 		src/exec/redirects_utils.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC)
+OBJ := $(OBJ:%.c=%.o)
 
-HEADER = incl/minishell.h
+HEADER = -I ./incl/
 
 CFLAGS = -Wall -Werror -Wextra -g
 
@@ -59,15 +59,16 @@ LIBFTPRINTF = libftprintf
 all: libs $(NAME)
 	@echo "minishell executable ready ✅"
 
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< $(HEADER) -o $@
 
 libs:
 	@make -C $(LIBFTPRINTF)
+	@mv $(LIBFTPRINTF)/$(LIBFTPRINTF).a .
 	@echo "libprintf library ready ✅"
 
-$(NAME): $(OBJ) $(HEADER)
-	$(CC) $(CFLAGS) -L $(LIBFTPRINTF) -o $@ $^ -lreadline -lftprintf
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFTPRINTF).a -o $(NAME) -lreadline
 
 clean:
 	@rm -f $(OBJ)
@@ -76,6 +77,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f libftprintf.a
 	@make fclean -C $(LIBFTPRINTF)
 
 re: fclean all
