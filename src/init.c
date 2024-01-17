@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 12:06:21 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/16 13:12:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 12:36:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	init_data(t_data *data)
 	data->orig_fdin = 0;
 	data->orig_fdout = 0;
 	data->hd_fd = 0;
-	data->line = NULL;
 	data->exit_status = 0;
 	exit_minishell(data, 0);
 	exit_current_prompt(data);

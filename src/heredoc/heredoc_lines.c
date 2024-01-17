@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/16 17:35:29 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 12:36:20 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,34 +75,44 @@ int	check_line_null(char *line, char *limiter)
  * in the create_heredoc_dollar_line function before writing the line
  * in the file. Each line in the file is followed by a newline.
  * 
+ * Signal lines:
+ * 1. SIGINT: Sets up a signal handler for SIGINT that is different than the one
+ * set in the parent process. When this signal is received,
+ * handle_sigint_heredoc sends SIGUSR1 signal to all processes and then exits
+ * minishell (it is the child process exiting, the parent keeps running).
+ * 2. SIGUSR1: Ignores the SIGUSR1 signal, so that when handle_sigint_heredoc
+ * sends it to all processes, it is processed (to indicate that the heredoc
+ * process was interruped by SIGINT) only in the parent process.
+ * 
  * @param	heredoc			list containing heredoc content
  * @param	hd_file_name	name of the temporary heredoc file
- * @param	data		pointer to the t_data structure (sent to $ expander)
+ * @param	data			pointer to the t_data structure (sent to $ expander)
  */
 void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 {
+	char	*line;
 	char	*limiter;
 
 	signal(SIGINT, handle_sigint_heredoc);
 	signal(SIGUSR1, SIG_IGN);
 	data->hd_fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	data->line = readline("> ");
+	line = readline("> ");
 	limiter = ((t_lexer *) heredoc->content)->word;
 	while (42)
 	{
-		if (!check_line_null(data->line, limiter))
+		if (!check_line_null(line, limiter))
 			break ;
-		else if (!ft_strncmp(data->line, limiter, ft_strlen(limiter))
-			&& data->line[ft_strlen(limiter)] == '\0')
+		else if (!ft_strncmp(line, limiter, ft_strlen(limiter))
+			&& line[ft_strlen(limiter)] == '\0')
 			break ;
-		else if (contains_dollar(data->line))
-			create_heredoc_dollar_line(data->hd_fd, data->line, data);
+		else if (contains_dollar(line))
+			create_heredoc_dollar_line(data->hd_fd, line, data);
 		else
-			ft_putstr_fd(data->line, data->hd_fd);
+			ft_putstr_fd(line, data->hd_fd);
 		ft_putstr_fd("\n", data->hd_fd);
-		free(data->line);
-		data->line = readline("> ");
+		free(line);
+		line = readline("> ");
 	}
-	free(data->line);
+	free(line);
 	close(data->hd_fd);
 }

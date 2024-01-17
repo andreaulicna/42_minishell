@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 13:37:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/16 16:34:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 12:31:37 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,5 @@ void	free_data_current_prompt(t_data *data)
 	{
 		free_array(data->input_split);
 		data->input_split = NULL;
-	}
-	if (data->line)
-	{
-		free(data->line);
-		data->line = NULL;
 	}
 }

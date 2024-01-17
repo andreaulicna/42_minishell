@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/16 18:00:27 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 12:36:25 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_data
 	int		orig_fdin;
 	int		orig_fdout;
 	int		hd_fd;
-	char	*line;
 	int		exit_status;
 }				t_data;
 
