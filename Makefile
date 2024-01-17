@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/16 18:00:54 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/17 12:46:38 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ HEADER = incl/minishell.h
 
 CFLAGS = -Wall -Werror -Wextra -g
 
-GCC = gcc
+CC = cc
 
 LIBFTPRINTF = libftprintf
 
@@ -60,14 +60,14 @@ all: libs $(NAME)
 	@echo "minishell executable ready ✅"
 
 .c.o:
-	$(GCC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 libs:
 	@make -C $(LIBFTPRINTF)
 	@echo "libprintf library ready ✅"
 
 $(NAME): $(OBJ) $(HEADER)
-	$(GCC) $(CFLAGS) -L $(LIBFTPRINTF) -o $@ $^ -lreadline -lftprintf
+	$(CC) $(CFLAGS) -L $(LIBFTPRINTF) -o $@ $^ -lreadline -lftprintf
 
 clean:
 	@rm -f $(OBJ)

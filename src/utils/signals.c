@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 11:37:32 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 12:43:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_sigint_heredoc(int sig_num)
 	if (sig_num == SIGUSR1)
 	{
 		write(STDOUT, "\n", 1);
-		global_signal = SIGUSR1;
+		g_signal = SIGUSR1;
 	}
 	if (sig_num == SIGINT)
 	{

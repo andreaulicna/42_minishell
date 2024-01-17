@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 12:36:25 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 12:44:28 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@
 # define EXIT_MALLOC		4
 # define EXIT_EXECVE 		5
 # define EXIT_EXECNOTFOUND	127
+
+extern int	g_signal;
 
 typedef struct s_data
 {
@@ -94,8 +96,6 @@ typedef struct s_str
 	t_list	*env_found;
 	t_env	*content;
 }	t_str;
-
-extern int	global_signal;
 
 /* SOURCES */
 
