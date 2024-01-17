@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 14:04:04 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 22:50:52 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,8 +222,6 @@ void	orig_fds_save(int *orig_input, int *orig_output);
 void	orig_fds_restore(int orig_input, int orig_output);
 
 /* Signals */
-//void	handle_sigint(int sig_num, siginfo_t *info, void *context);
-//void	handle_sigint_heredoc(int sig_num, siginfo_t *info, void *context);
 void	handle_sigint(int sig_num);
 void	handle_sigint_heredoc(int sig_num);
 
