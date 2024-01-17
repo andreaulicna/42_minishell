@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 12:44:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 14:31:30 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,15 @@ int	main(int argc, char **argv, char *env[])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
 		ft_putstr_fd("Correct usage: ./minishell\n\n", 2);
+		return (0);
+	}
+	if (getenv("USER") == NULL)
+	{
+		ft_putstr_fd("Error: We truly tried but there is honestly no reliable "
+					"way of constructing the minishell prompt without "
+					"the USER environment variable set before minishell "
+					"is run.\n", 2);
+		ft_putstr_fd("Please set the variable and try again.\n\n", 2);
 		return (0);
 	}
 	init_data(&data);
