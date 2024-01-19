@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 12:38:39 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 15:49:48 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,8 +203,9 @@ int		ft_exit_checknum(char *str);
 /* Execution */
 int		exec(t_data *data, t_list *simple_cmds);
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num);
-int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input,
-			int fd_output);
+//int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input,
+//			int fd_output);
+int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output, int **new_pipe, int i);
 void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/13 12:18:43 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:53:25 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,11 @@ void wait_for_pipeline(t_data *data, int pid_list[], int cmds_num)
 	int i;
 	int	status;
 
+	(void) pid_list;
 	i = 0;
 	while (i < cmds_num)
 	{
-		waitpid(pid_list[i], &status, 0);
+		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
 			data->exit_status = WEXITSTATUS(status);
 		i++;
