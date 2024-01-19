@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 07:47:35 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:23:46 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 //	no_space_split.c
-int		contains_space(char *s);
 t_tokens	contains_token_with_no_space(char *s);
 char	**no_space_split(char **input_split, int index, t_tokens token);
 // lexer.c
