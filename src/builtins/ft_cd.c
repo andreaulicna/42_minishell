@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/19 11:53:09 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:23:47 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,21 @@ char	*ft_cd_getpath(char *path_name, t_data *data)
 
 // ft_cd_home
 // - handles the case when there are no arguments to 'cd' (aka HOME);
-int	ft_cd_home(char *oldpwd, t_data *data)
+void ft_cd_home(char *oldpwd, t_data *data)
 {
 	int	ret;
 
-	ret = chdir(ft_cd_getpath("HOME", data));
+	ret = chdir(ft_cd_getpath("HOME", data)) != 0;
 	if (ret != 0)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 	else
 		ft_cd_update(oldpwd, data);
-	return (ret);
+	data->exit_status = ret;
 }
 
 // ft_cd_previous
 // - handles the case of '-' (minus) argument to 'cd' (aka OLDPWD);
-int	ft_cd_previous(char *oldpwd, t_data *data)
+void ft_cd_previous(char *oldpwd, t_data *data)
 {
 	int	ret;
 
@@ -73,14 +73,14 @@ int	ft_cd_previous(char *oldpwd, t_data *data)
 		ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
 	else
 		ft_cd_update(oldpwd, data);
-	return (ret);
+	data->exit_status = ret;
 }
 
 // ft_cd
 // - changes the current working directory;
 // - if more than two arguments, HOME or OLDPWD not set, return error;
 // - if path found, change current working directory and update PWD, OLDPWD;
-int	ft_cd(char **args, t_data *data)
+void ft_cd(char **args, t_data *data)
 {
 	int		ret;
 	char	cwd[PATH_MAX];
@@ -88,14 +88,21 @@ int	ft_cd(char **args, t_data *data)
 	if (strs_count(args) > 2)
 	{
 		ft_putendl_fd("minishell: cd: too many arguments", STDERR);
-		return (1);
+		data->exit_status = 1;
+		return;
 	}
 	getcwd(cwd, PATH_MAX);
 	if (args[1] == NULL || (args[1][0] == '~' && !args[1][1]))
-		return (ft_cd_home(cwd, data));
+	{
+		ft_cd_home(cwd, data);
+		return;
+	}
 	else if (args[1] && !ft_strncmp(args[1], "-", 1))
-		return (ft_cd_previous(cwd, data));
-	ret = chdir(args[1]);
+	{
+		ft_cd_previous(cwd, data);
+		return;
+	}
+	ret = chdir(args[1]) != 0;
 	if (ret != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", STDERR);
@@ -104,5 +111,5 @@ int	ft_cd(char **args, t_data *data)
 	}
 	else
 		ft_cd_update(cwd, data);
-	return (ret);
+	data->exit_status = ret;
 }

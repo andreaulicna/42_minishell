@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 12:07:17 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/14 18:31:00 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // ft_echo
 // - simulates the bash builtin 'echo';
 // - also checks for the -n flag (doesn't print newline);
-int	ft_echo(char **args)
+void ft_echo(char **args, t_data *data)
 {
 	int	n_flag;
 	int	i;
@@ -39,5 +39,5 @@ int	ft_echo(char **args)
 	}
 	if (n_flag == 0)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	return (0);
+	data->exit_status = 0;
 }

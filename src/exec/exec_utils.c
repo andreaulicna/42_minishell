@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/11 14:37:09 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/13 12:18:43 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*find_exe_path(t_data *data, char *cmd)
 
 	path_env = env_find(data->env_list, "PATH");
 	content = (t_env *) (path_env->content);
-	path_arr = ft_split(ft_strdup(content->value), ':');
+	path_arr = ft_split(content->value, ':');
 	i = 0;
 	while (path_arr[i] != NULL)
 	{
@@ -47,10 +47,6 @@ char	*find_exe_path(t_data *data, char *cmd)
 		i++;
 	}
 	free_array(path_arr);
-	ft_putstr_fd(cmd, STDERR);
-	ft_putendl_fd(": command not found", STDERR);
-	data->exit_status = 127;
-	exit(data->exit_status);
 	return (NULL);
 }
 

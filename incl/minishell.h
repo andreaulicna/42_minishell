@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 10:34:41 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:38:39 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,20 +182,21 @@ void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
 int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Builtins */
-int		ft_echo(char **args);
-int		ft_pwd(void);
-int		ft_env(t_data *data);
-int		ft_cd(char **args, t_data *data);
+void	ft_echo(char **args, t_data *data);
+void	ft_pwd(t_data *data);
+void	ft_env(t_data *data);
+void	ft_cd(char **args, t_data *data);
 char	*ft_cd_getpath(char *path_name, t_data *data);
 void	ft_cd_update(char *oldpwd, t_data *data);
-int		ft_cd_home(char *oldpwd, t_data *data);
-int		ft_cd_previous(char *oldpwd, t_data *data);
-int		ft_export(char **args, t_data *data);
+void	ft_cd_home(char *oldpwd, t_data *data);
+void	ft_cd_previous(char *oldpwd, t_data *data);
+void	ft_export(char **args, t_data *data);
 void	ft_export_add(char **args, t_data *data, int i);
 void	ft_export_list(t_data *data);
 void	ft_export_sort(char **env_arr);
 void	ft_export_format(char *env_var);
-int		ft_unset(char **args, t_data *data);
+int		ft_export_validate(char *arg);
+void	ft_unset(char **args, t_data *data);
 void	ft_exit(char **args, t_data *data);
 int		ft_exit_checknum(char *str);
 
@@ -208,10 +209,10 @@ void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
 int		is_builtin(char *cmd);
-void	handle_redirect(t_list *redirects, char *hd_file);
-void	handle_output_single(char *filename);
+void	handle_redirect(t_data *data, t_list *redirects, char *hd_file);
+void	handle_output_single(t_data *data, char *filename);
 void	handle_output_append(char *filename);
-void	handle_input(char *filename);
+void	handle_input(t_data *data, char *filename);
 char	**env_copy(t_data *data);
 void	wait_for_pipeline(t_data *data, int pid_list[], int cmds_num);
 int		pipe_create(int fd_pipe[2]);
