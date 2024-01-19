@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 14:26:16 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/14 20:17:06 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 06:41:04 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void ft_exit(char **args, t_data *data)
 		ft_putstr_fd("minishell: exit: ", STDERR);
 		ft_putstr_fd(args[1], STDERR);
 		ft_putendl_fd(": numeric argument required", STDERR);
-		exit_status = 255;
+		exit_status = 2;
 	}
 	else if (arg_num == 2)
 		exit_status = ft_atoi(args[1]) % 256;
