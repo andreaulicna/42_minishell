@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 19:56:59 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:13:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	check_enter_space(char *input)
 int	minishell_loop(t_data *data)
 {
 	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
 	g_signal = 0;
 	data->prompt = set_prompt(data->env_list);
 	data->input = readline((const char *)data->prompt);
@@ -75,6 +74,9 @@ int	minishell_loop(t_data *data)
 
 //int	minishell_loop(t_data *data)
 //{
+//	signal(SIGINT, handle_sigint);
+//	signal(SIGQUIT, SIG_IGN);
+//	g_signal = 0;
 //	data->prompt = set_prompt(data->env_list);
 //	data->input = readline((const char *)data->prompt);
 //	if (!check_input_null(data->input))
@@ -115,7 +117,7 @@ int	minishell_loop(t_data *data)
 //	heredoc(data);
 //	printf("----------------------\n");
 //	printf("SIMPLE CMDS - after heredoc\n");
-//	if (global_signal == 0)
+//	if (g_signal == 0)
 //		exec(data, data->simple_cmds);
 //	exit_current_prompt(data);
 //	return (1); //should never reach this
@@ -125,6 +127,7 @@ int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
 
+	signal(SIGQUIT, SIG_IGN);
 	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);

@@ -6,31 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:26:37 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/11 18:56:08 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/19 10:33:57 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
-
-/**
- * @brief	Checks if a string contains any space character.
- *
- * @param	s	string to check
- * @return	int	1 if the string contains space, 0 otherwise
- */
-int	contains_space(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == ' ')
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 /**
  * @brief	Determines the type of token present at the beginning of a string
