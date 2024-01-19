@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 11:33:21 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:36:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	expander_loop_dollar(t_simple_cmds *content, int i, t_data *data)
 		if (content->cmd[i][j] == '$')
 		{
 			dollar_flag = checker_dollar(content->cmd[i], j);
-			delete_quotes(content->cmd, i);
+			content->cmd[i] = delete_quotes(content->cmd[i]);
 			if (dollar_flag == 5)
 				break ;
 			else if (dollar_flag == 3)
@@ -83,7 +83,7 @@ void	expander_loop_no_dollar(t_simple_cmds *content, int i)
 {
 	int	j;
 
-	delete_quotes(content->cmd, i);
+	content->cmd[i] = delete_quotes(content->cmd[i]);
 	j = 0;
 	while (content->cmd[i][j])
 	{

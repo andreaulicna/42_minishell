@@ -6,13 +6,13 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/14 17:53:13 by vbartos          ###   ########.fr        #
+#    Updated: 2024/01/19 07:49:57 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = src/debug/main_a.c\
+SRC = src/debug/main.c\
 		src/debug/print.c\
 		src/utils/utils.c\
 		src/utils/env.c\
@@ -25,7 +25,6 @@ SRC = src/debug/main_a.c\
 		src/builtins/ft_export.c\
 		src/builtins/ft_unset.c\
 		src/builtins/ft_exit.c\
-		src/debug/print.c\
 		src/error/error_token.c\
 		src/exit/exit.c\
 		src/exit/free.c\
@@ -33,6 +32,7 @@ SRC = src/debug/main_a.c\
 		src/expander/expander.c\
 		src/expander/expander_dollar.c\
 		src/heredoc/heredoc.c\
+		src/heredoc/heredoc_lines.c\
 		src/lexer/ft_split_minishell.c\
 		src/lexer/no_space_split.c\
 		src/lexer/lexer.c\
@@ -46,36 +46,39 @@ SRC = src/debug/main_a.c\
 		src/exec/pipe_utils.c\
 		src/exec/redirects_utils.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC)
+OBJ := $(OBJ:%.c=%.o)
 
-HEADER = incl/minishell.h
+HEADER = -I ./incl/
 
 CFLAGS = -Wall -Werror -Wextra -g
 
-GCC = gcc
+CC = cc
 
 LIBFTPRINTF = libftprintf
 
 all: libs $(NAME)
 	@echo "minishell executable ready ✅"
 
-.c.o:
-	$(GCC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< $(HEADER) -o $@
 
 libs:
 	@make -C $(LIBFTPRINTF)
+	@mv $(LIBFTPRINTF)/$(LIBFTPRINTF).a .
 	@echo "libprintf library ready ✅"
 
-$(NAME): $(OBJ) $(HEADER)
-	$(GCC) $(CFLAGS) -L $(LIBFTPRINTF) -o $@ $^ -lreadline -lftprintf
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFTPRINTF).a -o $(NAME) -lreadline
 
 clean:
 	@rm -f $(OBJ)
-	@rm -f src/heredoc/.tmp_files/.tmp*
+	@rm -f src/heredoc/.tmp*
 	@make clean -C $(LIBFTPRINTF)
 
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f libftprintf.a
 	@make fclean -C $(LIBFTPRINTF)
 
 re: fclean all

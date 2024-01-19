@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/14 19:38:03 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 07:47:40 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@ void	ft_cd_update(char *oldpwd, t_data *data)
 	t_list	*oldpwd_env;
 	t_list	*pwd_env;
 	t_env	*content;
-	char	cwd[PATH_MAX];
+	char	*cwd;
+	//char	cwd[PATH_MAX];
 
-	getcwd(cwd, PATH_MAX);
+	//getcwd(cwd, PATH_MAX);
+	cwd = getcwd(NULL, 0);
 	if (oldpwd == NULL || cwd == NULL)
 		return ;
 	oldpwd_env = env_find(data->env_list, "OLDPWD");

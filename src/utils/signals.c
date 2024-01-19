@@ -6,40 +6,55 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/13 11:44:32 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 07:49:10 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
-
 /**
- * @brief Handles the SIGINT signal.
+ * @brief	Handles the SIGINT signal.
  *
- * This function is called when the SIGINT signal is received.
- * It writes a newline character to the standard output,
- * moves the readline cursor to a new line,
- * replaces the current line with an empty string, and redisplays the prompt.
+ * This function is designed to handle the SIGINT signal (pressing Ctrl+C) when
+ * received on the minishell prompt input (not in heredoc).
+ * 
+ * When the SIGINT signal is received, it writes a newline character
+ * to the standard output, prepares readline library to accept a new line,
+ * replaces the current line with an empty line, and then redisplay the prompt.
  *
- * @param signum The signal number (ignored).
+ * @param	sig_num	signal number
  */
-void handle_sigint(int sig_num)
+void	handle_sigint(int sig_num)
 {
-	(void) sig_num;
-	write(STDOUT, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (sig_num == SIGINT)
+	{
+		write(STDOUT, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 /**
- * @brief Initializes the signal handlers for the program.
+ * @brief	Handles the SIGINT and SIGUSR1 signals during a heredoc operation.
+ *
+ * When the SIGUSR1 signal is received, it writes a newline character
+ * to the standard output and sets the g_signal to SIGUSR1.
  * 
- * This function sets up the signal handlers for SIGINT and SIGQUIT.
- * The SIGINT signal is handled by the handle_sigint function,
- * while the SIGQUIT signal is ignored.
+ * When the SIGINT signal is received, it sends the SIGUSR1 signal to
+ * all processes in the current process group and then exits the minishell.
+ *
+ * @param	sig_num	The signal number. This function handles SIGUSR1 and SIGINT.
  */
-void init_signals(void)
+void	handle_sigint_heredoc(int sig_num)
 {
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	if (sig_num == SIGUSR1)
+	{
+		write(STDOUT, "\n", 1);
+		g_signal = SIGUSR1;
+	}
+	if (sig_num == SIGINT)
+	{
+		kill(0, SIGUSR1);
+		exit_minishell(NULL, 130);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:09:39 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 12:38:15 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 19:47:40 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,38 +49,28 @@ static char	*get_hostname(void)
 	free(content);
 	return (hostname);
 }
-/**
- * @brief	Extracts the username from the environment variable "USER" and
- * formats it as "username@" using the env_find function. 
- * 
- * The "@" is added at the end of the username to make it easier to construct
- * the whole prompt in contruct_prompt(), especially with regards to using
- * ft_strjoin() repeatedly.
- *
- * @param	env 	array of environment variables
- * @return	char*	username formatted as "[username]@"
- */
-
-static char	*get_username(t_list *env_list)
-{
-	t_list	*username_env;
-	t_env	*username_content;
-	char	*username;
-
-	username_env = env_find(env_list, "USER");
-	username_content = (t_env *) username_env->content;
-	username = ft_strjoin(username_content->value, "@");
-	return (username);
-}
 
 /**
  * @brief	Extracts the current working directory from the environment
- * variable "PWD". Checks if the directory is within the home directory.
- * If so, formats the directory as "~[cwd without home directory preamble that
- * is replaced with ~]>$", otherwise it formats it as 
- * "[cwd in full patf format]$". The "$" is added at the end of the directory
- * to make it easier to construct the whole prompt in contruct_prompt(),
- * especially with regards to using ft_strjoin() repeatedly.
+ * variables "PWD" and "HOME".
+ * 
+ * The default to get PWD is to use the env_find function. However, when that
+ * returns NULL (meaning that the variable has been unset in the current
+ * session, which is our minishell), we fall back on the getcwd function that
+ * gets the system current working directory. 
+ * 
+ * The default to get HOME is env_find too. However, when that returns NULL,
+ * directory is simply set to the cwd value. And since there is no HOME to
+ * assess for potentially including ~, the code falls into return.
+ *   
+ * If env_find returns HOME, the function checks if the directory is within
+ * the home directory. If so, it formats the directory as 
+ * "~[cwd without home directory preamble that is replaced with ~]>$".
+ * Otherwise it formats it as "[cwd in full patf format]$". 
+ * 
+ * The "$" is added at the end of the directory to make it easier to construct
+ * the whole prompt in contruct_prompt(), especially with regards to using
+ * ft_strjoin() repeatedly.
  *
  * @param	env 	array of environment variables
  * @return	char*	directory formatted either as ~[cwd without home directory
@@ -96,13 +86,21 @@ static char	*get_directory(t_list *env_list)
 	t_list	*home_env;
 
 	cwd_env = env_find(env_list, "PWD");
-	cwd = ((t_env *) cwd_env->content)->value;
-	home_env = env_find(env_list, "HOME");
-	home = ((t_env *) home_env->content)->value;
-	if (ft_strnstr(cwd, home, ft_strlen(cwd)) != NULL)
-		directory = ft_strjoin("~", cwd + ft_strlen(home));
+	if (cwd_env == NULL)
+		cwd = getcwd(NULL, 0);
 	else
+		cwd = ((t_env *) cwd_env->content)->value;
+	home_env = env_find(env_list, "HOME");
+	if (home_env == NULL)
 		directory = ft_strdup(cwd);
+	else
+	{
+		home = ((t_env *) home_env->content)->value;
+		if (ft_strnstr(cwd, home, ft_strlen(cwd)) != NULL)
+			directory = ft_strjoin("~", cwd + ft_strlen(home));
+		else
+			directory = ft_strdup(cwd);
+	}
 	return (directory);
 }
 
@@ -149,7 +147,7 @@ char	*set_prompt(t_list *env_list)
 	char	*directory_tmp;
 	char	*directory;
 
-	username = get_username(env_list);
+	username = ft_strjoin(getenv("USER"), "@");
 	hostname = get_hostname();
 	directory_tmp = get_directory(env_list);
 	directory = ft_strjoin(directory_tmp, "$ ");

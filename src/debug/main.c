@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_a.c                                           :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/13 11:40:55 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 07:48:51 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+int	g_signal = 0;
 
 int	check_input_null(char *input)
 {
@@ -28,8 +30,29 @@ int	check_enter_space(char *input)
 	return (1);
 }
 
+/**
+ * @brief	Runs the minishell.
+ * 
+ * Signal lines:
+ * 1. SIGINT: Sets up the signal handler for SIGINT (Ctrl + C), so that 
+ * minishell displays a new prompt when the signal is received.
+ * 2. SIGQUIT: Ignores SIGQUIT (Ctrl + \), so that minishell doesn't quit when
+ * the signal is received.
+ * 3. global_signal: Is set to 0 to indicate that the heredoc process has not
+ * been run (and may not even be) yet for the current command, and so
+ * the execution will be run unless the heredoc process is interrupted with
+ * SIGINT (Ctrl + C) when (and if) it runs.
+ * 
+ * The global variable g_signal is checked before the execution is launched
+ * because in case it isn't 0 (but SIGUSR1), it indicates that the heredoc
+ * process was interrupted with SIGINT (Ctrl + C), and so the whole command
+ * should be canceled and a new prompt displayed.
+*/
 int	minishell_loop(t_data *data)
 {
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	g_signal = 0;
 	data->prompt = set_prompt(data->env_list);
 	data->input = readline((const char *)data->prompt);
 	if (!check_input_null(data->input))
@@ -44,8 +67,8 @@ int	minishell_loop(t_data *data)
 	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
 	expander(data);
 	heredoc(data);
-	exec(data, data->simple_cmds);
-	// print_simple_cmds(&data->simple_cmds);
+	if (g_signal == 0)
+		exec(data, data->simple_cmds);
 	exit_current_prompt(data);
 	return (1);
 }
@@ -92,8 +115,8 @@ int	minishell_loop(t_data *data)
 //	heredoc(data);
 //	printf("----------------------\n");
 //	printf("SIMPLE CMDS - after heredoc\n");
-////	print_simple_cmds(&data->simple_cmds);
-//	exec(data, data->simple_cmds);
+//	if (global_signal == 0)
+//		exec(data, data->simple_cmds);
 //	exit_current_prompt(data);
 //	return (1); //should never reach this
 //}
@@ -102,11 +125,22 @@ int	main(int argc, char **argv, char *env[])
 {
 	t_data	data;
 
+<<<<<<< HEAD:src/debug/main_a.c
 	init_signals();
+=======
+>>>>>>> main:src/debug/main.c
 	if (argc > 1 || argv[1])
 	{
 		ft_putstr_fd("Error: Minishell doesn't take any arguments.\n\n", 2);
 		ft_putstr_fd("Correct usage: ./minishell\n\n", 2);
+		return (0);
+	}
+	if (getenv("USER") == NULL)
+	{
+		ft_putstr_fd("Error: We truly tried but there is honestly no reliable "
+			"way of constructing the minishell prompt without the USER "
+			"environment variable set before minishell is run.\n", 2);
+		ft_putstr_fd("Please set the variable and try again.\n\n", 2);
 		return (0);
 	}
 	init_data(&data);

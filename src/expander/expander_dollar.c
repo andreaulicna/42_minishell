@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 11:34:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:45:43 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,7 @@ void	expand_exit_status(char **cmd, int i_cmd, int exit_status)
 	new_str.tmp_join = ft_strjoin(new_str.part_1, new_str.part_2);
 	new_str.final = ft_strjoin(new_str.tmp_join, new_str.part_3);
 	cmd[i_cmd] = new_str.final;
-	free(str);
-	free_struct_str(&new_str);
+	free_struct_str(&new_str, str);
 }
 
 /**
@@ -177,8 +176,7 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
 	new_str.env_found = env_find(env_list, new_str.part_2);
 	expand_dollar_construct_final(&new_str, j_cmd);
 	cmd[i_cmd] = new_str.final;
-	free(str);
-	free_struct_str(&new_str);
+	free_struct_str(&new_str, str);
 }
 
 /**
@@ -217,7 +215,6 @@ void	delete_backslash(char **cmd, int i_cmd)
 	new_str.part_1 = ft_substr(str, 0, i);
 	new_str.part_2 = ft_substr(str, i + 1, ft_strlen(str) - 1);
 	new_str.final = ft_strjoin(new_str.part_1, new_str.part_2);
-	free_struct_str(&new_str);
 	cmd[i_cmd] = new_str.final;
-	free(str);
+	free_struct_str(&new_str, str);
 }

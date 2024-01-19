@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/19 19:46:07 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 11:54:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,33 @@ void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
 	ft_lstadd_back(simple_cmds, node_simple_cmds);
 }
 
+void	detect_quotes_in_redirects(t_list **simple_cmds)
+{
+	t_list			*current_simple_cmd;
+	t_simple_cmds	*content_simple_cmd;
+	t_list			*current_redirect;
+	t_lexer			*content_redirect;
+
+	current_simple_cmd = *simple_cmds;
+	while (current_simple_cmd)
+	{
+		content_simple_cmd = (t_simple_cmds *) current_simple_cmd->content;
+		if (content_simple_cmd->redirects == NULL)
+		{
+			current_simple_cmd = current_simple_cmd->next;
+			continue ;
+		}
+		current_redirect = content_simple_cmd->redirects;
+		while (current_redirect)
+		{
+			content_redirect = (t_lexer *) current_redirect->content;
+			content_redirect->word = delete_quotes(content_redirect->word);
+			current_redirect = current_redirect->next;
+		}
+		current_simple_cmd = current_simple_cmd->next;
+	}
+}
+
 /**
  * @brief	Converts lexer list to a list of simple commands.
  * 
@@ -157,5 +184,6 @@ int	lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds)
 		create_simple_cmds(lexer, simple_cmds);
 		current = *lexer;
 	}
+	detect_quotes_in_redirects(simple_cmds);
 	return (EXIT_SUCCESS);
 }
