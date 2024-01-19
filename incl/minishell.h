@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 12:23:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 12:38:39 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,6 @@ void	orig_fds_save(int *orig_input, int *orig_output);
 void	orig_fds_restore(int orig_input, int orig_output);
 
 /* Signals */
-void	init_signals(void);
 void	handle_sigint(int sig_num);
 void	handle_sigint_heredoc(int sig_num);
 
