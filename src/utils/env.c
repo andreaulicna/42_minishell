@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 13:06:37 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/19 06:35:46 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ t_list	*env_find(t_list *head, char *variable_key)
 	if (head == NULL)
 		return (NULL);
 	content = head->content;
-	if (ft_strncmp(content->name, variable_key, ft_strlen(variable_key)) == 0)
+	if (ft_strncmp(content->name, variable_key, ft_strlen(variable_key)) == 0
+		&& (ft_strlen(content->name) == ft_strlen(variable_key)))
 		return (head);
 	return (env_find(head->next, variable_key));
 }
