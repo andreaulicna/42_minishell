@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/09 23:52:36 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:50:58 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int	ft_export(char **args, t_data *data)
 	return (0);
 }
 
-void ft_export_add(char **args, t_data *data, int i)
+void	ft_export_add(char **args, t_data *data, int i)
 {
 	t_list	*possible_duplicate;
 	size_t	equal_pos;

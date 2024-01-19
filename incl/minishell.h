@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 10:36:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 22:50:52 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@
 # define EXIT_EXECVE 		5
 # define EXIT_EXECNOTFOUND	127
 
+extern int	g_signal;
+
 typedef struct s_data
 {
 	t_list	*env_list;
@@ -50,6 +52,7 @@ typedef struct s_data
 	char	**input_split;
 	int		orig_fdin;
 	int		orig_fdout;
+	int		hd_fd;
 	int		exit_status;
 }				t_data;
 
@@ -121,7 +124,7 @@ int		free_array(char **strs);
 void	free_lexer(t_list **lexer);
 void	free_simple_cmds(t_list **simple_cmds);
 int		free_envlist(t_list **head);
-void	free_struct_str(t_str *str);
+void	free_struct_str(t_str *str, char *old_str);
 
 /* Expander */
 // expander.c
@@ -135,8 +138,10 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd);
 void	delete_backslash(char **cmd, int i_cmd);
 
 /* Heredoc */
+// heredoc.c
 int		heredoc(t_data *data);
-void	heredoc_no_space(t_data *data);
+// heredoc_lines.c
+void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 
 /* Lexer */
 // ft_split_minishell.c
@@ -171,8 +176,9 @@ void	init_struct_str(t_str *str);
 char	*set_prompt(t_list *env_list);
 
 // quotes.c
+int		has_quotes(char *str, char *q);
 int		check_quotes(char *input);
-void	delete_quotes(char **cmd, int i_cmd);
+char	*delete_quotes(char *str);
 void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
 int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
@@ -197,7 +203,8 @@ int		ft_exit_checknum(char *str);
 /* Execution */
 int		exec(t_data *data, t_list *simple_cmds);
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num);
-int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output);
+int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input,
+			int fd_output);
 void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
@@ -216,5 +223,6 @@ void	orig_fds_restore(int orig_input, int orig_output);
 
 /* Signals */
 void	handle_sigint(int sig_num);
+void	handle_sigint_heredoc(int sig_num);
 
 #endif

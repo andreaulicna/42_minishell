@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 12:35:35 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/12 11:41:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/13 16:45:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	has_quotes(char *str, char *q)
 		return (1);
 	}
 	else
+	{
 		return (0);
+	}
 }
 
 /**
@@ -53,42 +55,41 @@ int	has_quotes(char *str, char *q)
  * And then it constructs the final string in 2 steps, first joining part_1 and
  * part_2 into tmp_join and then joining tmp_join and part_3 into final.
  * 
- * Finally, the appropriate string in the 2D input array is pointed to the final
- * string. All of the dynamically allocated memory is then freed with the
- * exception of the final string that is not freed until after the whole command
- * is processed and the program reaches the free_simple_cmds function.
+ * All of the dynamically allocated memory is then freed with the exception
+ * of the final string that is returned. The final string is not freed until
+ * after the whole command is processed and the program reaches
+ * the free_simple_cmds function.
  * 
- * @param 	cmd		array of strings containing the input commands
- * @param	i_cmd	index of the command string in the array to be modified
+ * @param 	str		string to check and potentially remove the quotes from
  */
 
-void	delete_quotes(char **cmd, int i_cmd)
+char	*delete_quotes(char *str)
 {
-	char	*str;
 	int		i;
 	int		j;
 	char	q;
 	t_str	new_str;
 
-	str = cmd[i_cmd];
-	if (!has_quotes(str, &q))
-		return ;
-	i = 0;
-	while (str[i] != q)
+	if (has_quotes(str, &q))
+	{
+		i = 0;
+		while (str[i] != q)
+			i++;
+		init_struct_str(&new_str);
+		new_str.part_1 = ft_substr(str, 0, i);
+		j = 0;
 		i++;
-	init_struct_str(&new_str);
-	new_str.part_1 = ft_substr(str, 0, i);
-	j = 0;
-	i++;
-	while (str[i + j] != q)
-		j++;
-	new_str.part_2 = ft_substr(str, i, j);
-	new_str.part_3 = ft_substr(str, i + j + 1, ft_strlen_custom(str) - i - j);
-	new_str.tmp_join = ft_strjoin(new_str.part_1, new_str.part_2);
-	new_str.final = ft_strjoin(new_str.tmp_join, new_str.part_3);
-	cmd[i_cmd] = new_str.final;
-	free(str);
-	free_struct_str(&new_str);
+		while (str[i + j] != q)
+			j++;
+		new_str.part_2 = ft_substr(str, i, j);
+		new_str.part_3 = ft_substr(str, i + j + 1,
+				ft_strlen_custom(str) - i - j);
+		new_str.tmp_join = ft_strjoin(new_str.part_1, new_str.part_2);
+		new_str.final = ft_strjoin(new_str.tmp_join, new_str.part_3);
+		free_struct_str(&new_str, str);
+		return (new_str.final);
+	}
+	return (str);
 }
 
 /**

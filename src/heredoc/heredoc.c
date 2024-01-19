@@ -6,81 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/12 10:54:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/17 23:10:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
-
-/**
- * @brief	Creates a line in the temporary heredoc file when there is a dollar
- * sign that needs to be expanded in it.
- * 
- * A temporary t_simple_cmds struct is created and the line saved as the first
- * element of the cmd variable in it. It is done this way so that the expansion
- * can be performed using the expander functions (expander.c, expander_dollar.c)
- * that take the t_simple_cmds struct as arguments.
- * 
- * Once the line is written in the file, the temporary node is freed.
- * 
- * @param	fd			file descriptor of the temporary heredoc file
- * @param	line		the line to expand and then write to the heredoc
- * @param	data		pointer to the t_data structure (sent to $ expander)
- */
-void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
-{
-	t_simple_cmds	*tmp_node;
-
-	tmp_node = malloc(sizeof(t_lexer));
-	tmp_node->cmd = ft_calloc(2, sizeof(char *));
-	tmp_node->cmd[0] = ft_strdup(line);
-	tmp_node->cmd[1] = NULL;
-	tmp_node->redirects = NULL;
-	tmp_node->hd_file = NULL;
-	expander_loop_dollar(tmp_node, 0, data);
-	ft_putstr_fd(tmp_node->cmd[0], fd);
-	free_array(tmp_node->cmd);
-	free(tmp_node);
-}
-
-/**
- * @brief	Creates a temporary heredoc file and fills it with user input.
- * 
- * The function opens and creates a heredoc file with a name detailing the order
- * the file was created in. Then it takes user input line by line and writes it
- * to the file. If the line contains a dollar sign, expansion is performed
- * in the create_heredoc_dollar_line function before writing the line
- * in the file. Each line in the file is followed by a newline.
- * 
- * @param	heredoc			list containing heredoc content
- * @param	hd_file_name	name of the temporary heredoc file
- * @param	data		pointer to the t_data structure (sent to $ expander)
- */
-void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
-{
-	int		fd;
-	char	*line;
-	char	*limiter;
-
-	fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	line = readline("> ");
-	limiter = ((t_lexer *) heredoc->content)->word;
-	while (line)
-	{
-		if (!ft_strncmp(line, limiter, ft_strlen(limiter)) 
-			&& line[ft_strlen(limiter)] == '\0')
-			break;
-		else if (contains_dollar(line))
-			create_heredoc_dollar_line(fd, line, data);
-		else
-			ft_putstr_fd(line, fd);
-		ft_putstr_fd("\n", fd);
-		free(line);
-		line = readline("> ");
-	}
-	free(line);
-	close(fd);
-}
 
 /**
  * @brief	Generates a unique heredoc file name using an incremented static
@@ -95,69 +25,110 @@ char	*get_hd_file_name(void)
 	char		*hd_file_name;
 
 	str_i = ft_itoa(i++);
-	hd_file_name = ft_strjoin("./src/heredoc/.tmp_files/.tmp_heredoc_", str_i);
+	hd_file_name = ft_strjoin("./src/heredoc/.tmp_heredoc_", str_i);
 	free(str_i);
 	return (hd_file_name);
 }
 
 /**
- * @brief   Searches for heredoc content in the provided commands and executes
- * the heredoc process.
+ * @brief	Creates a child process that manages the saving of heredoc input.
  * 
- * The function traverses the redirects list in the provided simple_cmd node.
- * For each heredoc redirection, <<, a temporary heredoc file is
- * generated and filled in with user input, expanding variables where
- * appropriate.
+ * A temporary heredoc file is generated and filled in with user input,
+ * expanding variables where appropriate.
  * 
- * When << is encountered and the hd_file already exists, it is freed as to
- * make space for the new (just now encountered) heredoc because only the last
- * heredoc should be taken into account.
+ * The function waits for the child to exit and saves the exit status into
+ * the main t_data structure.
  * 
- * @param	simple_cmd	list containing simple command data
- * @param	env_list	list containing environment variables for expansion
- * @param	data		pointer to the t_data structure (sent to $ expander)
+ * Signal lines (parent process):
+ * 1. SIGINT: Ignores the SIGINT signal, so that the handle_sigint handler
+ * doesn't get triggered in the parent process for now as there is a child
+ * process running that has its own handler for this signal.
+ * 
+ * 2. SIGUSR1: Sets up the signal handler for SIGUSR1 to handle_sigint_heredoc
+ * Thanks to that when the child process sends it to indicate that the heredoc
+ * process has been interrupted by SIGINT (Ctrl + C), the parent process saves
+ * this information in the global variable g_signal. This variable is then
+ * checked in the minishell_loop before the execution is triggered and if
+ * it is set to SIGUSR1, the execution won't be triggered because SIGINT
+ * received during the heredoc process cancels the whole command.
+ * 
+ * 
+ * @param	current_redirect		list containing heredoc content
+ * @param	content_simle_cmd		pointer to the content of current_simple_cmd
+ * 									to access the name of the temp heredoc file
+ * @param	data					pointer to the t_data structure
+ * 									(for exit_status and to send to 
+ * 									create_heredoc and then expander)
  */
-void	process_heredoc(t_list *simple_cmd, t_data *data)
+void	process_heredoc(t_data *data, t_list *current_redirect,
+	t_simple_cmds *content_simple_cmd)
 {
-	t_simple_cmds	*content_simple_cmd;
-	t_list			*current_redirect;
-	t_lexer			*content_redirect;
+	int				pid;
+	int				status;
 
-	content_simple_cmd = (t_simple_cmds *) simple_cmd->content;
-	current_redirect = content_simple_cmd->redirects;
-	while (current_redirect)
+	pid = fork();
+	if (pid == -1)
 	{
-		content_redirect = (t_lexer *) current_redirect->content;
-		if (content_redirect->token == LESS_2)
-		{
-			if (content_simple_cmd->hd_file)
-				free(content_simple_cmd->hd_file);
-			content_simple_cmd->hd_file = get_hd_file_name();
-			create_heredoc(current_redirect, content_simple_cmd->hd_file, data);
-		}
-		current_redirect = current_redirect->next;
+		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
+		exit_current_prompt(NULL);
+	}
+	if (pid == 0)
+	{
+		create_heredoc(current_redirect, content_simple_cmd->hd_file,
+			data);
+		exit_minishell(NULL, 0);
+	}
+	else
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGUSR1, handle_sigint_heredoc);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			data->exit_status = WEXITSTATUS(status);
 	}
 }
 
 /**
- * @brief   Executes the heredoc process for the entire command sequence.
+ * @brief   Searches for heredoc content in the whole simple_cmds sequence and
+ * executes the heredoc process for each command.
+ *
+ * The function traverses the simple commands list and for each one of that it
+ * traverses the redirects list via a nested while loop. 
  * 
- * The function traverses the simple commands list, sending each node into
- * the process_heredoc which takes care of running the whole heredoc process if
- * a heredoc redirection, <<, is encountered.
+ * For each heredoc redirection, <<, the process_heredoc function is called.
+ * 
+ * When << is encountered and the hd_file already exists, it is freed as to
+ * make space for the new (just now encountered) heredoc because only the last
+ * heredoc should be taken into account.
  * 
  * @param	data	pointer to the t_data structure
  * @return	int		returns 0 on successful execution
  */
 int	heredoc(t_data *data)
 {
-	t_list	*current;
+	t_list			*current_simple_cmd;
+	t_simple_cmds	*content_simple_cmd;
+	t_list			*current_redirect;
+	t_lexer			*content_redirect;
 
-	current = data->simple_cmds;
-	while (current)
+	current_simple_cmd = data->simple_cmds;
+	while (current_simple_cmd)
 	{
-		process_heredoc(current, data);
-		current = current->next;
+		content_simple_cmd = (t_simple_cmds *) data->simple_cmds->content;
+		current_redirect = content_simple_cmd->redirects;
+		while (current_redirect)
+		{
+			content_redirect = (t_lexer *) current_redirect->content;
+			if (content_redirect->token == LESS_2)
+			{
+				if (content_simple_cmd->hd_file)
+					free(content_simple_cmd->hd_file);
+				content_simple_cmd->hd_file = get_hd_file_name();
+				process_heredoc(data, current_redirect, content_simple_cmd);
+			}
+			current_redirect = current_redirect->next;
+		}
+		current_simple_cmd = current_simple_cmd->next;
 	}
 	return (0);
 }
