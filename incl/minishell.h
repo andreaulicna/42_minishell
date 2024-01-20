@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 12:38:39 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/20 18:47:07 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ char	*find_exe_path(t_data *data, char *cmd);
 int		is_builtin(char *cmd);
 void	handle_redirect(t_data *data, t_list *redirects, char *hd_file);
 void	handle_output_single(t_data *data, char *filename);
-void	handle_output_append(char *filename);
+void	handle_output_append(t_data *data, char *filename);
 void	handle_input(t_data *data, char *filename);
 char	**env_copy(t_data *data);
 void	wait_for_pipeline(t_data *data, int pid_list[], int cmds_num);
