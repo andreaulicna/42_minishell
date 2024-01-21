@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/19 15:54:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/21 17:41:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,19 @@ int exec(t_data *data, t_list *simple_cmds)
  */
 void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
-	//int	fd_pipe[2];
-	int	fd_input;
-	int	fd_output;
+	int	**fd_pipe;
 	int	pid_list[cmds_num];
 	int	i;
-	int	**new_pipe;
-//	int test_write;
-//	int test_read;
-//	int list_size = ft_lstsize(simple_cmds);
 	int close_val;
 
-	fd_input = STDIN;
 	i = 0;
-	new_pipe = malloc(sizeof(int *) * ft_lstsize(simple_cmds));
+	fd_pipe = malloc(sizeof(int *) * (ft_lstsize(simple_cmds)));
 	while(i < cmds_num)
 	{
-		new_pipe[i] = malloc(sizeof(int) * 2);
+		fd_pipe[i] = malloc(sizeof(int) * 2);
 	//	if (simple_cmds->next != NULL)
 	//	{
-		if (pipe(new_pipe[i]) == -1)
+		if (pipe(fd_pipe[i]) == -1)
 		{
 			ft_putendl_fd("minishell: pipe: Too many open files", 2);
 			exit_current_prompt(NULL);
@@ -86,15 +79,13 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 	//	test_write = fd_output;
 	//	}
 	//	else
-		if (simple_cmds->next == NULL)
-			fd_output = STDOUT;
-		pid_list[i] = fork_cmd(data, simple_cmds, fd_input, fd_output, new_pipe, i);
+	//	if (simple_cmds->next == NULL)
+		pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
 //		if (fd_input != STDIN)
 //		{
-		close_val = close(new_pipe[i][PIPE_WRITE]);
+		close_val = close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
-			close_val = close (new_pipe[i - 1][PIPE_READ]);
-		// dprintf(2, "%d\n", close(fd_input));
+			close_val = close(fd_pipe[i - 1][PIPE_READ]);
 //		}
 //		if (simple_cmds->next != NULL)
 //		{
@@ -111,6 +102,13 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 		i++;
 	}
 	wait_for_pipeline(data, pid_list, cmds_num);
+//	if: solves 4 open fds at the end of the program if only one command
+//	else: solves 4 open fds at the end of the program if pipe
+	if (ft_lstsize(data->simple_cmds) == 1)
+		close(fd_pipe[i - 1][PIPE_READ]);
+	else
+		close_val = close(fd_pipe[i - 2][PIPE_WRITE]);
+	free_pipe(fd_pipe, ft_lstsize(data->simple_cmds));
 	(void) close_val;
 }
 
@@ -123,13 +121,11 @@ void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
  * @param fd_output The file descriptor for output redirection.
  * @return The process ID of the child process.
  */
-int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output, int **new_pipe, int i)
+int fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 {
 	int				pid;
 	t_simple_cmds	*content;
 
-	(void) fd_input;
-	(void) fd_output;
 	content = (t_simple_cmds *)simple_cmds->content;
 	pid = fork();
 	if (pid == -1)
@@ -140,13 +136,18 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output, int
 	if (pid == 0)
 	{
 	//	pipe_redirect(fd_input, fd_output);
-		close(new_pipe[i][PIPE_READ]);
+		close(fd_pipe[i][PIPE_READ]);
 		if (i > 0)
-			dup2(new_pipe[i - 1][PIPE_READ], STDIN_FILENO);
+			dup2(fd_pipe[i - 1][PIPE_READ], STDIN_FILENO);
 		if (simple_cmds->next != NULL)
-			dup2(new_pipe[i][PIPE_WRITE], STDOUT_FILENO);
+			dup2(fd_pipe[i][PIPE_WRITE], STDOUT_FILENO);
+		// solves 4 open fds in child
+		close(fd_pipe[i][PIPE_WRITE]);
 		if (content->redirects)
 			handle_redirect(data, content->redirects, content->hd_file);
+		// solves still reachable in child
+		free(fd_pipe[i]);
+		free(fd_pipe);
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);

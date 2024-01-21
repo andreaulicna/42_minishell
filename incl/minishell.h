@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 15:49:48 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/21 17:38:00 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int		error_parser_double_token(t_tokens token);
 void	exit_minishell(t_data *data, int exit_status);
 void	exit_current_prompt(t_data *data);
 // free.c
+void	free_pipe(int **fd_pipe, int num_cmds);
 void	free_data(t_data *data);
 void	free_data_current_prompt(t_data *data);
 // free_helpers.c
@@ -203,9 +204,7 @@ int		ft_exit_checknum(char *str);
 /* Execution */
 int		exec(t_data *data, t_list *simple_cmds);
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num);
-//int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input,
-//			int fd_output);
-int fork_cmd(t_data *data, t_list *simple_cmds, int fd_input, int fd_output, int **new_pipe, int i);
+int		fork_cmd(t_data *data, t_list *simple_cmds, int **new_pipe, int i);
 void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
