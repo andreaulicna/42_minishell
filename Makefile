@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/22 13:19:17 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/22 14:42:53 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,7 @@ CC = cc
 LIBFTPRINTF = libftprintf
 
 all: libs $(NAME)
+	@rm -f src/heredoc/.tmp*
 	@echo "minishell executable ready ✅"
 
 %.o: %.c
