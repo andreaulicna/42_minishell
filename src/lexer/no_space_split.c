@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:26:37 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 10:33:57 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 17:09:28 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
  */
 t_tokens	contains_token_with_no_space(char *s)
 {
+	int	len;
+
+	len = ft_strlen_custom(s);
+	printf("token no space for: %s\n", s);
 	if (is_token(s))
 		return (0);
 	else if (s[0] == '|' && s[1])
@@ -32,6 +36,16 @@ t_tokens	contains_token_with_no_space(char *s)
 	else if (s[0] == '>' && s[1] == '>' && s[2])
 		return (GREATER_2);
 	else if (s[0] == '>' && s[1])
+		return (GREATER);
+	else if (s[len - 1] == '|' && s[len] == '\0')
+		return (PIPE);
+	else if (s[len - 2] == '<' && s[len - 1] == '<' && s[len] == '\0')
+		return (LESS_2);
+	else if (s[len - 1] == '<' && s[len] == '\0')
+		return (LESS);
+	else if (s[len - 2] == '>' && s[len - 1] == '>' && s[len] == '\0')
+		return (GREATER_2);
+	else if (s[len - 1] == '>' && s[len] == '\0')
 		return (GREATER);
 	return (0);
 }
@@ -74,6 +88,8 @@ void	fill_new_input_split(char **new_input_split, char **input_split, int j,
 	t_tokens token)
 {
 	int		i;
+	int		k;
+	int		l;
 	int		new_i;
 
 	i = 0;
@@ -82,16 +98,46 @@ void	fill_new_input_split(char **new_input_split, char **input_split, int j,
 	{
 		if (i == j)
 		{
-			if (token == PIPE)
-				fill_token(token, new_input_split, &new_i, &input_split[i][1]);
-			else if (token == LESS)
-				fill_token(token, new_input_split, &new_i, &input_split[i][1]);
-			else if (token == LESS_2)
-				fill_token(token, new_input_split, &new_i, &input_split[i][2]);
-			else if (token == GREATER)
-				fill_token(token, new_input_split, &new_i, &input_split[i][1]);
-			else if (token == GREATER_2)
-				fill_token(token, new_input_split, &new_i, &input_split[i][2]);
+			if (input_split[i][0] == '|' || input_split[i][0] == '<'
+				|| input_split[i][0] == '>')
+			{
+				if (token == PIPE)
+					fill_token(token, new_input_split, &new_i, &input_split[i][1]);
+				else if (token == LESS)
+					fill_token(token, new_input_split, &new_i, &input_split[i][1]);
+				else if (token == LESS_2)
+					fill_token(token, new_input_split, &new_i, &input_split[i][2]);
+				else if (token == GREATER)
+					fill_token(token, new_input_split, &new_i, &input_split[i][1]);
+				else if (token == GREATER_2)
+					fill_token(token, new_input_split, &new_i, &input_split[i][2]);
+			}
+			else
+			{
+				k = 0;
+				while (input_split[i][k] != '|' && input_split[i][k] != '<'
+					&& input_split[i][k] != '>' && input_split[i][k])
+					k++;
+				new_input_split[new_i] = (char *) malloc(sizeof(char) * (k + 1));
+				l = 0;
+				while (l < k)
+				{
+					new_input_split[new_i][l] = input_split[i][l];
+					l++;
+				}
+				new_input_split[new_i][l] = '\0';
+			//	new_i++;
+			//	if (token == PIPE)
+			//		new_input_split[new_i] = ft_strdup("|");
+			//	else if (token == LESS_2)
+			//		new_input_split[new_i] = ft_strdup("<<");
+			//	else if (token == LESS)
+			//		new_input_split[new_i] = ft_strdup("<");
+			//	else if (token == GREATER)
+			//		new_input_split[new_i] = ft_strdup(">");
+			//	else if (token == GREATER_2)
+			//		new_input_split[new_i] = ft_strdup(">>");
+			}
 		}
 		else
 			new_input_split[new_i] = ft_strdup(input_split[i]);
@@ -125,5 +171,7 @@ char	**no_space_split(char **input_split, int index, t_tokens token)
 	fill_new_input_split(new_input_split, input_split, index, token);
 	new_input_split[len_2d + 1] = NULL;
 	free_array(input_split);
+	printf("***NEW SPLIT***\n");
+	print_input_split(new_input_split);
 	return (new_input_split);
 }

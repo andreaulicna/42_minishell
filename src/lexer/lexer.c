@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 10:33:18 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 18:41:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,65 @@ void	assign_word(t_lexer *content, char *word)
 	content->token = 0;
 }
 
+char	**no_space_split_final(char **input_split, int index)
+{
+	int	len_2d;
+	char	**new_input_split;
+	int	i;
+	int	j;
+	int	k;
+	int	new_i;
+
+	len_2d = 0;
+	while (input_split[len_2d])
+		len_2d++;
+	new_input_split = (char **) malloc(sizeof(char *) * (len_2d + 2));
+	i = 0;
+	new_i = 0;
+	while (input_split[i])
+	{
+		if (i == index)
+		{
+			if (input_split[i][0] == '<' || input_split[i][0] == '>')
+			{
+				new_input_split[new_i] = ft_strdup("<<");
+				new_i++;
+				new_input_split[new_i] = ft_strdup(&input_split[i][2]);
+			}
+			else if (input_split[i][0] == '|')
+			{
+				new_input_split[new_i] = ft_strdup("|");
+				new_i++;
+				new_input_split[new_i] = ft_strdup(&input_split[i][1]);
+			}
+			else
+			{
+				k = 0;
+				while (input_split[i][k] != '<' && input_split[i][k] != '>'
+					&& input_split[i][k] != '|')
+					k++;
+				new_input_split[new_i] = (char *) malloc(sizeof(char) + (k + 1));
+				j = 0;
+				while (j < k)
+				{
+					new_input_split[new_i][j] = input_split[i][j];
+					j++;
+				}
+				new_input_split[new_i][j] = '\0';
+				new_i++;
+				new_input_split[new_i] = ft_strdup(&input_split[i][k]);
+			}
+		}
+		else
+			new_input_split[new_i] = ft_strdup(input_split[i]);
+		new_i++;
+		i++;
+	}
+	new_input_split[len_2d + 1] = NULL;
+	free_array(input_split);
+	return (new_input_split);
+}
+
 /**
  * @brief	Handles redirections without spaces by detecting them and
  * reconstructing the input_split accordingly.
@@ -78,18 +137,34 @@ void	handle_redirect_no_space(t_data *data)
 {
 	int			i;
 	char		**input_split;
-	t_tokens	token;
+//	t_tokens	token;
 
-	i = 0;
+//	i = 0;
 	input_split = data->input_split;
+//	while (input_split[i])
+//	{
+//		token = contains_token_with_no_space(input_split[i]);
+//		if (token != 0)
+//		{
+//			data->input_split = no_space_split(input_split, i, token);
+//			input_split = data->input_split;
+//			i++;
+//		}
+//		i++;
+//	}
+	i = 0;
 	while (input_split[i])
 	{
-		token = contains_token_with_no_space(input_split[i]);
-		if (token != 0)
+		if (is_token(input_split[i]))
 		{
-			data->input_split = no_space_split(input_split, i, token);
-			input_split = data->input_split;
 			i++;
+			continue ;
+		}
+		if (ft_strchr(input_split[i], '|') || ft_strchr(input_split[i], '<')
+			|| ft_strchr(input_split[i], '>'))
+		{
+			data->input_split = no_space_split_final(input_split, i);
+			input_split = data->input_split;
 		}
 		i++;
 	}
