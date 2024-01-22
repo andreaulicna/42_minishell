@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/22 18:41:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 19:19:55 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,29 @@ char	**no_space_split_final(char **input_split, int index)
 	{
 		if (i == index)
 		{
-			if (input_split[i][0] == '<' || input_split[i][0] == '>')
+			if (input_split[i][0] == '<' && input_split[i][1] == '<')
 			{
 				new_input_split[new_i] = ft_strdup("<<");
 				new_i++;
 				new_input_split[new_i] = ft_strdup(&input_split[i][2]);
+			}
+			else if (input_split[i][0] == '>' && input_split[i][1] == '>')
+			{
+				new_input_split[new_i] = ft_strdup(">>");
+				new_i++;
+				new_input_split[new_i] = ft_strdup(&input_split[i][2]);
+			}
+			else if (input_split[i][0] == '<')
+			{
+				new_input_split[new_i] = ft_strdup("<");
+				new_i++;
+				new_input_split[new_i] = ft_strdup(&input_split[i][1]);
+			}
+			else if (input_split[i][0] == '>')
+			{
+				new_input_split[new_i] = ft_strdup(">");
+				new_i++;
+				new_input_split[new_i] = ft_strdup(&input_split[i][1]);
 			}
 			else if (input_split[i][0] == '|')
 			{
@@ -137,6 +155,7 @@ void	handle_redirect_no_space(t_data *data)
 {
 	int			i;
 	char		**input_split;
+	char		q;
 //	t_tokens	token;
 
 //	i = 0;
@@ -155,7 +174,8 @@ void	handle_redirect_no_space(t_data *data)
 	i = 0;
 	while (input_split[i])
 	{
-		if (is_token(input_split[i]))
+		if ((has_quotes(input_split[i], &q) && (input_split[i][0] != '<' && input_split[i][0] != '>'))
+			|| is_token(input_split[i]))
 		{
 			i++;
 			continue ;
