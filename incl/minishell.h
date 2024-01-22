@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/21 17:38:00 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 13:30:04 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ int		error_parser_double_token(t_tokens token);
 void	exit_minishell(t_data *data, int exit_status);
 void	exit_current_prompt(t_data *data);
 // free.c
-void	free_pipe(int **fd_pipe, int num_cmds);
 void	free_data(t_data *data);
 void	free_data_current_prompt(t_data *data);
 // free_helpers.c
@@ -126,6 +125,9 @@ void	free_lexer(t_list **lexer);
 void	free_simple_cmds(t_list **simple_cmds);
 int		free_envlist(t_list **head);
 void	free_struct_str(t_str *str, char *old_str);
+// free_pipe.c
+void	free_pipe(int **fd_pipe, int num_cmds);
+void	free_pipe_child(int **fd_pipe, int i);
 
 /* Expander */
 // expander.c
@@ -214,10 +216,10 @@ void	handle_output_single(t_data *data, char *filename);
 void	handle_output_append(char *filename);
 void	handle_input(t_data *data, char *filename);
 char	**env_copy(t_data *data);
-void	wait_for_pipeline(t_data *data, int pid_list[], int cmds_num);
+void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
-void	pipe_redirect(int fd_input, int fd_output);
+void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
 void	orig_fds_save(int *orig_input, int *orig_output);
 void	orig_fds_restore(int orig_input, int orig_output);
 

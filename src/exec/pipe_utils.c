@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 22:14:18 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/19 15:20:52 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 13:31:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,21 +70,21 @@ int pipe_close(int fd_pipe[2])
 }
 
 /**
- * Redirects input and output file descriptors for piping.
- *
- * @param fd_input The file descriptor for input.
- * @param fd_output The file descriptor for output.
+ * @brief	Redirects input and output file descriptors for piping.
+ * 
+ * The write end of the current pipe must be closed after (possible) dupping
+ * to ensure there is no fd left open in the child process.
+ * 
+ * @param	simple_cmd	current command being processed
+ * @param	fd_pipe		2d array of file descriptors
+ * @param	i			current position in fd_pipe
  */
-void pipe_redirect(int fd_input, int fd_output)
+void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i)
 {
-	if (fd_input != STDIN)
-	{
-		dup2(fd_input, STDIN);
-		close(fd_input);
-	}
-	if (fd_output != STDOUT)
-	{
-		dup2(fd_output, STDOUT);
-		close(fd_output);
-	}
+	close(fd_pipe[i][PIPE_READ]);
+	if (i > 0)
+		dup2(fd_pipe[i - 1][PIPE_READ], STDIN_FILENO);
+	if (simple_cmds->next != NULL)
+		dup2(fd_pipe[i][PIPE_WRITE], STDOUT_FILENO);
+	close(fd_pipe[i][PIPE_WRITE]);
 }

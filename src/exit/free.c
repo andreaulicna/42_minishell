@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 13:37:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/21 17:40:05 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 13:17:19 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,4 @@ void	free_data_current_prompt(t_data *data)
 		free_array(data->input_split);
 		data->input_split = NULL;
 	}
-}
-
-void	free_pipe(int **fd_pipe, int num_cmds)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_cmds)
-	{
-		free(fd_pipe[i]);
-		i++;
-	}
-	free(fd_pipe);
 }

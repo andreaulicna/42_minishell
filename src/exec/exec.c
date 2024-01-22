@@ -6,14 +6,14 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/21 17:41:36 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 13:29:31 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
 /**
- * Executes a list of simple commands.
+ * @brief Executes a list of simple commands.
  * 
  * Saves the STDIN and STDOUT file descriptors for later restoration.
  * If there is only one command and it's a builtin, runs it in the main process.
@@ -22,7 +22,7 @@
  * @param data The data structure containing the shell's state and settings.
  * @param simple_cmds The linked list of simple commands to execute.
  */
-int exec(t_data *data, t_list *simple_cmds)
+int	exec(t_data *data, t_list *simple_cmds)
 {
 	t_simple_cmds	*content;
 	int				cmds_num;
@@ -43,7 +43,7 @@ int exec(t_data *data, t_list *simple_cmds)
 }
 
 /**
- * Executes a pipeline of simple commands.
+ * @brief	Executes a pipeline of simple commands.
  *
  * This function takes a data structure, a linked list of simple commands,
  * and the number of commands in the pipeline. It creates pipes for
@@ -52,76 +52,64 @@ int exec(t_data *data, t_list *simple_cmds)
  * accordingly to redirect the input and output of each command.
  * The function waits for all child processes to complete before returning.
  *
- * @param data The data structure containing information about the shell environment.
+ * Details: 
+ * If the current command is not the first one, the parent process 
+ * (after fork_cmd line) closes the read end of the previous pipe. Each command
+ * reads from the previous pipe and writes to the current pipe, so after
+ * a command has finished reading from a pipe, it should close the read end so
+ * that the writing process can get a SIGPIPE signal if it tries to write
+ * to the pipe.
+ * 
+ * @param data Pointer to the t_data structure (for simple_cmds, exit_status)
  * @param simple_cmds The linked list of simple commands in the pipeline.
  * @param cmds_num The number of commands in the pipeline.
  */
-void exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
+void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
 	int	**fd_pipe;
-	int	pid_list[cmds_num];
 	int	i;
-	int close_val;
 
 	i = 0;
 	fd_pipe = malloc(sizeof(int *) * (ft_lstsize(simple_cmds)));
-	while(i < cmds_num)
+	while (i < cmds_num)
 	{
 		fd_pipe[i] = malloc(sizeof(int) * 2);
-	//	if (simple_cmds->next != NULL)
-	//	{
 		if (pipe(fd_pipe[i]) == -1)
 		{
 			ft_putendl_fd("minishell: pipe: Too many open files", 2);
 			exit_current_prompt(NULL);
 		}
-	//	fd_output = new_pipe[i][PIPE_WRITE];
-	//	test_write = fd_output;
-	//	}
-	//	else
-	//	if (simple_cmds->next == NULL)
-		pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
-//		if (fd_input != STDIN)
-//		{
-		close_val = close(fd_pipe[i][PIPE_WRITE]);
+		fork_cmd(data, simple_cmds, fd_pipe, i);
+		close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
-			close_val = close(fd_pipe[i - 1][PIPE_READ]);
-//		}
-//		if (simple_cmds->next != NULL)
-//		{
-//			close_val = close(new_pipe[i][PIPE_WRITE]);
-//			fd_input = new_pipe[i][PIPE_READ];
-//			test_read = new_pipe[i][PIPE_READ];
-//		}
-//			//fd_input = pipe_close(new_pipe[i]);
-//		if (simple_cmds->next == NULL && list_size > 1)
-//		{
-//			close_val = close(fd_input);
-//		}
+			close(fd_pipe[i - 1][PIPE_READ]);
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	wait_for_pipeline(data, pid_list, cmds_num);
-//	if: solves 4 open fds at the end of the program if only one command
-//	else: solves 4 open fds at the end of the program if pipe
-	if (ft_lstsize(data->simple_cmds) == 1)
-		close(fd_pipe[i - 1][PIPE_READ]);
-	else
-		close_val = close(fd_pipe[i - 2][PIPE_WRITE]);
+	wait_for_pipeline(data, cmds_num, fd_pipe, i);
 	free_pipe(fd_pipe, ft_lstsize(data->simple_cmds));
-	(void) close_val;
 }
 
 /**
- * Forks a new process to execute a command.
+ * @brief	Forks a new process to execute a command.
+ * 
+ * pipe_redirect takes care of redirecting input and output fds for piping.
+ * 
+ * handle_redirect checks for redirections and redirects input/ output
+ * accordingly.
+ * 
+ * free_pipe_child solves still reachable leaks in the child process since
+ * it inherits the malloced fd_pipe.
+ * 
+ * Then the command is executed.
  *
- * @param data The data structure containing the shell's state.
- * @param simple_cmds The list of simple commands to execute.
- * @param fd_input The file descriptor for input redirection.
- * @param fd_output The file descriptor for output redirection.
- * @return The process ID of the child process.
+ * @param	data		pointer to the t_data structure (for exit_status)
+ * @param	simple_cmds	list of simple commands to execute
+ * @param	fd_pipe		2d array of file descriptors
+ * @param	i			current position in fd_pipe
+ * @return	int			process ID of the child process
  */
-int fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
+int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 {
 	int				pid;
 	t_simple_cmds	*content;
@@ -135,19 +123,10 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	}
 	if (pid == 0)
 	{
-	//	pipe_redirect(fd_input, fd_output);
-		close(fd_pipe[i][PIPE_READ]);
-		if (i > 0)
-			dup2(fd_pipe[i - 1][PIPE_READ], STDIN_FILENO);
-		if (simple_cmds->next != NULL)
-			dup2(fd_pipe[i][PIPE_WRITE], STDOUT_FILENO);
-		// solves 4 open fds in child
-		close(fd_pipe[i][PIPE_WRITE]);
+		pipe_redirect(simple_cmds, fd_pipe, i);
 		if (content->redirects)
 			handle_redirect(data, content->redirects, content->hd_file);
-		// solves still reachable in child
-		free(fd_pipe[i]);
-		free(fd_pipe);
+		free_pipe_child(fd_pipe, i);
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
@@ -160,17 +139,17 @@ int fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 }
 
 /**
- * Executes the given command. First checks if the command was given in and
- * absolute path. If so, executes it. If not, parses the command name and
+ * @brief	Executes the given command. First checks if the command was given
+ * in and absolute path. If so, executes it. If not, parses the command name and
  * attempts to generate a path for the executable.
  * 
  * @param data The data structure containing the shell's state.
  * @param content The structure containing the parsed command.
  */
-void run_exec(t_data *data, t_simple_cmds *content)
+void	run_exec(t_data *data, t_simple_cmds *content)
 {
-	char    **env_cpy;
-	char    *path;
+	char	**env_cpy;
+	char	*path;
 
 	env_cpy = env_copy(data);
 	if (access(content->cmd[0], F_OK) == 0)
@@ -193,12 +172,12 @@ void run_exec(t_data *data, t_simple_cmds *content)
 }
 
 /**
- * Executes the appropriate built-in command based on the given command.
+ * @brief	Executes the appropriate built-in command based on the given command.
  *
  * @param data The data structure containing the shell's state.
  * @param cmd The command to be executed.
  */
-void run_builtin(t_data *data, char **cmd)
+void	run_builtin(t_data *data, char **cmd)
 {
 	if (ft_strncmp(cmd[0], "cd", 2) == 0)
 		ft_cd(cmd, data);
