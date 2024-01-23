@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/22 13:30:04 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/23 16:05:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,8 +150,7 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 //	no_space_split.c
-t_tokens	contains_token_with_no_space(char *s);
-char	**no_space_split(char **input_split, int index, t_tokens token);
+char	**no_space_split(char **input_split, int index);
 // lexer.c
 t_tokens	is_token(char *check);
 int		input_arr_to_lexer_list(t_data *data);
