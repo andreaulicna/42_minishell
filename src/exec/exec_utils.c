@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/13 12:18:43 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/22 13:31:11 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,21 +100,31 @@ int is_builtin(char *cmd)
 }
 
 /**
- * Waits for all processes in the pipeline to finish.
+ * @brief	Waits for all processes in the pipeline to finish.
+ * 
+ * The if and else statement ensures there is no fd left open
+ * in the parent process for one command and piped commands, respectively.
  *
- * @param pid_list An array of process IDs representing the pipeline.
+ * @param	data		pointer to the t_data structure (for exit_status)
+ * @param	cmds_num	number of commands in the pipeline
+ * @param	fd_pipe		2d array of file descriptors
+ * @param	i			current position in fd_pipe
  */
-void wait_for_pipeline(t_data *data, int pid_list[], int cmds_num)
+void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i)
 {
-	int i;
+	int	j;
 	int	status;
 
-	i = 0;
-	while (i < cmds_num)
+	j = 0;
+	while (j < cmds_num)
 	{
-		waitpid(pid_list[i], &status, 0);
+		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
 			data->exit_status = WEXITSTATUS(status);
-		i++;
+		j++;
 	}
+	if (cmds_num == 1)
+		close(fd_pipe[i - 1][PIPE_READ]);
+	else
+		close(fd_pipe[i - 2][PIPE_WRITE]);
 }

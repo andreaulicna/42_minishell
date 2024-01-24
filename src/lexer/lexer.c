@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 10:33:18 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/23 16:35:32 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,23 @@ void	handle_redirect_no_space(t_data *data)
 {
 	int			i;
 	char		**input_split;
-	t_tokens	token;
+	char		q;
 
-	i = 0;
 	input_split = data->input_split;
+	i = 0;
 	while (input_split[i])
 	{
-		token = contains_token_with_no_space(input_split[i]);
-		if (token != 0)
+		if ((has_quotes(input_split[i], &q) && (input_split[i][0] != '<'
+				&& input_split[i][0] != '>')) || is_token(input_split[i]))
 		{
-			data->input_split = no_space_split(input_split, i, token);
-			input_split = data->input_split;
 			i++;
+			continue ;
+		}
+		if (ft_strchr(input_split[i], '|') || ft_strchr(input_split[i], '<')
+			|| ft_strchr(input_split[i], '>'))
+		{
+			data->input_split = no_space_split(input_split, i);
+			input_split = data->input_split;
 		}
 		i++;
 	}

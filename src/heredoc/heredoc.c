@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 23:10:44 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 14:36:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ char	*get_hd_file_name(void)
 	char		*str_i;
 	char		*hd_file_name;
 
-	str_i = ft_itoa(i++);
+	i++;
+	str_i = ft_itoa(i);
 	hd_file_name = ft_strjoin("./src/heredoc/.tmp_heredoc_", str_i);
 	free(str_i);
 	return (hd_file_name);
@@ -114,7 +115,7 @@ int	heredoc(t_data *data)
 	current_simple_cmd = data->simple_cmds;
 	while (current_simple_cmd)
 	{
-		content_simple_cmd = (t_simple_cmds *) data->simple_cmds->content;
+		content_simple_cmd = (t_simple_cmds *) current_simple_cmd->content;
 		current_redirect = content_simple_cmd->redirects;
 		while (current_redirect)
 		{

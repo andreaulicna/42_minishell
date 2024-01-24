@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
+#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/19 07:49:57 by vbartos          ###   ########.fr        #
+#    Updated: 2024/01/22 14:42:53 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC = src/debug/main.c\
 		src/exit/exit.c\
 		src/exit/free.c\
 		src/exit/free_helpers.c\
+		src/exit/free_pipe.c\
 		src/expander/expander.c\
 		src/expander/expander_dollar.c\
 		src/heredoc/heredoc.c\
@@ -58,6 +59,7 @@ CC = cc
 LIBFTPRINTF = libftprintf
 
 all: libs $(NAME)
+	@rm -f src/heredoc/.tmp*
 	@echo "minishell executable ready ✅"
 
 %.o: %.c
