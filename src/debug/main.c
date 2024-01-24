@@ -6,29 +6,13 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/22 18:41:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:24:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
 int	g_signal = 0;
-
-int	check_input_null(char *input)
-{
-	if (input == NULL)
-		return (0);
-	else
-		add_history(input);
-	return (1);
-}
-
-int	check_enter_space(char *input)
-{
-	if (!ft_strncmp(input, " ", ft_strlen_custom(input)) || input[0] == '\0')
-		return (0);
-	return (1);
-}
 
 /**
  * @brief	Runs the minishell.

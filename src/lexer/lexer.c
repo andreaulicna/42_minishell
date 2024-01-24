@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 12:43:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:00:49 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	handle_redirect_no_space(t_data *data)
 	i = 0;
 	while (input_split[i])
 	{
-		if ((has_quotes(input_split[i], &q) && (input_split[i][0] != '<'
+		if ((get_quotes_type(input_split[i], &q) && (input_split[i][0] != '<'
 				&& input_split[i][0] != '>')) || is_token(input_split[i]))
 		{
 			i++;

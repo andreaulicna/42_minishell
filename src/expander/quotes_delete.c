@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quotes.c                                           :+:      :+:    :+:   */
+/*   quotes_delete.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 12:35:35 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/23 22:11:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:37:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/minishell.h"
+#include "../../incl/minishell.h"
 
 /**
  * @brief	Checks if a string contains quotes and determines the quote type. 
@@ -20,8 +20,7 @@
  * @param	q	pointer to a character variable that stores the quote type found
  * @return	int	returns 1 if quotes are found; 0 otherwise
  */
-
-int	has_quotes(char *str, char *q)
+int	get_quotes_type(char *str, char *q)
 {
 	int	i;
 
@@ -35,6 +34,23 @@ int	has_quotes(char *str, char *q)
 	}
 	else
 		return (0);
+}
+
+/**
+ * @brief	Checks whether there is a pair of quotes to delete from a string.
+ * 
+ * It is done by comparing the pointer to their first and last occurence. If
+ * those two equal, it means that there are no more quotes to delete as they
+ * both evaluate to NULL.
+ * 
+ * @param	str	string to check
+*/
+int	has_quotes_to_delete(char *str)
+{
+	if (ft_strchr(str, '"') != ft_strrchr(str, '"')
+		|| ft_strchr(str, '\'') != ft_strrchr(str, '\''))
+		return (1);
+	return (0);
 }
 
 /**
@@ -60,7 +76,6 @@ int	has_quotes(char *str, char *q)
  * 
  * @param 	str		string to check and potentially remove the quotes from
  */
-
 char	*delete_quotes(char *str)
 {
 	int		i;
@@ -68,7 +83,7 @@ char	*delete_quotes(char *str)
 	char	q;
 	t_str	new_str;
 
-	if (has_quotes(str, &q))
+	if (get_quotes_type(str, &q))
 	{
 		i = 0;
 		while (str[i] != q)
@@ -88,80 +103,4 @@ char	*delete_quotes(char *str)
 		return (new_str.final);
 	}
 	return (str);
-}
-
-/**
- * @brief	Counts single and double quotes in a string.
- * 
- * This function keeps track of the number of single and double quotes
- * encountered in the input string. It's used in the word-counting process
- * to correctly handle quoted substrings as part of a word.
- * 
- * @param	c			character to check
- * @param	s_quotes	pointer to the count of single quotes
- * @param	d_quotes	pointer to the count of double quotes
- */
-
-void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes)
-{
-	if (c == '\'' && !(*d_quotes % 2))
-		*s_quotes += 1;
-	else if (c == '"' && !(*s_quotes % 2))
-		*d_quotes += 1;
-}
-
-/**
- * @brief	Checks if both single and double quotes are paired.
- * 
- * This function determines whether both single and double quotes are paired in
- * a balanced manner. It's crucial for identifying if a word is enclosed in
- * a pair of matched quotes or not.
- * 
- * @param	s_quotes	count of single quotes
- * @param	d_quotes	count of double quotes
- * @return	int			1 if single and double quotes are paired, otherwise 0
- */
-
-int	quotes_pair(unsigned int s_quotes, unsigned int d_quotes)
-{
-	if (!(s_quotes % 2) && !(d_quotes % 2))
-		return (1);
-	return (0);
-}
-
-/**
- * @brief	Checks for the presence and closure of quotes in the input string.
- * 
- * It prints an error message to STDERR if unclosed quotes are found.
- * 
- * @param	input	input string to be checked for quotes
- * @return	int		returns 1 if all quotes are closed and balanced; 0 otherwise
- */
-
-int	check_quotes(char *input)
-{
-	int				i;
-	unsigned int	quotes;
-
-	quotes = 0;
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '\'' && quotes == 0)
-			quotes = 1;
-		else if (input[i] == '\'' && quotes == 1)
-			quotes = 0;
-		else if (input[i] == '"' && quotes == 0)
-			quotes = 2;
-		else if (input[i] == '"' && quotes == 2)
-			quotes = 0;
-		i++;
-	}
-	if (quotes != 0)
-	{
-		ft_putstr_fd("Minishell cannot interpret unclosed quotes, ", 2);
-		ft_putstr_fd("please close them.\n", 2);
-		return (0);
-	}
-	return (1);
 }
