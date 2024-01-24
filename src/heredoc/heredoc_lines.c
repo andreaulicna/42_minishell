@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 12:36:20 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/22 14:35:49 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	check_line_null(char *line, char *limiter)
  * @param	hd_file_name	name of the temporary heredoc file
  * @param	data			pointer to the t_data structure (sent to $ expander)
  */
+
 void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 {
 	char	*line;
@@ -102,7 +103,7 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 	{
 		if (!check_line_null(line, limiter))
 			break ;
-		else if (!ft_strncmp(line, limiter, ft_strlen(limiter))
+		if (!ft_strncmp(line, limiter, ft_strlen(limiter))
 			&& line[ft_strlen(limiter)] == '\0')
 			break ;
 		else if (contains_dollar(line))

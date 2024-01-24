@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 12:38:39 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/23 16:05:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,9 @@ void	free_lexer(t_list **lexer);
 void	free_simple_cmds(t_list **simple_cmds);
 int		free_envlist(t_list **head);
 void	free_struct_str(t_str *str, char *old_str);
+// free_pipe.c
+void	free_pipe(int **fd_pipe, int num_cmds);
+void	free_pipe_child(int **fd_pipe, int i);
 
 /* Expander */
 // expander.c
@@ -147,8 +150,7 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 //	no_space_split.c
-t_tokens	contains_token_with_no_space(char *s);
-char	**no_space_split(char **input_split, int index, t_tokens token);
+char	**no_space_split(char **input_split, int index);
 // lexer.c
 t_tokens	is_token(char *check);
 int		input_arr_to_lexer_list(t_data *data);
@@ -203,8 +205,7 @@ int		ft_exit_checknum(char *str);
 /* Execution */
 int		exec(t_data *data, t_list *simple_cmds);
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num);
-int		fork_cmd(t_data *data, t_list *simple_cmds, int fd_input,
-			int fd_output);
+int		fork_cmd(t_data *data, t_list *simple_cmds, int **new_pipe, int i);
 void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
@@ -214,10 +215,10 @@ void	handle_output_single(t_data *data, char *filename);
 void	handle_output_append(char *filename);
 void	handle_input(t_data *data, char *filename);
 char	**env_copy(t_data *data);
-void	wait_for_pipeline(t_data *data, int pid_list[], int cmds_num);
+void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
-void	pipe_redirect(int fd_input, int fd_output);
+void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
 void	orig_fds_save(int *orig_input, int *orig_output);
 void	orig_fds_restore(int orig_input, int orig_output);
 

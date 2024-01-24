@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 11:54:36 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/23 22:23:00 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,9 @@ void	detect_quotes_in_redirects(t_list **simple_cmds)
 		while (current_redirect)
 		{
 			content_redirect = (t_lexer *) current_redirect->content;
-			content_redirect->word = delete_quotes(content_redirect->word);
+			while (ft_strchr(content_redirect->word, '"') != ft_strrchr(content_redirect->word, '"')
+				|| ft_strchr(content_redirect->word, '\'') != ft_strrchr(content_redirect->word, '\''))
+				content_redirect->word = delete_quotes(content_redirect->word);
 			current_redirect = current_redirect->next;
 		}
 		current_simple_cmd = current_simple_cmd->next;
