@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/23 16:35:32 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:00:49 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ void	assign_word(t_lexer *content, char *word)
  * @brief	Handles redirections without spaces by detecting them and
  * reconstructing the input_split accordingly.
  *
+ * As long as there is a redirection token not separated by spaces, the function
+ * will keep calling the no_space_split that will keep reconstructing the split.
+ * 
  * @param	data	pointer to the t_data structure (for input_split)
  */
 void	handle_redirect_no_space(t_data *data)
@@ -84,7 +87,7 @@ void	handle_redirect_no_space(t_data *data)
 	i = 0;
 	while (input_split[i])
 	{
-		if ((has_quotes(input_split[i], &q) && (input_split[i][0] != '<'
+		if ((get_quotes_type(input_split[i], &q) && (input_split[i][0] != '<'
 				&& input_split[i][0] != '>')) || is_token(input_split[i]))
 		{
 			i++;

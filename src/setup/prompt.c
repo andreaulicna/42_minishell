@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:09:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 19:47:40 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:22:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/minishell.h"
+#include "../../incl/minishell.h"
 
 /**
  * @brief	Retrieves the hostname of the system from 
