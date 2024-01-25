@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/24 15:36:47 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/25 13:10:11 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,10 +33,11 @@ SRC = src/debug/main.c\
 		src/exit/free.c\
 		src/exit/free_helpers.c\
 		src/exit/free_pipe.c\
-		src/expander/quotes_delete.c\
 		src/expander/expander.c\
 		src/expander/expander_checkers.c\
 		src/expander/expander_construct.c\
+		src/expander/expander_empty_env.c\
+		src/expander/quotes_delete.c\
 		src/heredoc/heredoc.c\
 		src/heredoc/heredoc_lines.c\
 		src/lexer/ft_split_minishell.c\

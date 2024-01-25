@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 16:11:29 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/25 13:42:18 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,10 @@ int		checker_dollar(char *str, int j);
 char	*expand_exit_status(char *str, int exit_status);
 char	*expand_dollar(char *str, t_list *env_list, int *j_cmd);
 char	*delete_backslash(char *str);
+//	expander_emtpy_env.c
+char	**ft_strdup_array(char **arr);
+void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
+		int *exit_status);
 // quotes_delete.c
 int		get_quotes_type(char *str, char *q);
 char	*delete_quotes(char *str);

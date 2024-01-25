@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/14 18:31:00 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/25 13:33:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void ft_echo(char **args, t_data *data)
 		while (args[i] != NULL)
 		{
 			ft_putstr_fd(args[i], STDOUT_FILENO);
-			if (args[i + 1] && args[i][0] != '\0')
+			if (args[i + 1])
 				ft_putstr_fd(" ", STDOUT_FILENO);
 			i++;
 		}

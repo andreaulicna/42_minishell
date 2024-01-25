@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 16:10:57 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/25 13:43:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,11 @@ void	expander_redirects(t_list **redirects, int exit_status,
  * ("1st level detail") while the expander_loop_dollar function traverses
  * through each character of a string ("2nd level detail").
  * 
- * Lastly, expander_redirects is called to remove quotes and expand dollar signs
+ * Then, expander_redirects is called to remove quotes and expand dollar signs
  * in redirections (word) too.
+ * 
+ * Lastly, the cmd array is checked for empty strings that are left after
+ * expanding env variables that don't exist and they're removed from the array.
  *  
  * @param	data	pointer to the t_data structure (for simple_cmds, env_list)
  */
@@ -169,12 +172,14 @@ void	expander(t_data *data)
 	t_list			*current;
 	t_simple_cmds	*content;
 	int				i;
+	char			**old_cmd;
 
 	current = data->simple_cmds;
 	while (current != NULL)
 	{
 		i = 0;
 		content = (t_simple_cmds *) current->content;
+		old_cmd = ft_strdup_array(content->cmd);
 		while (content->cmd[i])
 		{
 			if (contains_dollar(content->cmd[i]))
@@ -186,6 +191,7 @@ void	expander(t_data *data)
 		}
 		expander_redirects(&content->redirects, data->exit_status,
 			data->env_list);
+		handle_empty_envs(old_cmd, content, &data->exit_status);
 		current = current->next;
 	}
 }
