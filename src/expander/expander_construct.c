@@ -1,56 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_dollar.c                                  :+:      :+:    :+:   */
+/*   expander_construct.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/13 16:45:43 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 14:51:30 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
-
-/**
- * @brief	Checks the context of the dollar sign in a string.
- * 
- * This function analyzes the context of a dollar sign ('$') in a string 'str'
- * at position 'j'. It examines nearby characters to determine the context
- * of the dollar sign within the string.
- * 
- * @param	str	input string to check
- * @param	j	index of the dollar sign in the string
- * @return	int	returns a flag representing the context:
- *              5:	$ is enclosed in single quotes
- * 				4:	$ is followed by \ and enclosed in double quotes
- * 				3:	$ is followed or preceded with \ (not in double quotes)
- *              2:	$ is followed by a space, a quote (' or ")
- * 					or there is nothing else following it
- *              1:	$ is followed by a question mark (?)
- *              0: 	$ appears in a context that can be expanded
- */
-int	checker_dollar(char *str, int j)
-{
-	if ((str[0] == '\'' && str[ft_strlen_custom(str) - 1] == '\''))
-		return (5);
-	if (str[0] == '"' && str[ft_strlen_custom(str) - 1] == '"'
-		&& str[j + 1] == '\\')
-		return (4);
-	if (j - 1 >= 0)
-	{
-		if (str[j - 1] == '\\')
-			return (3);
-	}
-	if (str[j + 1] == '\\')
-		return (3);
-	if (!str[j + 1] || str[j + 1] == ' ' || str[j + 1] == '\''
-		|| str[j + 1] == '"')
-		return (2);
-	if (str[j + 1] == '?')
-		return (1);
-	return (0);
-}
 
 /**
  * @brief Expands a dollar sign followed by the exit status in a string.
@@ -66,24 +26,23 @@ int	checker_dollar(char *str, int j)
  * Then it constructs the final string in 2 steps, first joining part_1 and
  * part_2 into tmp_join and then joining tmp_join and part_3 into final.
  * 
- * Finally, the appropriate string in the 2D input array is pointed to the final
- * string. All of the dynamically allocated memory is then freed with the
- * exception of the final string that is not freed until after the whole command
+ * All of the dynamically allocated memory is then freed with the exception
+ * of the final string that is not freed until after the whole command
  * is processed and the program reaches the free_simple_cmds function.
  * 
- * @param 	cmd			array of strings containing input commands
- * @param	i_cmd		index of the command string in the array to modify
+ * Finally, the new_string.final is returned and assigned to the appropriate
+ * string in the 2D input array in the caller function.
+ * 
+ * @param 	str			string to be expanded
  * @param	exit_status	exit status of the most recently executed foreground
  * 						pipeline
  */
-void	expand_exit_status(char **cmd, int i_cmd, int exit_status)
+char	*expand_exit_status(char *str, int exit_status)
 {
-	char	*str;
 	int		i;
 	int		j;
 	t_str	new_str;
 
-	str = cmd[i_cmd];
 	i = 0;
 	while (str[i] && str[i] != '$')
 		i++;
@@ -94,8 +53,8 @@ void	expand_exit_status(char **cmd, int i_cmd, int exit_status)
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	new_str.tmp_join = ft_strjoin(new_str.part_1, new_str.part_2);
 	new_str.final = ft_strjoin(new_str.tmp_join, new_str.part_3);
-	cmd[i_cmd] = new_str.final;
 	free_struct_str(&new_str, str);
+	return (new_str.final);
 }
 
 /**
@@ -110,7 +69,7 @@ void	expand_exit_status(char **cmd, int i_cmd, int exit_status)
  * back to the expander_loop_dolar function.
  * 
  * @param	new_str	pointer to a t_str structure containing parsed string parts
- * @param	j_cmd		index of the dollar sign in string to modify
+ * @param	j_cmd	index of the dollar sign in string to modify
  */
 void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
 {
@@ -145,24 +104,23 @@ void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
  * whether or not the env variable was found in the env list. This part is done
  * in the expand_dollar_construct_final helper function.
  * 
- * Finally, the appropriate string in the 2D input array is pointed to the final
- * string. All of the dynamically allocated memory is then freed with the
- * exception of the final string that is not freed until after the whole command
+ * All of the dynamically allocated memory is then freed with the exception
+ * of the final string that is not freed until after the whole command
  * is processed and the program reaches the free_simple_cmds function.
  * 
- * @param	cmd			array of strings containing input commands
- * @param	i_cmd		index of the command string in the array to modify
+ * Finally, the new_string.final is returned and assigned to the appropriate
+ * string in the 2D input array in the caller function.
+ * 
+ * @param 	str			string to be expanded
  * @param	env_list	linked list containing environment variables
  * @param	j_cmd		index of the dollar sign in string to modify
  */
-void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
+char	*expand_dollar(char *str, t_list *env_list, int *j_cmd)
 {
-	char	*str;
 	int		i;
 	int		j;
 	t_str	new_str;
 
-	str = cmd[i_cmd];
 	i = 0;
 	while (str[i] && str[i] != '$')
 		i++;
@@ -175,8 +133,8 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	new_str.env_found = env_find(env_list, new_str.part_2);
 	expand_dollar_construct_final(&new_str, j_cmd);
-	cmd[i_cmd] = new_str.final;
 	free_struct_str(&new_str, str);
+	return (new_str.final);
 }
 
 /**
@@ -185,10 +143,12 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
  * It breaks down the input string into 2 parts, leaving the backslash out,
  * and then it constructs the final string by joining the 2 parts.
  * 
- * Finally, the appropriate string in the 2D input array is pointed to the final
- * string. All of the dynamically allocated memory is then freed with the
- * exception of the final string that is not freed until after the whole command
+ * All of the dynamically allocated memory is then freed with the exception
+ * of the final string that is not freed until after the whole command
  * is processed and the program reaches the free_simple_cmds function.
+ * 
+ * Finally, the new_string.final is returned and assigned to the appropriate
+ * string in the 2D input array in the caller function.
  * 
  * Examples:
  * \$USER -> $USER 
@@ -198,16 +158,13 @@ void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd)
  * '$\USER' -> $\USER 
  * '\$USER' -> \$USER 
  * 
- * @param	cmd			array of strings containing input commands
- * @param	i_cmd		index of the command string in the array to modify
+ * @param 	str			string to be expanded
  */
-void	delete_backslash(char **cmd, int i_cmd)
+char	*delete_backslash(char *str)
 {
-	char	*str;
 	int		i;
 	t_str	new_str;
 
-	str = cmd[i_cmd];
 	i = 0;
 	while (str[i] && str[i] != '\\')
 		i++;
@@ -215,6 +172,6 @@ void	delete_backslash(char **cmd, int i_cmd)
 	new_str.part_1 = ft_substr(str, 0, i);
 	new_str.part_2 = ft_substr(str, i + 1, ft_strlen(str) - 1);
 	new_str.final = ft_strjoin(new_str.part_1, new_str.part_2);
-	cmd[i_cmd] = new_str.final;
 	free_struct_str(&new_str, str);
+	return (new_str.final);
 }

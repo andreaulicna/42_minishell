@@ -6,11 +6,11 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 12:06:21 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/17 14:03:40 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:22:03 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incl/minishell.h"
+#include "../../incl/minishell.h"
 
 // init_data
 // - initializes all elements of the data struct to NULL;

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/24 09:05:01 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/25 17:51:38 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void ft_echo(char **args, t_data *data)
 		while (args[i] != NULL)
 		{
 			ft_putstr_fd(args[i], STDOUT_FILENO);
-			if (args[i + 1] && args[i][0] != '\0')
+			if (args[i + 1])
 				ft_putstr_fd(" ", STDOUT_FILENO);
 			i++;
 		}

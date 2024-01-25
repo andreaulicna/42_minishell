@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/25 17:44:30 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/25 17:51:36 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,17 @@ void	print_input_split(char **input_split);
 void	print_lexer(t_list **lexer);
 void	print_simple_cmds(t_list **simple_cmds);
 
+/* Setup */
+// main_checkers.c
+int		check_quotes(char *input);
+int		check_input_null(char *input);
+int		check_enter_space(char *input);
+// init.c
+void	init_data(t_data *data);
+void	init_struct_str(t_str *str);
+// prompt.c
+char	*set_prompt(t_list *env_list);
+
 /* Error */
 // error.c
 int		error_handler(int code);
@@ -132,13 +143,23 @@ void	free_pipe_child(int **fd_pipe, int i);
 /* Expander */
 // expander.c
 void	expander(t_data *data);
+void	expander_loop_dollar(t_simple_cmds *content, int i, int exit_status,
+			t_list *env_list);
+// expander_dollar_checkers.c
 int		contains_dollar(char *str);
-void	expander_loop_dollar(t_simple_cmds *content, int i, t_data *data);
-// expander_dollar.c
 int		checker_dollar(char *str, int j);
-void	expand_exit_status(char **cmd, int i_cmd, int exit_status);
-void	expand_dollar(char **cmd, int i_cmd, t_list *env_list, int *j_cmd);
-void	delete_backslash(char **cmd, int i_cmd);
+// expander_construct.c
+char	*expand_exit_status(char *str, int exit_status);
+char	*expand_dollar(char *str, t_list *env_list, int *j_cmd);
+char	*delete_backslash(char *str);
+//	expander_emtpy_env.c
+char	**ft_strdup_array(char **arr);
+void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
+		int *exit_status);
+// quotes_delete.c
+int		get_quotes_type(char *str, char *q);
+char	*delete_quotes(char *str);
+int		has_quotes_to_delete(char *str);
 
 /* Heredoc */
 // heredoc.c
@@ -149,11 +170,14 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 /* Lexer */
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
-//	no_space_split.c
-char	**no_space_split(char **input_split, int index);
 // lexer.c
 t_tokens	is_token(char *check);
 int		input_arr_to_lexer_list(t_data *data);
+//	no_space_split.c
+char	**no_space_split(char **input_split, int index);
+// quotes.c
+void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
+int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Parser */
 // parser.c
@@ -168,20 +192,6 @@ t_list	*env_find(t_list *head, char *variable_key);
 int		env_add(t_list **head, char *env_var);
 t_list	**env_remove(t_list **head, char *variable_key);
 size_t	strs_count(char **strs);
-
-// init.c
-void	init_data(t_data *data);
-void	init_struct_str(t_str *str);
-
-// prompt.c
-char	*set_prompt(t_list *env_list);
-
-// quotes.c
-int		has_quotes(char *str, char *q);
-int		check_quotes(char *input);
-char	*delete_quotes(char *str);
-void	count_qoutes(char c, unsigned int *s_quotes, unsigned int *d_quotes);
-int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Builtins */
 void	ft_echo(char **args, t_data *data);
