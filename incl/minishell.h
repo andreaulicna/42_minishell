@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/25 13:42:18 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/27 21:38:46 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ char	*delete_backslash(char *str);
 //	expander_emtpy_env.c
 char	**ft_strdup_array(char **arr);
 void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
-		int *exit_status);
+			int *exit_status);
 // quotes_delete.c
 int		get_quotes_type(char *str, char *q);
 char	*delete_quotes(char *str);
@@ -185,6 +185,8 @@ int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
 void	free_lexer_node(t_list **lexer, int id);
+// open_pipe.c
+void	handle_open_pipe(t_data *data);
 
 // env.c
 int		env_init(char **envp, t_data *data);

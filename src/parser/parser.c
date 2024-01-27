@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/27 19:05:49 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/27 20:26:00 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int	lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds)
 		if (current)
 			content = (t_lexer *) current->content;
 		else
-			error_parser_double_token(content->token);
+			break ;
 		if (content->token == PIPE)
 			error_parser_double_token(1);
 		create_simple_cmds(lexer, simple_cmds);
