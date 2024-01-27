@@ -6,11 +6,25 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/22 13:29:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/27 23:19:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+void	handle_sigint_child(int sig_num)
+{
+	if (sig_num == SIGUSR2)
+	{
+		write(STDOUT, "\n", 1);
+		g_signal = SIGUSR2;
+	}
+	if (sig_num == SIGINT)
+	{
+		kill(0, SIGUSR2);
+		exit_minishell(NULL, 0);
+	}
+}
 
 /**
  * @brief Executes a list of simple commands.
@@ -123,6 +137,8 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	}
 	if (pid == 0)
 	{
+		signal(SIGINT, handle_sigint_child);
+		signal(SIGUSR2, SIG_IGN);
 		pipe_redirect(simple_cmds, fd_pipe, i);
 		if (content->redirects)
 			handle_redirect(data, content->redirects, content->hd_file);
@@ -134,6 +150,11 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 		}
 		else
 			run_exec(data, content);
+	}
+	else
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGUSR2, handle_sigint_child);
 	}
 	return (pid);
 }
