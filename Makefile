@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/25 13:10:11 by aulicna          ###   ########.fr        #
+#    Updated: 2024/01/27 18:50:48 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ CC = cc
 LIBFTPRINTF = libftprintf
 
 all: libs $(NAME)
-	@rm -f src/heredoc/.tmp*
+	@find ~/ -name ".tmp_heredoc_*" -type f -delete
 	@echo "minishell executable ready ✅"
 
 %.o: %.c
@@ -79,7 +79,7 @@ $(NAME): $(OBJ)
 
 clean:
 	@rm -f $(OBJ)
-	@rm -f src/heredoc/.tmp*
+	@find ~/ -name ".tmp_heredoc_*" -type f -delete
 	@make clean -C $(LIBFTPRINTF)
 
 fclean: clean
