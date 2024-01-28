@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/22 13:29:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/28 21:15:23 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	exec(t_data *data, t_list *simple_cmds)
 	if (simple_cmds->next == NULL && is_builtin(content->cmd[0]))
 	{
 		if (content->redirects)
-			handle_redirect(data, content->redirects, content->hd_file);
+			handle_redirect(content->redirects, content->hd_file);
 		run_builtin(data, content->cmd);
 	}
 	else
@@ -125,7 +125,7 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	{
 		pipe_redirect(simple_cmds, fd_pipe, i);
 		if (content->redirects)
-			handle_redirect(data, content->redirects, content->hd_file);
+			handle_redirect(content->redirects, content->hd_file);
 		free_pipe_child(fd_pipe, i);
 		if (is_builtin(content->cmd[0]))
 		{
