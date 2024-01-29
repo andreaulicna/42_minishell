@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/27 21:34:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 10:58:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	minishell_loop(t_data *data)
 	if (!check_input_null(data->input))
 	{
 		ft_putendl_fd("exit", STDOUT);
-		exit_minishell(NULL, 50);
+		exit_minishell(NULL, 0);
 	}
 	if (!check_quotes(data->input) || !check_enter_space(data->input))
 		exit_current_prompt(data);
