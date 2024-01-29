@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/22 13:31:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 11:44:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,4 +127,6 @@ void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i)
 		close(fd_pipe[i - 1][PIPE_READ]);
 	else
 		close(fd_pipe[i - 2][PIPE_WRITE]);
+	if (g_signal == SIGUSR2)
+		data->exit_status = 130;
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 14:51:30 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 11:46:15 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ char	*expand_exit_status(char *str, int exit_status)
 		i++;
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(str, 0, i);
+	if (g_signal == SIGINT)
+		exit_status = 130;
 	new_str.part_2 = ft_itoa(exit_status);
 	j = 2;
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);

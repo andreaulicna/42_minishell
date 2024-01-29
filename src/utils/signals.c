@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/19 07:49:10 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/29 12:02:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	handle_sigint(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
+		g_signal = SIGINT;
 		write(STDOUT, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -49,12 +50,26 @@ void	handle_sigint_heredoc(int sig_num)
 {
 	if (sig_num == SIGUSR1)
 	{
-		write(STDOUT, "\n", 1);
 		g_signal = SIGUSR1;
+		write(STDOUT, "\n", 1);
 	}
 	if (sig_num == SIGINT)
 	{
 		kill(0, SIGUSR1);
 		exit_minishell(NULL, 130);
+	}
+}
+
+void	handle_sigint_hanging_command(int sig_num)
+{
+	if (sig_num == SIGUSR2)
+	{
+		exit_minishell(NULL, 130);
+	}
+	if (sig_num == SIGINT)
+	{
+		write(STDOUT, "\n", 1);
+		g_signal = SIGUSR2;
+		kill(0, SIGUSR2);
 	}
 }
