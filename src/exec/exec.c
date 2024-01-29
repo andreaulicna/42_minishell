@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/29 12:08:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 13:38:17 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,6 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 			exit_current_prompt(NULL);
 		}
 		fork_cmd(data, simple_cmds, fd_pipe, i);
-		signal(SIGINT, handle_sigint_hanging_command);
-		signal(SIGUSR2, SIG_IGN);
 		close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
 			close(fd_pipe[i - 1][PIPE_READ]);
@@ -104,6 +102,25 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
  * it inherits the malloced fd_pipe.
  * 
  * Then the command is executed.
+ * 
+ * Signal lines - child:
+ * 1. SIGUSR2: Sets up the signal handler for SIGUSR2. When the signal
+ * is received handle_sigint_hanging_command ensures that the child process
+ * exits as the hanging command was interrupted by SIGINT.
+ * 2. SIGINT: Ignores the SIGINT signal, so that only the parent process
+ * registers it and handles in handle_sigint_hanging_command.
+ * 
+ * Signal lines - parent:
+ * 1. SIGINT: Sets up the signal handler for SIGINT that is different than the
+ * general one (handle_sigint) or the one used in heredoc
+ * (handle_sigint_heredoc). When the signal is received,
+ * handle_sigint_hanging_command writes a newline character on the standard
+ * output, sets g_signal to SIGUSR2 and sends SIGUSR2 signal to all processes so
+ * that the child registers it and exits.
+ * 2. SIGUSR2: Ignores the SIGUSR2 signal, so that when
+ * handle_sigint_hanging_command sends it to all processes, it is processed (to
+ * indicate that there was a hanging command in the pipeline interrupted by
+ * SIGINT) only in the child process.
  *
  * @param	data		pointer to the t_data structure (for exit_status)
  * @param	simple_cmds	list of simple commands to execute
@@ -125,8 +142,8 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	}
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_IGN);
 		signal(SIGUSR2, handle_sigint_hanging_command);
+		signal(SIGINT, SIG_IGN);
 		pipe_redirect(simple_cmds, fd_pipe, i);
 		if (content->redirects)
 			handle_redirect(data, content->redirects, content->hd_file);
@@ -138,6 +155,11 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 		}
 		else
 			run_exec(data, content);
+	}
+	else
+	{
+		signal(SIGINT, handle_sigint_hanging_command);
+		signal(SIGUSR2, SIG_IGN);
 	}
 	return (pid);
 }

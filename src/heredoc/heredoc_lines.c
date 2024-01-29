@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 16:03:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 13:23:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	check_line_null(char *line, char *limiter)
  * minishell (it is the child process exiting, the parent keeps running).
  * 2. SIGUSR1: Ignores the SIGUSR1 signal, so that when handle_sigint_heredoc
  * sends it to all processes, it is processed (to indicate that the heredoc
- * process was interruped by SIGINT) only in the parent process.
+ * process was interrupted by SIGINT) only in the parent process.
  * 
  * @param	heredoc			list containing heredoc content
  * @param	hd_file_name	name of the temporary heredoc file

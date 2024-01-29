@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/29 11:44:54 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 13:39:11 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,12 @@ int is_builtin(char *cmd)
 /**
  * @brief	Waits for all processes in the pipeline to finish.
  * 
- * The if and else statement ensures there is no fd left open
+ * The if and else statement after while loop ensure there is no fd left open
  * in the parent process for one command and piped commands, respectively.
+ * 
+ * The last if handles the case of a hanging command (e.g. cat or sort) getting
+ * interrupted by SIGINT as g_signal == SIGUSR2 indicates that there was
+ * such a command and therefore the exit_status should be set to 130.
  *
  * @param	data		pointer to the t_data structure (for exit_status)
  * @param	cmds_num	number of commands in the pipeline

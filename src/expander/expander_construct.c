@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/29 11:46:15 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 12:42:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,13 @@
  * part_2: the exit status
  * part_3: after, not including, the question mark that follows the dollar sign
  * 
- * Then it constructs the final string in 2 steps, first joining part_1 and
- * part_2 into tmp_join and then joining tmp_join and part_3 into final.
+ * Just before the part_2 is created, g_signal is checked and if it equals to
+ * SIGINT, exit_status is set to 130 since g_signal == SIGINT indicates that 
+ * the most recent new prompt was created after Ctrl + C.
+ * 
+ * The function then constructs the final string in 2 steps, first joining
+ * part_1 and part_2 into tmp_join and then joining tmp_join and part_3 into
+ * final.
  * 
  * All of the dynamically allocated memory is then freed with the exception
  * of the final string that is not freed until after the whole command
