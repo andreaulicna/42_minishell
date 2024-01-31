@@ -6,13 +6,13 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/28 21:29:12 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/29 12:20:58 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-int determine_output_mode(char *filename, int redirection)
+static int determine_output_mode(char *filename, int redirection)
 {
 	int fd;
 	
@@ -23,7 +23,7 @@ int determine_output_mode(char *filename, int redirection)
 	return (fd);
 }
 
-int	handle_output(char *filename, int redirection)
+static int	handle_output(char *filename, int redirection)
 {
 	int fd;
 	
@@ -45,7 +45,7 @@ int	handle_output(char *filename, int redirection)
 	return (0);
 }
 
-int	handle_input(char *filename)
+static int	handle_input(char *filename)
 {
 	int fd;
 
@@ -74,7 +74,7 @@ int	handle_input(char *filename)
 	return (0);
 }
 
-void handle_redirect(t_list *redirects, char *hd_file)
+void handle_redirect(t_data *data, t_list *redirects, char *hd_file)
 {
 	t_list	*curr_redirect;
 	t_lexer	*content;
@@ -96,7 +96,10 @@ void handle_redirect(t_list *redirects, char *hd_file)
 		else if (hd_file)
 			ret = handle_input(hd_file);
 		if (ret == 1)
+		{
+			data->exit_status = 1;
 			exit(1);
+		}
 		curr_redirect = curr_redirect->next;
 	}
 }
