@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/29 12:20:58 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/31 22:46:59 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,14 @@ static int	handle_input(char *filename)
 	return (0);
 }
 
-void handle_redirect(t_data *data, t_list *redirects, char *hd_file)
+void handle_redirect(t_list *redirects, char *hd_file)
 {
 	t_list	*curr_redirect;
 	t_lexer	*content;
 	int		redirection;
 	char	*filename;
 	int		ret;
-	
+
 	curr_redirect = redirects;
 	ret = 0;
 	while (curr_redirect != NULL)
@@ -96,10 +96,7 @@ void handle_redirect(t_data *data, t_list *redirects, char *hd_file)
 		else if (hd_file)
 			ret = handle_input(hd_file);
 		if (ret == 1)
-		{
-			data->exit_status = 1;
-			exit(1);
-		}
+			exit_minishell(NULL, 1);
 		curr_redirect = curr_redirect->next;
 	}
 }
