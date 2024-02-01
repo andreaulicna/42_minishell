@@ -6,14 +6,26 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 07:40:43 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/19 06:35:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/01/24 09:21:27 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-// env_init
-// - initialize all environment variables into a linked list;
+/**
+ * @brief Initializes environment variables into a linked list.
+ *
+ * This function initializes the environment variables into a linked list by
+ * adding each variable from the provided array (envp). It calls the env_add
+ * function to create and append new nodes to the linked list, representing
+ * each environment variable.
+ *
+ * @param envp An array of strings representing the initial environment
+ * variables.
+ * @param data A pointer to the data structure containing the linked list
+ * of environment variables.
+ * @return 0 on successful initialization, or appropriate exit code on failure.
+ */
 int	env_init(char **envp, t_data *data)
 {
 	t_list	*head;
@@ -28,10 +40,18 @@ int	env_init(char **envp, t_data *data)
 	return (0);
 }
 
-// env_add
-// - adds a new variable to minishell's environment variables list;
-// - splits the variable into name+value pair;
-// - if added variable has no '=', assings no value;
+/**
+ * @brief Adds a new variable to the minishell's environment variables list.
+ *
+ * This function adds a new variable to the linked list of environment variables
+ * used by minishell. It splits the variable into a name-value pair and handles
+ * cases where the variable has no '=' (assigns no value). The new variable is
+ * added to the list.
+ *
+ * @param head A pointer to the pointer to the head of the linked list.
+ * @param env_var The string representing the environment variable to be added.
+ * @return 0 on success or appropriate exit code on failure.
+ */
 int	env_add(t_list **head, char *env_var)
 {
 	t_list	*new_var;
@@ -55,8 +75,17 @@ int	env_add(t_list **head, char *env_var)
 	return (0);
 }
 
-// env_find
-// - finds a variable in the local environment variables list;
+/**
+ * @brief Finds a variable in the local environment variables list.
+ *
+ * This function searches for a variable with a specified key in the linked list
+ * of environment variables. If found, it returns a pointer to the node
+ * containing the variable; otherwise, it returns NULL.
+ *
+ * @param head A pointer to the head of the linked list.
+ * @param variable_key The key of the variable to find.
+ * @return A pointer to the node containing the variable, or NULL if not found.
+ */
 t_list	*env_find(t_list *head, char *variable_key)
 {
 	t_env	*content;
@@ -70,8 +99,17 @@ t_list	*env_find(t_list *head, char *variable_key)
 	return (env_find(head->next, variable_key));
 }
 
-// env_remove
-// - removes a variable from the local envrionment variables list;
+/**
+ * @brief Removes a variable from the local environment variables list.
+ *
+ * This function removes a variable with the specified key from the linked list
+ * of environment variables. It returns a pointer to the modified head of the
+ * linked list.
+ *
+ * @param head A pointer to the pointer to the head of the linked list.
+ * @param variable_key The key of the variable to be removed.
+ * @return A pointer to the modified head of the linked list.
+ */
 t_list	**env_remove(t_list **head, char *variable_key)
 {
 	t_list	*var_to_remove;

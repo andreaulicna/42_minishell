@@ -6,7 +6,7 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/02/01 16:05:59 by aulicna          ###   ########.fr        #
+#    Updated: 2024/02/01 16:45:09 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,8 @@ SRC = main.c\
 		src/exec/exec.c\
 		src/exec/exec_utils.c\
 		src/exec/pipe_utils.c\
-		src/exec/redirects_utils.c
+		src/exec/redirects_utils.c\
+		src/exec/files_utils.c
 
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/22 13:29:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:42:43 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	exec(t_data *data, t_list *simple_cmds)
 	if (simple_cmds->next == NULL && is_builtin(content->cmd[0]))
 	{
 		if (content->redirects)
-			handle_redirect(data, content->redirects, content->hd_file);
+			handle_redirect(content->redirects, content->hd_file);
 		run_builtin(data, content->cmd);
 	}
 	else
@@ -66,11 +66,13 @@ int	exec(t_data *data, t_list *simple_cmds)
  */
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
-	int	**fd_pipe;
 	int	i;
+	int	**fd_pipe;
+	int	*pid_list;
 
 	i = 0;
 	fd_pipe = malloc(sizeof(int *) * (ft_lstsize(simple_cmds)));
+	pid_list = (int *)malloc(sizeof(int) * cmds_num);
 	while (i < cmds_num)
 	{
 		fd_pipe[i] = malloc(sizeof(int) * 2);
@@ -79,14 +81,15 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 			ft_putendl_fd("minishell: pipe: Too many open files", 2);
 			exit_current_prompt(NULL);
 		}
-		fork_cmd(data, simple_cmds, fd_pipe, i);
+		pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
 		close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
 			close(fd_pipe[i - 1][PIPE_READ]);
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	wait_for_pipeline(data, cmds_num, fd_pipe, i);
+	data->exit_status = wait_for_pipeline(cmds_num, fd_pipe, i, pid_list);
+	free(pid_list);
 	free_pipe(fd_pipe, ft_lstsize(data->simple_cmds));
 }
 
@@ -125,12 +128,12 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	{
 		pipe_redirect(simple_cmds, fd_pipe, i);
 		if (content->redirects)
-			handle_redirect(data, content->redirects, content->hd_file);
+			handle_redirect(content->redirects, content->hd_file);
 		free_pipe_child(fd_pipe, i);
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
-			exit_minishell(NULL, 0);
+			exit_minishell(NULL, data->exit_status);
 		}
 		else
 			run_exec(data, content);
@@ -152,8 +155,7 @@ void	run_exec(t_data *data, t_simple_cmds *content)
 	char	*path;
 
 	env_cpy = env_copy(data);
-	if (access(content->cmd[0], F_OK) == 0)
-		execve(content->cmd[0], content->cmd, env_cpy);
+	check_for_files(content, env_cpy);
 	path = find_exe_path(data, content->cmd[0]);
 	if (path != NULL)
 	{

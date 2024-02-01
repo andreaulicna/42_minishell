@@ -3,19 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/25 13:33:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:19:49 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-// ft_echo
-// - simulates the bash builtin 'echo';
-// - also checks for the -n flag (doesn't print newline);
-void ft_echo(char **args, t_data *data)
+/**
+ * @brief Simulates the bash builtin 'echo'.
+ *
+ * This function simulates the behavior of the 'echo' command in Bash. It prints
+ * the specified arguments to the standard output, separated by spaces. It also
+ * checks for the -n flag, which suppresses the trailing newline character.
+ *
+ * @param args An array of strings representing the args for the 'echo' command.
+ * @param data A pointer to the data structure for handling shell-related info.
+ */
+void	ft_echo(char **args, t_data *data)
 {
 	int	n_flag;
 	int	i;
