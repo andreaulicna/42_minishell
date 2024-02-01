@@ -6,13 +6,13 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/27 21:34:38 by aulicna          ###   ########.fr        #
+#    Updated: 2024/02/01 16:45:09 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = src/debug/main.c\
+SRC = main.c\
 		src/debug/print.c\
 		src/setup/init.c\
 		src/setup/main_checkers.c\
@@ -28,7 +28,6 @@ SRC = src/debug/main.c\
 		src/builtins/ft_export.c\
 		src/builtins/ft_unset.c\
 		src/builtins/ft_exit.c\
-		src/error/error_token.c\
 		src/exit/exit.c\
 		src/exit/free.c\
 		src/exit/free_helpers.c\
@@ -50,7 +49,8 @@ SRC = src/debug/main.c\
 		src/exec/exec.c\
 		src/exec/exec_utils.c\
 		src/exec/pipe_utils.c\
-		src/exec/redirects_utils.c
+		src/exec/redirects_utils.c\
+		src/exec/files_utils.c
 
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/29 12:42:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:49:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*expand_exit_status(char *str, int exit_status)
  * @param	new_str	pointer to a t_str structure containing parsed string parts
  * @param	j_cmd	index of the dollar sign in string to modify
  */
-void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
+static void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
 {
 	if (new_str->env_found != NULL)
 	{

@@ -6,16 +6,24 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:24:31 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/14 18:31:14 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:19:42 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-// ft_env
-// - prints the list of environment variables;
-// - only prints variables with assigned values;
-void ft_env(t_data *data)
+/**
+ * @brief Prints the list of environment variables with assigned values.
+ *
+ * This function prints the list of environment variables along with their
+ * assigned values to the standard output. It iterates through the linked list
+ * of environment variables, checks for variables with non-NULL values,
+ * and prints them in the format "name=value".
+ *
+ * @param data A pointer to the data structure containing the linked list
+ * of environment variables.
+ */
+void	ft_env(t_data *data)
 {
 	t_list	*current;
 	t_env	*env;

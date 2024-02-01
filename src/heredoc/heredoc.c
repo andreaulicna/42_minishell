@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/27 18:41:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:13:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * 
  * @return	char*	unique heredoc file name
  */
-char	*get_hd_file_name(void)
+static char	*get_hd_file_name(void)
 {
 	static int	i;
 	char		*str_i;
@@ -61,7 +61,7 @@ char	*get_hd_file_name(void)
  * 									(for exit_status and to send to 
  * 									create_heredoc and then expander)
  */
-void	process_heredoc(t_data *data, t_list *current_redirect,
+static void	process_heredoc(t_data *data, t_list *current_redirect,
 	t_simple_cmds *content_simple_cmd)
 {
 	int				pid;

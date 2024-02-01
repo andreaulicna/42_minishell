@@ -6,11 +6,36 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:17:34 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/27 20:26:00 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:18:49 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+/**
+* @brief	Handles syntax error when encountering an unexpected double token.
+* 
+* @param	token	token from the defined enum representing different symbols
+* @return	int		returns the exit status code (EXIT_FAILURE)
+*/
+int	error_parser_double_token(t_tokens token)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token `",
+		STDERR_FILENO);
+	if (token == PIPE)
+		ft_putstr_fd("|", STDERR_FILENO);
+	else if (token == LESS)
+		ft_putstr_fd("<", STDERR_FILENO);
+	else if (token == LESS_2)
+		ft_putstr_fd("<<", STDERR_FILENO);
+	else if (token == GREATER)
+		ft_putstr_fd(">", STDERR_FILENO);
+	else if (token == GREATER_2)
+		ft_putstr_fd(">>", STDERR_FILENO);
+	ft_putstr_fd("'\n", STDERR_FILENO);
+	exit_current_prompt(NULL);
+	return (1);
+}
 
 /**
  * @brief	Gets the length of a command within the lexer list. Everything up
@@ -20,7 +45,7 @@
  * @return	int		returns the length of the command
  */
 
-int	ft_cmd_len(t_list **lexer)
+static int	ft_cmd_len(t_list **lexer)
 {
 	int		i;
 	t_list	*current;
@@ -58,7 +83,7 @@ int	ft_cmd_len(t_list **lexer)
  * @param	cmd_len	the length of the command
  */
 
-void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
+static void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
 {
 	int		i;
 	t_list	*current;
@@ -92,7 +117,7 @@ void	create_cmd(t_list **lexer, char **cmd, int cmd_len)
  * @param	simple_cmds	pointer to the list of simple commands
  */
 
-void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
+static void	create_simple_cmds(t_list **lexer, t_list **simple_cmds)
 {
 	int				cmd_len;
 	char			**cmd;
@@ -156,7 +181,7 @@ int	lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds)
 		else
 			break ;
 		if (content->token == PIPE)
-			error_parser_double_token(1);
+			error_parser_double_token(PIPE);
 		create_simple_cmds(lexer, simple_cmds);
 		current = *lexer;
 	}

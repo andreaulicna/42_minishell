@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/29 12:07:30 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:48:16 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_str
 /* SOURCES */
 
 /* Debug */
-// main_a.c
+// main.c
 int		minishell_loop(t_data *data);
 // print.c
 void	print_input_split(char **input_split);
@@ -117,11 +117,6 @@ void	init_data(t_data *data);
 void	init_struct_str(t_str *str);
 // prompt.c
 char	*set_prompt(t_list *env_list);
-
-/* Error */
-// error.c
-int		error_handler(int code);
-int		error_parser_double_token(t_tokens token);
 
 /* Exit */
 // exit.c
@@ -171,7 +166,6 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 // lexer.c
-t_tokens	is_token(char *check);
 int		input_arr_to_lexer_list(t_data *data);
 //	no_space_split.c
 char	**no_space_split(char **input_split, int index);
@@ -181,6 +175,7 @@ int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Parser */
 // parser.c
+int			error_parser_double_token(t_tokens token);
 int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
@@ -200,15 +195,9 @@ void	ft_echo(char **args, t_data *data);
 void	ft_pwd(t_data *data);
 void	ft_env(t_data *data);
 void	ft_cd(char **args, t_data *data);
-char	*ft_cd_getpath(char *path_name, t_data *data);
-void	ft_cd_update(char *oldpwd, t_data *data);
-void	ft_cd_home(char *oldpwd, t_data *data);
-void	ft_cd_previous(char *oldpwd, t_data *data);
+void	ft_cd_nosuchfile(char *arg);
+void	ft_cd_toomanyargs(t_data *data);
 void	ft_export(char **args, t_data *data);
-void	ft_export_add(char **args, t_data *data, int i);
-void	ft_export_list(t_data *data);
-void	ft_export_sort(char **env_arr);
-void	ft_export_format(char *env_var);
 int		ft_export_validate(char *arg);
 void	ft_unset(char **args, t_data *data);
 void	ft_exit(char **args, t_data *data);
@@ -222,12 +211,10 @@ void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
 int		is_builtin(char *cmd);
-void	handle_redirect(t_data *data, t_list *redirects, char *hd_file);
-void	handle_output_single(t_data *data, char *filename);
-void	handle_output_append(char *filename);
-void	handle_input(t_data *data, char *filename);
+void	handle_redirect(t_list *redirects, char *hd_file);
+void	check_for_files(t_simple_cmds *content, char **env_cpy);
 char	**env_copy(t_data *data);
-void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i);
+int		wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[]);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
 void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
