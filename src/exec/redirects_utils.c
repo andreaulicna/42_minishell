@@ -3,15 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   redirects_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 15:00:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:49:50 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
+
+/**
+ * @brief Determines the output mode for redirection based on the specified
+ * filename and redirection type.
+ *
+ * @param filename The name of the file to be used for redirection.
+ * @param redirection An integer indicating the type of redirection (GREATER,
+ * GREATER_2, or other).
+ * @return The file descriptor (fd) for the output mode.
+ */
 static int	determine_output_mode(char *filename, int redirection)
 {
 	int	fd;
@@ -25,6 +35,14 @@ static int	determine_output_mode(char *filename, int redirection)
 	return (fd);
 }
 
+/**
+ * @brief Handles output redirection by checking file existence and permissions,
+ *        then redirecting standard output if necessary.
+ *
+ * @param filename The name of the file for output redirection.
+ * @param fd The file descriptor for the output mode.
+ * @return Returns 0 on success, 1 on failure.
+ */
 static int	handle_output(char *filename, int fd)
 {
 	if (access(filename, F_OK) != 0)
@@ -52,6 +70,13 @@ static int	handle_output(char *filename, int fd)
 	return (0);
 }
 
+/**
+ * @brief Handles input redirection by opening the specified file in
+ * read-only mode, checking for permissions, and redirecting standard input.
+ *
+ * @param filename The name of the file for input redirection.
+ * @return Returns 0 on success, 1 on failure.
+ */
 static int	handle_input(char *filename)
 {
 	int	fd;
@@ -81,6 +106,14 @@ static int	handle_input(char *filename)
 	return (0);
 }
 
+/**
+ * @brief Handles redirection based on a list of redirections and an optional
+ * here document file. Exits the loop (redirection chain) when an error is
+ * encountered.
+ *
+ * @param redirects A linked list of redirections.
+ * @param hd_file The name of the file for here document redirection (optional).
+ */
 void	handle_redirect(t_list *redirects, char *hd_file)
 {
 	t_list	*curr_redirect;
