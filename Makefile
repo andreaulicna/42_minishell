@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
+#    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/01/25 13:10:11 by aulicna          ###   ########.fr        #
+#    Updated: 2024/02/01 10:22:08 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,8 @@ SRC = src/debug/main.c\
 		src/exec/exec.c\
 		src/exec/exec_utils.c\
 		src/exec/pipe_utils.c\
-		src/exec/redirects_utils.c
+		src/exec/redirects_utils.c\
+		src/exec/files_utils.c
 
 OBJ = $(SRC)
 OBJ := $(OBJ:%.c=%.o)

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/31 22:58:36 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 10:37:04 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,40 +150,9 @@ void	run_exec(t_data *data, t_simple_cmds *content)
 {
 	char	**env_cpy;
 	char	*path;
-	struct stat path_stat;
-	int		i;
 
 	env_cpy = env_copy(data);
-	i = 0;
-	while (content->cmd[0][i] == ' ')
-		i++;
-	if (content->cmd[0][i] == '/' ||
-		(content->cmd[0][i] == '.' && content->cmd[0][i + 1] == '/'))
-	{
-		if (access(content->cmd[0], F_OK) == 0)
-		{
-			stat(content->cmd[0], &path_stat);
-			if (S_ISDIR(path_stat.st_mode))
-			{
-				ft_putstr_fd(content->cmd[0], STDERR);
-				ft_putendl_fd(": Is a directory", STDERR);
-				exit_minishell(NULL, 126);
-			}
-			else if (access(content->cmd[0], X_OK) == -1)
-			{
-				ft_putstr_fd(content->cmd[0], STDERR);
-				ft_putendl_fd(": Permission denied", STDERR);
-				exit_minishell(NULL, 126);
-			}
-			execve(content->cmd[0], content->cmd, env_cpy);
-		}
-		else
-		{
-			ft_putstr_fd(content->cmd[0], STDERR);
-			ft_putendl_fd(": No such file or directory", STDERR);
-			exit_minishell(NULL, 127);
-		}
-	}
+	check_for_files(content, env_cpy);
 	path = find_exe_path(data, content->cmd[0]);
 	if (path != NULL)
 	{
