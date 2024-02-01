@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:45:57 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/25 17:51:38 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:19:49 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param args An array of strings representing the args for the 'echo' command.
  * @param data A pointer to the data structure for handling shell-related info.
  */
-void ft_echo(char **args, t_data *data)
+void	ft_echo(char **args, t_data *data)
 {
 	int	n_flag;
 	int	i;

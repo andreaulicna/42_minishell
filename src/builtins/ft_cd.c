@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/24 09:04:03 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:17:41 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param oldpwd The previous working directory.
  * @param data   A pointer to the structure containing environment variables.
  */
-void	ft_cd_update(char *oldpwd, t_data *data)
+static void	ft_cd_update(char *oldpwd, t_data *data)
 {
 	t_list	*oldpwd_env;
 	t_list	*pwd_env;
@@ -42,7 +42,6 @@ void	ft_cd_update(char *oldpwd, t_data *data)
 	content->value = ft_strdup(cwd);
 }
 
-
 /**
  * @brief Returns a pointer to the desired path stored in the environment
  * variables list.
@@ -57,7 +56,7 @@ void	ft_cd_update(char *oldpwd, t_data *data)
  * @return A pointer to the value of the specified environment variable, or
  * NULL if not found.
  */
-char	*ft_cd_getpath(char *path_name, t_data *data)
+static char	*ft_cd_getpath(char *path_name, t_data *data)
 {
 	t_list	*path_env;
 	t_env	*content;
@@ -80,7 +79,7 @@ char	*ft_cd_getpath(char *path_name, t_data *data)
  * @param data   A pointer to the data structure containing environment
  * variables.
  */
-void ft_cd_home(char *oldpwd, t_data *data)
+static void	ft_cd_home(char *oldpwd, t_data *data)
 {
 	int	ret;
 
@@ -104,7 +103,7 @@ void ft_cd_home(char *oldpwd, t_data *data)
  * @param data   A pointer to the data structure containing environment
  * variables.
  */
-void ft_cd_previous(char *oldpwd, t_data *data)
+static void	ft_cd_previous(char *oldpwd, t_data *data)
 {
 	int	ret;
 
@@ -128,35 +127,30 @@ void ft_cd_previous(char *oldpwd, t_data *data)
  * @param args An array of command arguments.
  * @param data A pointer to the data structure containing environment variables.
  */
-void ft_cd(char **args, t_data *data)
+void	ft_cd(char **args, t_data *data)
 {
 	int		ret;
 	char	cwd[PATH_MAX];
 
 	if (strs_count(args) > 2)
 	{
-		ft_putendl_fd("minishell: cd: too many arguments", STDERR);
-		data->exit_status = 1;
-		return;
+		ft_cd_toomanyargs(data);
+		return ;
 	}
 	getcwd(cwd, PATH_MAX);
 	if (args[1] == NULL || (args[1][0] == '~' && !args[1][1]))
 	{
 		ft_cd_home(cwd, data);
-		return;
+		return ;
 	}
 	else if (args[1] && !ft_strncmp(args[1], "-", 1))
 	{
 		ft_cd_previous(cwd, data);
-		return;
+		return ;
 	}
 	ret = chdir(args[1]) != 0;
 	if (ret != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", STDERR);
-		ft_putstr_fd(args[1], STDERR);
-		ft_putendl_fd(": No such file or directory", STDERR);
-	}
+		ft_cd_nosuchfile(args[1]);
 	else
 		ft_cd_update(cwd, data);
 	data->exit_status = ret;

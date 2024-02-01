@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:24:31 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/24 09:11:17 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:19:42 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * @param data A pointer to the data structure containing the linked list
  * of environment variables.
  */
-void ft_env(t_data *data)
+void	ft_env(t_data *data)
 {
 	t_list	*current;
 	t_env	*env;

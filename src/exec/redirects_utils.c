@@ -6,16 +6,16 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/31 22:46:59 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:10:03 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
 
-static int determine_output_mode(char *filename, int redirection)
+static int	determine_output_mode(char *filename, int redirection)
 {
-	int fd;
-	
+	int	fd;
+
 	if (redirection == GREATER)
 		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	else if (redirection == GREATER_2)
@@ -25,8 +25,8 @@ static int determine_output_mode(char *filename, int redirection)
 
 static int	handle_output(char *filename, int redirection)
 {
-	int fd;
-	
+	int	fd;
+
 	fd = determine_output_mode(filename, redirection);
 	if (fd < 0)
 	{
@@ -47,7 +47,7 @@ static int	handle_output(char *filename, int redirection)
 
 static int	handle_input(char *filename)
 {
-	int fd;
+	int	fd;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -74,7 +74,7 @@ static int	handle_input(char *filename)
 	return (0);
 }
 
-void handle_redirect(t_list *redirects, char *hd_file)
+void	handle_redirect(t_list *redirects, char *hd_file)
 {
 	t_list	*curr_redirect;
 	t_lexer	*content;

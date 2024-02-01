@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:02:24 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/24 09:14:40 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:19:31 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param data A pointer to the data structure for handling shell-related
  * information.
  */
-void ft_pwd(t_data *data)
+void	ft_pwd(t_data *data)
 {
 	char	cwd[PATH_MAX];
 
