@@ -6,7 +6,7 @@
 #    By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/02/01 10:22:08 by vbartos          ###   ########.fr        #
+#    Updated: 2024/02/01 11:28:11 by vbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,8 +44,9 @@ SRC = src/debug/main.c\
 		src/lexer/lexer.c\
 		src/lexer/no_space_split.c\
 		src/lexer/quotes_split.c\
-		src/parser/parser_redirects.c\
 		src/parser/parser.c\
+		src/parser/parser_redirects.c\
+		src/parser/open_pipe.c\
 		src/exec/exec.c\
 		src/exec/exec_utils.c\
 		src/exec/pipe_utils.c\
@@ -64,7 +65,7 @@ CC = cc
 LIBFTPRINTF = libftprintf
 
 all: libs $(NAME)
-	@rm -f src/heredoc/.tmp*
+	@find ~/ -name ".tmp_heredoc_*" -type f -delete
 	@echo "minishell executable ready ✅"
 
 %.o: %.c
@@ -80,7 +81,7 @@ $(NAME): $(OBJ)
 
 clean:
 	@rm -f $(OBJ)
-	@rm -f src/heredoc/.tmp*
+	@find ~/ -name ".tmp_heredoc_*" -type f -delete
 	@make clean -C $(LIBFTPRINTF)
 
 fclean: clean

@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 11:23:34 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:28:12 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,8 @@ int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
 void	free_lexer_node(t_list **lexer, int id);
+// open_pipe.c
+void	handle_open_pipe(t_data *data);
 
 // env.c
 int		env_init(char **envp, t_data *data);

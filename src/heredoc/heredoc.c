@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/22 14:36:33 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/27 18:41:33 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*get_hd_file_name(void)
 
 	i++;
 	str_i = ft_itoa(i);
-	hd_file_name = ft_strjoin("./src/heredoc/.tmp_heredoc_", str_i);
+	hd_file_name = ft_strjoin(".tmp_heredoc_", str_i);
 	free(str_i);
 	return (hd_file_name);
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 15:24:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 10:58:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	minishell_loop(t_data *data)
 	if (!check_input_null(data->input))
 	{
 		ft_putendl_fd("exit", STDOUT);
-		exit_minishell(NULL, 50);
+		exit_minishell(NULL, 0);
 	}
 	if (!check_quotes(data->input) || !check_enter_space(data->input))
 		exit_current_prompt(data);
@@ -50,6 +50,7 @@ int	minishell_loop(t_data *data)
 	lexer_to_simple_cmds(&data->lexer, &data->simple_cmds);
 	expander(data);
 	heredoc(data);
+	handle_open_pipe(data);
 	if (g_signal == 0)
 		exec(data, data->simple_cmds);
 	exit_current_prompt(data);
@@ -101,6 +102,7 @@ int	minishell_loop(t_data *data)
 //	heredoc(data);
 //	printf("----------------------\n");
 //	printf("SIMPLE CMDS - after heredoc\n");
+//	handle_open_pipe(data);
 //	if (g_signal == 0)
 //		exec(data, data->simple_cmds);
 //	exit_current_prompt(data);
