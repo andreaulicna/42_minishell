@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirects_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 11:10:03 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:00:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,20 @@ static int	determine_output_mode(char *filename, int redirection)
 		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	else if (redirection == GREATER_2)
 		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	else
+		fd = 0;
 	return (fd);
 }
 
-static int	handle_output(char *filename, int redirection)
+static int	handle_output(char *filename, int fd)
 {
-	int	fd;
-
-	fd = determine_output_mode(filename, redirection);
+	if (access(filename, F_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR);
+		ft_putstr_fd(filename, STDERR);
+		ft_putendl_fd(": No such file or directory", STDERR);
+		return (1);
+	}
 	if (fd < 0)
 	{
 		ft_putstr_fd("minishell: ", STDERR);
@@ -38,6 +44,7 @@ static int	handle_output(char *filename, int redirection)
 	if (fd > 0 && dup2(fd, STDOUT) < 0)
 	{
 		ft_putendl_fd("minishell: pipe error", STDERR);
+		close(fd);
 		return (1);
 	}
 	if (fd > 0)
@@ -90,7 +97,8 @@ void	handle_redirect(t_list *redirects, char *hd_file)
 		redirection = content->token;
 		filename = content->word;
 		if (redirection == GREATER || redirection == GREATER_2)
-			ret = handle_output(filename, redirection);
+			ret = handle_output(filename,
+					determine_output_mode(filename, redirection));
 		else if (redirection == LESS)
 			ret = handle_input(filename);
 		else if (hd_file)

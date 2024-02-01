@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 10:37:04 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 14:43:39 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	exec(t_data *data, t_list *simple_cmds)
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
 	int	**fd_pipe;
+	int	pid_list[cmds_num];
 	int	i;
 
 	i = 0;
@@ -79,14 +80,14 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 			ft_putendl_fd("minishell: pipe: Too many open files", 2);
 			exit_current_prompt(NULL);
 		}
-		fork_cmd(data, simple_cmds, fd_pipe, i);
+		pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
 		close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
 			close(fd_pipe[i - 1][PIPE_READ]);
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	wait_for_pipeline(data, cmds_num, fd_pipe, i);
+	wait_for_pipeline(data, cmds_num, fd_pipe, i, pid_list);
 	free_pipe(fd_pipe, ft_lstsize(data->simple_cmds));
 }
 
@@ -130,7 +131,7 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
-			exit_minishell(NULL, 0);
+			exit_minishell(NULL, data->exit_status);
 		}
 		else
 			run_exec(data, content);

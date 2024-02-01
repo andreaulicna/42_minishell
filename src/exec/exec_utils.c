@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 11:09:08 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 14:34:35 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	is_builtin(char *cmd)
  * @param	fd_pipe		2d array of file descriptors
  * @param	i			current position in fd_pipe
  */
-void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i)
+void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i, int pid_list[])
 {
 	int	j;
 	int	status;
@@ -138,7 +138,7 @@ void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i)
 	j = 0;
 	while (j < cmds_num)
 	{
-		waitpid(-1, &status, 0);
+		waitpid(pid_list[j], &status, 0);
 		if (WIFEXITED(status))
 			data->exit_status = WEXITSTATUS(status);
 		j++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 11:28:12 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 14:34:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ int		is_builtin(char *cmd);
 void	handle_redirect(t_list *redirects, char *hd_file);
 void	check_for_files(t_simple_cmds *content, char **env_cpy);
 char	**env_copy(t_data *data);
-void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i);
+void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i, int pid_list[]);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
 void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
