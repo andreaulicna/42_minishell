@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 15:23:41 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 15:26:32 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/01/29 10:42:30 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,15 @@ int	check_input_null(char *input)
 
 int	check_enter_space(char *input)
 {
-	if (!ft_strncmp(input, " ", ft_strlen_custom(input)) || input[0] == '\0')
-		return (0);
-	return (1);
+	int	i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (!(7 <= input[i] && input[i] <= 13)
+			&& input[i] != 32 && input[i] != '\0')
+			return (1);
+		i++;
+	}
+	return (0);
 }
