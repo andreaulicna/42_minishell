@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:26:37 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 12:46:17 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:16:25 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
  * @param	new_input_split new input split
  * @param	new_i			current index in the new_input_split array
  */
-void	handle_token_in_middle(char **input_split, int i,
+static void	handle_token_in_middle(char **input_split, int i,
 	char **new_input_split, int *new_i)
 {
 	int	k;
@@ -69,7 +69,7 @@ void	handle_token_in_middle(char **input_split, int i,
  * @param	new_input_split new input split
  * @param	new_i			current index in the new_input_split array
  */
-void	reconstruct_string(char **input_split, int i,
+static void	reconstruct_string(char **input_split, int i,
 	char **new_input_split,	int *new_i)
 {
 	if ((input_split[i][0] == '<' && input_split[i][1] == '<')

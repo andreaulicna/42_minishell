@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/25 13:43:54 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:11:55 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	expander_loop_dollar(t_simple_cmds *content, int i, int exit_status,
  * @param	content		pointer to t_simple_cmds struct
  * @param	i			index of the command string in the array to process
  */
-void	expander_loop_no_dollar(t_simple_cmds *content, int i)
+static void	expander_loop_no_dollar(t_simple_cmds *content, int i)
 {
 	int	j;
 
@@ -87,7 +87,7 @@ void	expander_loop_no_dollar(t_simple_cmds *content, int i)
  * @param	exit_status	most recent exit status
  * @param	env_list	list of environment variables
  */
-void	expander_redirects_loop_dollar(t_lexer *content, int exit_status,
+static void	expander_redirects_loop_dollar(t_lexer *content, int exit_status,
 	t_list *env_list)
 {
 	int		i;
@@ -126,7 +126,7 @@ void	expander_redirects_loop_dollar(t_lexer *content, int exit_status,
  * @param	exit_status	most recent exit status
  * @param	env_list	list of environment variables
  */
-void	expander_redirects(t_list **redirects, int exit_status,
+static void	expander_redirects(t_list **redirects, int exit_status,
 	t_list *env_list)
 {
 	t_list	*current;
@@ -191,7 +191,8 @@ void	expander(t_data *data)
 		}
 		expander_redirects(&content->redirects, data->exit_status,
 			data->env_list);
-		handle_empty_envs(old_cmd, content, &data->exit_status);
+		if (content->redirects == NULL)
+			handle_empty_envs(old_cmd, content, &data->exit_status);
 		current = current->next;
 	}
 }

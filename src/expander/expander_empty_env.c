@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:01:16 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/25 14:02:18 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:10:50 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**ft_strdup_array(char **arr)
  * @param	cmd	simple_cmds array to check
  * @return	int	1 if all strings in the command are empty, 0 otherwise
  */
-int	only_empty_envs(char **cmd)
+static int	only_empty_envs(char **cmd)
 {
 	int	i;
 
@@ -66,7 +66,7 @@ int	only_empty_envs(char **cmd)
  * @return	char**	new simple_cmds array that is a copy of the original one,
  * 					but without the string at index i
  */
-char	**remove_cmd_empty_env(char **cmd, int i)
+static char	**remove_cmd_empty_env(char **cmd, int i)
 {
 	int		len_2d;
 	int		j;

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/27 21:38:46 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:20:13 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_str
 /* SOURCES */
 
 /* Debug */
-// main_a.c
+// main.c
 int		minishell_loop(t_data *data);
 // print.c
 void	print_input_split(char **input_split);
@@ -117,11 +117,6 @@ void	init_data(t_data *data);
 void	init_struct_str(t_str *str);
 // prompt.c
 char	*set_prompt(t_list *env_list);
-
-/* Error */
-// error.c
-int		error_handler(int code);
-int		error_parser_double_token(t_tokens token);
 
 /* Exit */
 // exit.c
@@ -171,7 +166,6 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 // lexer.c
-t_tokens	is_token(char *check);
 int		input_arr_to_lexer_list(t_data *data);
 //	no_space_split.c
 char	**no_space_split(char **input_split, int index);
@@ -181,6 +175,7 @@ int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Parser */
 // parser.c
+int			error_parser_double_token(t_tokens token);
 int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
