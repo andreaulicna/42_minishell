@@ -3,14 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/22 13:31:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:36:51 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+/**
+ * @brief Converts the "PATH" environment variable into an array of strings.
+ * 
+ * This function takes a pointer to a `t_data` structure and retrieves the value
+ * of the "PATH" environment variable. It then splits the value into individual
+ * paths using the ':' delimiter and stores them in a dynamically allocated
+ * array of strings. The resulting array is returned.
+ * 
+ * @param data A pointer to the `t_data` structure.
+ * @return A dynamically allocated array of strings containing the individual
+ * paths from the "PATH" environment variable.
+ */
+static char	**paths_into_arr(t_data *data)
+{
+	t_list	*path_env;
+	t_env	*content;
+	char	**path_arr;
+
+	path_env = env_find(data->env_list, "PATH");
+	content = (t_env *)(path_env->content);
+	path_arr = ft_split(content->value, ':');
+	return (path_arr);
+}
 
 /**
  * Finds the executable path for a given command by searching through the PATH
@@ -22,16 +46,12 @@
  */
 char	*find_exe_path(t_data *data, char *cmd)
 {
-	t_list	*path_env;
-	t_env	*content;
 	char	**path_arr;
 	char	*temp;
 	char	*working_path;
 	int		i;
 
-	path_env = env_find(data->env_list, "PATH");
-	content = (t_env *) (path_env->content);
-	path_arr = ft_split(content->value, ':');
+	path_arr = paths_into_arr(data);
 	i = 0;
 	while (path_arr[i] != NULL)
 	{
@@ -85,7 +105,7 @@ char	**env_copy(t_data *data)
  * @param cmd The command to check.
  * @return 1 if the command is a built-in command, 0 otherwise.
  */
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if ((ft_strncmp(cmd, "cd", 2) == 0 && ft_strlen(cmd) == 2)
 		|| (ft_strncmp(cmd, "echo", 4) == 0 && ft_strlen(cmd) == 4)
@@ -110,21 +130,23 @@ int is_builtin(char *cmd)
  * @param	fd_pipe		2d array of file descriptors
  * @param	i			current position in fd_pipe
  */
-void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i)
+int	wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[])
 {
 	int	j;
 	int	status;
+	int	exit_status;
 
 	j = 0;
 	while (j < cmds_num)
 	{
-		waitpid(-1, &status, 0);
+		waitpid(pid_list[j], &status, 0);
 		if (WIFEXITED(status))
-			data->exit_status = WEXITSTATUS(status);
+			exit_status = WEXITSTATUS(status);
 		j++;
 	}
 	if (cmds_num == 1)
 		close(fd_pipe[i - 1][PIPE_READ]);
 	else
 		close(fd_pipe[i - 2][PIPE_WRITE]);
+	return (exit_status);
 }

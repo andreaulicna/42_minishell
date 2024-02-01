@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 22:14:18 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/22 13:31:36 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:10:45 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param orig_output Pointer to store the original standard output file
  * descriptor.
  */
-void orig_fds_save(int *orig_input, int *orig_output)
+void	orig_fds_save(int *orig_input, int *orig_output)
 {
 	*orig_output = dup(STDOUT);
 	*orig_input = dup(STDIN);
@@ -33,7 +33,7 @@ void orig_fds_save(int *orig_input, int *orig_output)
  * @param orig_input The original file descriptor for standard input.
  * @param orig_output The original file descriptor for standard output.
  */
-void orig_fds_restore(int orig_input, int orig_output)
+void	orig_fds_restore(int orig_input, int orig_output)
 {
 	dup2(orig_output, STDOUT);
 	dup2(orig_input, STDIN);
@@ -47,7 +47,7 @@ void orig_fds_restore(int orig_input, int orig_output)
  * @param fd_pipe An array to store the file descriptors for the pipe.
  * @return The write end file descriptor of the pipe.
  */
-int pipe_create(int fd_pipe[2])
+int	pipe_create(int fd_pipe[2])
 {
 	if (pipe(fd_pipe) == -1)
 	{
@@ -63,7 +63,7 @@ int pipe_create(int fd_pipe[2])
  * @param fd_pipe The file descriptors for the pipe.
  * @return The read end of the pipe.
  */
-int pipe_close(int fd_pipe[2])
+int	pipe_close(int fd_pipe[2])
 {
 	close(fd_pipe[PIPE_WRITE]);
 	return (fd_pipe[PIPE_READ]);

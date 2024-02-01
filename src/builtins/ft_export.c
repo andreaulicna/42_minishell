@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/01/19 07:48:46 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 11:20:54 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  *
  * @param env_var The environment variable to format and print
  */
-void	ft_export_format(char *env_var)
+static void	ft_export_format(char *env_var)
 {
 	int		equalsign_pos;
 	char	*substr1;
@@ -49,7 +49,7 @@ void	ft_export_format(char *env_var)
  * 
  * @param env_arr The array of environment variables to be sorted.
  */
-void	ft_export_sort(char **env_arr)
+static void	ft_export_sort(char **env_arr)
 {
 	long unsigned int	i;
 	long unsigned int	j;
@@ -88,7 +88,7 @@ void	ft_export_sort(char **env_arr)
  * @param data A pointer to the data structure containing the environment
  * variables.
  */
-void	ft_export_list(t_data *data)
+static void	ft_export_list(t_data *data)
 {
 	char	**arr;
 	t_list	*current;
@@ -124,7 +124,7 @@ void	ft_export_list(t_data *data)
  * @param data The data structure containing the environment list.
  * @param i The index of the argument in the args array.
  */
-void ft_export_add(char **args, t_data *data, int i)
+static void	ft_export_add(char **args, t_data *data, int i)
 {
 	t_list	*possible_duplicate;
 	size_t	equal_pos;
@@ -164,7 +164,7 @@ void ft_export_add(char **args, t_data *data, int i)
  * @param data The data structure containing the environment variables.
  * @return Returns 0 on success, 1 on failure.
  */
-void ft_export(char **args, t_data *data)
+void	ft_export(char **args, t_data *data)
 {
 	int		i;
 
@@ -172,7 +172,7 @@ void ft_export(char **args, t_data *data)
 	{
 		ft_export_list(data);
 		data->exit_status = 0;
-		return;
+		return ;
 	}
 	i = 1;
 	while (args[i] != NULL)
@@ -185,7 +185,7 @@ void ft_export(char **args, t_data *data)
 			ft_putstr_fd(args[i], STDERR);
 			ft_putendl_fd(": not a valid identifier", STDERR);
 			data->exit_status = 1;
-			return;
+			return ;
 		}
 		i++;
 	}

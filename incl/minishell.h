@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/27 21:38:46 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:35:32 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,15 +200,9 @@ void	ft_echo(char **args, t_data *data);
 void	ft_pwd(t_data *data);
 void	ft_env(t_data *data);
 void	ft_cd(char **args, t_data *data);
-char	*ft_cd_getpath(char *path_name, t_data *data);
-void	ft_cd_update(char *oldpwd, t_data *data);
-void	ft_cd_home(char *oldpwd, t_data *data);
-void	ft_cd_previous(char *oldpwd, t_data *data);
+void	ft_cd_nosuchfile(char *arg);
+void	ft_cd_toomanyargs(t_data *data);
 void	ft_export(char **args, t_data *data);
-void	ft_export_add(char **args, t_data *data, int i);
-void	ft_export_list(t_data *data);
-void	ft_export_sort(char **env_arr);
-void	ft_export_format(char *env_var);
 int		ft_export_validate(char *arg);
 void	ft_unset(char **args, t_data *data);
 void	ft_exit(char **args, t_data *data);
@@ -222,12 +216,10 @@ void	run_builtin(t_data *data, char **cmd);
 void	run_exec(t_data *data, t_simple_cmds *content);
 char	*find_exe_path(t_data *data, char *cmd);
 int		is_builtin(char *cmd);
-void	handle_redirect(t_data *data, t_list *redirects, char *hd_file);
-void	handle_output_single(t_data *data, char *filename);
-void	handle_output_append(char *filename);
-void	handle_input(t_data *data, char *filename);
+void	handle_redirect(t_list *redirects, char *hd_file);
+void	check_for_files(t_simple_cmds *content, char **env_cpy);
 char	**env_copy(t_data *data);
-void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i);
+int		wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[]);
 int		pipe_create(int fd_pipe[2]);
 int		pipe_close(int fd_pipe[2]);
 void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
