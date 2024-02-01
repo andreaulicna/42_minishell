@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 14:43:39 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:42:43 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,13 @@ int	exec(t_data *data, t_list *simple_cmds)
  */
 void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
-	int	**fd_pipe;
-	int	pid_list[cmds_num];
 	int	i;
+	int	**fd_pipe;
+	int	*pid_list;
 
 	i = 0;
 	fd_pipe = malloc(sizeof(int *) * (ft_lstsize(simple_cmds)));
+	pid_list = (int *)malloc(sizeof(int) * cmds_num);
 	while (i < cmds_num)
 	{
 		fd_pipe[i] = malloc(sizeof(int) * 2);
@@ -87,7 +88,8 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	wait_for_pipeline(data, cmds_num, fd_pipe, i, pid_list);
+	data->exit_status = wait_for_pipeline(cmds_num, fd_pipe, i, pid_list);
+	free(pid_list);
 	free_pipe(fd_pipe, ft_lstsize(data->simple_cmds));
 }
 

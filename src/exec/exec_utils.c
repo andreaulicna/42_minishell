@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 14:34:35 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 15:36:51 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,21 +130,23 @@ int	is_builtin(char *cmd)
  * @param	fd_pipe		2d array of file descriptors
  * @param	i			current position in fd_pipe
  */
-void	wait_for_pipeline(t_data *data, int cmds_num, int **fd_pipe, int i, int pid_list[])
+int	wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[])
 {
 	int	j;
 	int	status;
+	int	exit_status;
 
 	j = 0;
 	while (j < cmds_num)
 	{
 		waitpid(pid_list[j], &status, 0);
 		if (WIFEXITED(status))
-			data->exit_status = WEXITSTATUS(status);
+			exit_status = WEXITSTATUS(status);
 		j++;
 	}
 	if (cmds_num == 1)
 		close(fd_pipe[i - 1][PIPE_READ]);
 	else
 		close(fd_pipe[i - 2][PIPE_WRITE]);
+	return (exit_status);
 }
