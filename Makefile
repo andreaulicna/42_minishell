@@ -6,14 +6,13 @@
 #    By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/23 14:30:35 by aulicna           #+#    #+#              #
-#    Updated: 2024/02/01 16:45:09 by aulicna          ###   ########.fr        #
+#    Updated: 2024/02/02 16:24:46 by aulicna          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRC = main.c\
-		src/debug/print.c\
 		src/setup/init.c\
 		src/setup/main_checkers.c\
 		src/setup/prompt.c\
