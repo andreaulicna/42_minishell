@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:01:16 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:10:50 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:29:43 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ char	**ft_strdup_array(char **arr)
 	int		len_2d;
 	char	**new_arr;
 
+	if (arr[0] == NULL)
+		return (NULL);
 	len_2d = 0;
 	while (arr[len_2d])
 		len_2d++;

@@ -5,12 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/29 13:02:15y aulicna          ###   ########.fr       */
+/*   Created: 2024/02/02 14:36:46 by aulicna           #+#    #+#             */
+/*   Updated: 2024/02/02 14:36:51 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
 /**
  * @brief	Handles the SIGINT signal.
  *

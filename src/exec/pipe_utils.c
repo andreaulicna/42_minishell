@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 22:14:18 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 11:10:45 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:57:09 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,28 +45,15 @@ void	orig_fds_restore(int orig_input, int orig_output)
  * Creates a pipe using the pipe system call.
  * 
  * @param fd_pipe An array to store the file descriptors for the pipe.
- * @return The write end file descriptor of the pipe.
  */
-int	pipe_create(int fd_pipe[2])
+void	pipe_create(int **fd_pipe, int i)
 {
-	if (pipe(fd_pipe) == -1)
+	if (pipe(fd_pipe[i]) == -1)
 	{
 		ft_putendl_fd("minishell: pipe: Too many open files", 2);
+		free_pipe_child(fd_pipe, i);
 		exit_current_prompt(NULL);
 	}
-	return (fd_pipe[PIPE_WRITE]);
-}
-
-/**
- * Closes the write end of a pipe and returns the read end.
- *
- * @param fd_pipe The file descriptors for the pipe.
- * @return The read end of the pipe.
- */
-int	pipe_close(int fd_pipe[2])
-{
-	close(fd_pipe[PIPE_WRITE]);
-	return (fd_pipe[PIPE_READ]);
 }
 
 /**
@@ -81,10 +68,53 @@ int	pipe_close(int fd_pipe[2])
  */
 void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i)
 {
+	t_simple_cmds	*content;
+
 	close(fd_pipe[i][PIPE_READ]);
 	if (i > 0)
 		dup2(fd_pipe[i - 1][PIPE_READ], STDIN_FILENO);
 	if (simple_cmds->next != NULL)
 		dup2(fd_pipe[i][PIPE_WRITE], STDOUT_FILENO);
+	content = (t_simple_cmds *) simple_cmds->content;
+	if (i > 0 && content->cmd[0] == NULL)
+		close(fd_pipe[i - 1][PIPE_READ]);
 	close(fd_pipe[i][PIPE_WRITE]);
+}
+
+/**
+ * @brief	Waits for all processes in the pipeline to finish.
+ * 
+ * The if and else statement after while loop ensure there is no fd left open
+ * in the parent process for one command and piped commands, respectively.
+ * 
+ * The last if handles the case of a hanging command (e.g. cat or sort) getting
+ * interrupted by SIGINT as g_signal == SIGUSR2 indicates that there was
+ * such a command and therefore the exit_status should be set to 130.
+ *
+ * @param	data		pointer to the t_data structure (for exit_status)
+ * @param	cmds_num	number of commands in the pipeline
+ * @param	fd_pipe		2d array of file descriptors
+ * @param	i			current position in fd_pipe
+ */
+int	wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[])
+{
+	int	j;
+	int	status;
+	int	exit_status;
+
+	j = 0;
+	while (j < cmds_num)
+	{
+		waitpid(pid_list[j], &status, 0);
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
+		j++;
+	}
+	if (cmds_num > 0)
+		close(fd_pipe[i - 1][PIPE_READ]);
+	if (cmds_num != 1)
+		close(fd_pipe[i - 2][PIPE_WRITE]);
+	if (g_signal == SIGUSR2)
+		exit_status = 130;
+	return (exit_status);
 }

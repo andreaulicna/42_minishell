@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:11:55 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:33:51 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,9 @@ static void	expander_redirects_loop_dollar(t_lexer *content, int exit_status,
  * ("2nd level detail").
  * 
  * @param	redirects	list of redirections
- * @param	exit_status	most recent exit status
- * @param	env_list	list of environment variables
+ * @param	data	pointer to the t_data structure (for env_list, exit_status)
  */
-static void	expander_redirects(t_list **redirects, int exit_status,
-	t_list *env_list)
+static void	expander_redirects(t_list **redirects, t_data *data)
 {
 	t_list	*current;
 	t_lexer	*content;
@@ -137,7 +135,8 @@ static void	expander_redirects(t_list **redirects, int exit_status,
 	{
 		content = (t_lexer *) current->content;
 		if (contains_dollar(content->word))
-			expander_redirects_loop_dollar(content, exit_status, env_list);
+			expander_redirects_loop_dollar(content, data->exit_status,
+				data->env_list);
 		else
 		{
 			while (has_quotes_to_delete(content->word))
@@ -165,7 +164,7 @@ static void	expander_redirects(t_list **redirects, int exit_status,
  * Lastly, the cmd array is checked for empty strings that are left after
  * expanding env variables that don't exist and they're removed from the array.
  *  
- * @param	data	pointer to the t_data structure (for simple_cmds, env_list)
+ * @param	data	pointer to the t_data structure (for env_list, exit_status)
  */
 void	expander(t_data *data)
 {
@@ -189,9 +188,8 @@ void	expander(t_data *data)
 				expander_loop_no_dollar(content, i);
 			i++;
 		}
-		expander_redirects(&content->redirects, data->exit_status,
-			data->env_list);
-		if (content->redirects == NULL)
+		expander_redirects(&content->redirects, data);
+		if (content->redirects == NULL && old_cmd != NULL)
 			handle_empty_envs(old_cmd, content, &data->exit_status);
 		current = current->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:48:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:27:39 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	minishell_loop(t_data *data)
 	exit_current_prompt(data);
 	return (1);
 }
-
 
 int	main(int argc, char **argv, char *env[])
 {

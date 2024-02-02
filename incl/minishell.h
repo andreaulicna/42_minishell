@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:48:16 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:13:38 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_data
 	int		orig_fdin;
 	int		orig_fdout;
 	int		hd_fd;
+	int		*pid_list;
 	int		exit_status;
 }				t_data;
 
@@ -175,7 +176,7 @@ int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Parser */
 // parser.c
-int			error_parser_double_token(t_tokens token);
+int		error_parser_double_token(t_tokens token);
 int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
@@ -215,11 +216,11 @@ void	handle_redirect(t_list *redirects, char *hd_file);
 void	check_for_files(t_simple_cmds *content, char **env_cpy);
 char	**env_copy(t_data *data);
 int		wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[]);
-int		pipe_create(int fd_pipe[2]);
-int		pipe_close(int fd_pipe[2]);
+void	pipe_create(int **fd_pipe, int i);
 void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
 void	orig_fds_save(int *orig_input, int *orig_output);
 void	orig_fds_restore(int orig_input, int orig_output);
+void	fork_process(int *pid);
 
 /* Signals */
 void	handle_sigint(int sig_num);

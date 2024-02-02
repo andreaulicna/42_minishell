@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:13:01 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/02 14:26:45 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,7 @@ static void	process_heredoc(t_data *data, t_list *current_redirect,
 	int				pid;
 	int				status;
 
-	pid = fork();
-	if (pid == -1)
-	{
-		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
-		exit_current_prompt(NULL);
-	}
+	fork_process(&pid);
 	if (pid == 0)
 	{
 		create_heredoc(current_redirect, content_simple_cmd->hd_file,
