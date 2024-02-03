@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:07:57 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 15:00:49 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:14:31 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * @return	t_tokens	returns the corresponding token enum value if found;
  * otherwise, returns 0
  */
-t_tokens	is_token(char *check)
+static t_tokens	is_token(char *check)
 {
 	unsigned int	len;
 
@@ -49,7 +49,7 @@ t_tokens	is_token(char *check)
  * @param	content	pointer to the content of the node to assign the token to	
  * @param	token	token to assign
 */
-void	assign_token(t_lexer *content, t_tokens token)
+static void	assign_token(t_lexer *content, t_tokens token)
 {
 	content->word = NULL;
 	content->token = token;
@@ -62,7 +62,7 @@ void	assign_token(t_lexer *content, t_tokens token)
  * @param	content	pointer to the content of the node to assign the word to	
  * @param	token	word to assign
 */
-void	assign_word(t_lexer *content, char *word)
+static void	assign_word(t_lexer *content, char *word)
 {
 	content->word = ft_strdup(word);
 	content->token = 0;
@@ -77,7 +77,7 @@ void	assign_word(t_lexer *content, char *word)
  * 
  * @param	data	pointer to the t_data structure (for input_split)
  */
-void	handle_redirect_no_space(t_data *data)
+static void	handle_redirect_no_space(t_data *data)
 {
 	int			i;
 	char		**input_split;

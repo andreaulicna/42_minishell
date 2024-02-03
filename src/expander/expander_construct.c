@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 14:51:30 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:49:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,13 @@
  * part_2: the exit status
  * part_3: after, not including, the question mark that follows the dollar sign
  * 
- * Then it constructs the final string in 2 steps, first joining part_1 and
- * part_2 into tmp_join and then joining tmp_join and part_3 into final.
+ * Just before the part_2 is created, g_signal is checked and if it equals to
+ * SIGINT, exit_status is set to 130 since g_signal == SIGINT indicates that 
+ * the most recent new prompt was created after Ctrl + C.
+ * 
+ * The function then constructs the final string in 2 steps, first joining
+ * part_1 and part_2 into tmp_join and then joining tmp_join and part_3 into
+ * final.
  * 
  * All of the dynamically allocated memory is then freed with the exception
  * of the final string that is not freed until after the whole command
@@ -48,6 +53,8 @@ char	*expand_exit_status(char *str, int exit_status)
 		i++;
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(str, 0, i);
+	if (g_signal == SIGINT)
+		exit_status = 130;
 	new_str.part_2 = ft_itoa(exit_status);
 	j = 2;
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
@@ -71,7 +78,7 @@ char	*expand_exit_status(char *str, int exit_status)
  * @param	new_str	pointer to a t_str structure containing parsed string parts
  * @param	j_cmd	index of the dollar sign in string to modify
  */
-void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
+static void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
 {
 	if (new_str->env_found != NULL)
 	{

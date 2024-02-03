@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 15:35:32 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:13:38 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_data
 	int		orig_fdin;
 	int		orig_fdout;
 	int		hd_fd;
+	int		*pid_list;
 	int		exit_status;
 }				t_data;
 
@@ -100,7 +101,7 @@ typedef struct s_str
 /* SOURCES */
 
 /* Debug */
-// main_a.c
+// main.c
 int		minishell_loop(t_data *data);
 // print.c
 void	print_input_split(char **input_split);
@@ -117,11 +118,6 @@ void	init_data(t_data *data);
 void	init_struct_str(t_str *str);
 // prompt.c
 char	*set_prompt(t_list *env_list);
-
-/* Error */
-// error.c
-int		error_handler(int code);
-int		error_parser_double_token(t_tokens token);
 
 /* Exit */
 // exit.c
@@ -171,7 +167,6 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data);
 // ft_split_minishell.c
 char	**ft_split_minishell(char const *s, char c);
 // lexer.c
-t_tokens	is_token(char *check);
 int		input_arr_to_lexer_list(t_data *data);
 //	no_space_split.c
 char	**no_space_split(char **input_split, int index);
@@ -181,6 +176,7 @@ int		quotes_pair(unsigned int s_quotes, unsigned int d_quotes);
 
 /* Parser */
 // parser.c
+int		error_parser_double_token(t_tokens token);
 int		lexer_to_simple_cmds(t_list **lexer, t_list **simple_cmds);
 // parser_redirects.c
 void	separate_redirects(t_list **lexer, t_list **redirects);
@@ -220,14 +216,15 @@ void	handle_redirect(t_list *redirects, char *hd_file);
 void	check_for_files(t_simple_cmds *content, char **env_cpy);
 char	**env_copy(t_data *data);
 int		wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[]);
-int		pipe_create(int fd_pipe[2]);
-int		pipe_close(int fd_pipe[2]);
+void	pipe_create(int **fd_pipe, int i);
 void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i);
 void	orig_fds_save(int *orig_input, int *orig_output);
 void	orig_fds_restore(int orig_input, int orig_output);
+void	fork_process(int *pid);
 
 /* Signals */
 void	handle_sigint(int sig_num);
 void	handle_sigint_heredoc(int sig_num);
+void	handle_sigint_hanging_command(int sig_num);
 
 #endif

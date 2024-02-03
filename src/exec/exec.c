@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 15:42:43 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:15:11 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
  * @brief Executes a list of simple commands.
  * 
  * Saves the STDIN and STDOUT file descriptors for later restoration.
+ * 
+ * First, a case of a heredoc only is checked and handled via exec_pipeline.
+ * 
  * If there is only one command and it's a builtin, runs it in the main process.
  * For all other cases, runs a pipeline with child processes.
  * 
@@ -30,14 +33,19 @@ int	exec(t_data *data, t_list *simple_cmds)
 	orig_fds_save(&data->orig_fdin, &data->orig_fdout);
 	content = (t_simple_cmds *) simple_cmds->content;
 	cmds_num = ft_lstsize(simple_cmds);
-	if (simple_cmds->next == NULL && is_builtin(content->cmd[0]))
-	{
-		if (content->redirects)
-			handle_redirect(content->redirects, content->hd_file);
-		run_builtin(data, content->cmd);
-	}
-	else
+	if (content->cmd[0] == NULL)
 		exec_pipeline(data, simple_cmds, cmds_num);
+	else
+	{
+		if (simple_cmds->next == NULL && is_builtin(content->cmd[0]))
+		{
+			if (content->redirects)
+				handle_redirect(content->redirects, content->hd_file);
+			run_builtin(data, content->cmd);
+		}
+		else
+			exec_pipeline(data, simple_cmds, cmds_num);
+	}
 	orig_fds_restore(data->orig_fdin, data->orig_fdout);
 	return (0);
 }
@@ -60,6 +68,18 @@ int	exec(t_data *data, t_list *simple_cmds)
  * that the writing process can get a SIGPIPE signal if it tries to write
  * to the pipe.
  * 
+ * Signal lines:
+ * 1. SIGINT: Sets up the signal handler for SIGINT that is different than the
+ * general one (handle_sigint) or the one used in heredoc
+ * (handle_sigint_heredoc). When the signal is received,
+ * handle_sigint_hanging_command writes a newline character on the standard
+ * output, sets g_signal to SIGUSR2 and sends SIGUSR2 signal to all processes so
+ * that the child registers it and exits.
+ * 2. SIGUSR2: Ignores the SIGUSR2 signal, so that when
+ * handle_sigint_hanging_command sends it to all processes, it is processed (to
+ * indicate that there was a hanging command in the pipeline interrupted by
+ * SIGINT) only in the child process.
+ *
  * @param data Pointer to the t_data structure (for simple_cmds, exit_status)
  * @param simple_cmds The linked list of simple commands in the pipeline.
  * @param cmds_num The number of commands in the pipeline.
@@ -68,28 +88,24 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 {
 	int	i;
 	int	**fd_pipe;
-	int	*pid_list;
 
 	i = 0;
 	fd_pipe = malloc(sizeof(int *) * (ft_lstsize(simple_cmds)));
-	pid_list = (int *)malloc(sizeof(int) * cmds_num);
+	data->pid_list = (int *)malloc(sizeof(int) * cmds_num);
 	while (i < cmds_num)
 	{
 		fd_pipe[i] = malloc(sizeof(int) * 2);
-		if (pipe(fd_pipe[i]) == -1)
-		{
-			ft_putendl_fd("minishell: pipe: Too many open files", 2);
-			exit_current_prompt(NULL);
-		}
-		pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
+		pipe_create(fd_pipe, i);
+		data->pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
+		signal(SIGINT, handle_sigint_hanging_command);
+		signal(SIGUSR2, SIG_IGN);
 		close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
 			close(fd_pipe[i - 1][PIPE_READ]);
 		simple_cmds = simple_cmds->next;
 		i++;
 	}
-	data->exit_status = wait_for_pipeline(cmds_num, fd_pipe, i, pid_list);
-	free(pid_list);
+	data->exit_status = wait_for_pipeline(cmds_num, fd_pipe, i, data->pid_list);
 	free_pipe(fd_pipe, ft_lstsize(data->simple_cmds));
 }
 
@@ -101,11 +117,20 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
  * handle_redirect checks for redirections and redirects input/ output
  * accordingly.
  * 
- * free_pipe_child solves still reachable leaks in the child process since
- * it inherits the malloced fd_pipe.
+ * free_pipe_child and free on pid_list solve still reachable leaks
+ * in the child process since it inherits the malloced variables.
  * 
- * Then the command is executed.
- *
+ * Then the command is executed. First, a case of heredoc only is checked and 
+ * handled in run_exec. Otherwise, a decision between running a builtin or
+ * a command is made.
+ * 
+ * Signal lines:
+ * 1. SIGUSR2: Sets up the signal handler for SIGUSR2. When the signal
+ * is received handle_sigint_hanging_command ensures that the child process
+ * exits as the hanging command was interrupted by SIGINT.
+ * 2. SIGINT: Ignores the SIGINT signal, so that only the parent process
+ * registers it and handles in handle_sigint_hanging_command.
+ * 
  * @param	data		pointer to the t_data structure (for exit_status)
  * @param	simple_cmds	list of simple commands to execute
  * @param	fd_pipe		2d array of file descriptors
@@ -118,18 +143,17 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	t_simple_cmds	*content;
 
 	content = (t_simple_cmds *)simple_cmds->content;
-	pid = fork();
-	if (pid == -1)
-	{
-		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
-		exit_current_prompt(NULL);
-	}
+	fork_process(&pid);
 	if (pid == 0)
 	{
+		signal(SIGUSR2, handle_sigint_hanging_command);
+		signal(SIGINT, SIG_IGN);
 		pipe_redirect(simple_cmds, fd_pipe, i);
 		if (content->redirects)
 			handle_redirect(content->redirects, content->hd_file);
 		free_pipe_child(fd_pipe, i);
+		if (content->cmd[0] == NULL)
+			run_exec(data, content);
 		if (is_builtin(content->cmd[0]))
 		{
 			run_builtin(data, content->cmd);
@@ -142,8 +166,11 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 }
 
 /**
- * @brief	Executes the given command. First checks if the command was given
- * in and absolute path. If so, executes it. If not, parses the command name and
+ * @brief	Executes the given command.
+ * 
+ * A case of a heredoc only immediately exits. If the program makes it
+ * to the actual exectution, it first checks if the command was given in and
+ * absolute path. If so, executes it. If not, it parses the command name and
  * attempts to generate a path for the executable.
  * 
  * @param data The data structure containing the shell's state.
@@ -154,6 +181,8 @@ void	run_exec(t_data *data, t_simple_cmds *content)
 	char	**env_cpy;
 	char	*path;
 
+	if (content->cmd[0] == NULL)
+		exit_minishell(NULL, 0);
 	env_cpy = env_copy(data);
 	check_for_files(content, env_cpy);
 	path = find_exe_path(data, content->cmd[0]);

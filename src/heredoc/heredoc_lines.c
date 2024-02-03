@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 16:03:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:50:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
  * @param	line		the line to expand and then write to the heredoc
  * @param	data		pointer to the t_data structure (sent to $ expander)
  */
-void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
+static void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
 {
 	t_simple_cmds	*tmp_node;
 
@@ -53,7 +53,7 @@ void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
  * @param	limiter	string that was expected to end the creation of the heredoc
  * @return	int	0 if the read line is NULL, 1 otherwise
 */
-int	check_line_null(char *line, char *limiter)
+static int	check_line_null(char *line, char *limiter)
 {
 	if (line == NULL)
 	{
@@ -82,7 +82,7 @@ int	check_line_null(char *line, char *limiter)
  * minishell (it is the child process exiting, the parent keeps running).
  * 2. SIGUSR1: Ignores the SIGUSR1 signal, so that when handle_sigint_heredoc
  * sends it to all processes, it is processed (to indicate that the heredoc
- * process was interruped by SIGINT) only in the parent process.
+ * process was interrupted by SIGINT) only in the parent process.
  * 
  * @param	heredoc			list containing heredoc content
  * @param	hd_file_name	name of the temporary heredoc file

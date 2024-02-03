@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirects.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:59:11 by aulicna           #+#    #+#             */
-/*   Updated: 2023/12/23 12:34:52 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/01 16:19:56 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incl/minishell.h"
+
+/**
+ * @brief 	Handles syntax error according to the error code sent.
+ * 
+ * @param	code	integer representing the error code
+ * 					1: nothing following a redirection (or a pipe?)
+ * @return	int		returns the exit status code (EXIT_FAILURE)
+ */
+static void	error_parser_newline(void)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd("syntax error near unexpected token `newline'\n",
+		STDERR_FILENO);
+	exit_current_prompt(NULL);
+}
 
 /**
  * @brief	Frees a node from the lexer list based on the provided ID.
@@ -57,7 +72,7 @@ void	free_lexer_node(t_list **lexer, int id)
  * @param	node		pointer to the node to be moved
  * @param	redirects	pointer to the list to which the node will be added
  */
-void	move_redirect_to_redirects_list(t_list **lexer, t_list *node,
+static void	move_redirect_to_redirects_list(t_list **lexer, t_list *node,
 	t_list **redirects)
 {
 	t_list	*node_move;
@@ -118,7 +133,7 @@ void	separate_redirects(t_list **lexer, t_list **redirects)
 	if (!current || content->token == PIPE)
 		return ;
 	if (!current->next)
-		error_handler(1);
+		error_parser_newline();
 	content = (t_lexer *) current->next->content;
 	if (content->token)
 		error_parser_double_token(content->token);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
+/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 15:36:51 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/02 15:41:30 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ char	*find_exe_path(t_data *data, char *cmd)
 	char	*working_path;
 	int		i;
 
+	if (!ft_strncmp(cmd, ".", 2) || !ft_strncmp(cmd, "..", 3))
+		return (NULL);
 	path_arr = paths_into_arr(data);
 	i = 0;
 	while (path_arr[i] != NULL)
@@ -120,33 +122,14 @@ int	is_builtin(char *cmd)
 }
 
 /**
- * @brief	Waits for all processes in the pipeline to finish.
- * 
- * The if and else statement ensures there is no fd left open
- * in the parent process for one command and piped commands, respectively.
- *
- * @param	data		pointer to the t_data structure (for exit_status)
- * @param	cmds_num	number of commands in the pipeline
- * @param	fd_pipe		2d array of file descriptors
- * @param	i			current position in fd_pipe
- */
-int	wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[])
+ * @brief	Prints an error message when a fork creation fails.
+*/
+void	fork_process(int *pid)
 {
-	int	j;
-	int	status;
-	int	exit_status;
-
-	j = 0;
-	while (j < cmds_num)
+	*pid = fork();
+	if (*pid == -1)
 	{
-		waitpid(pid_list[j], &status, 0);
-		if (WIFEXITED(status))
-			exit_status = WEXITSTATUS(status);
-		j++;
+		ft_putendl_fd("minishell: fork: Resource temporarily unavailable", 2);
+		exit_current_prompt(NULL);
 	}
-	if (cmds_num == 1)
-		close(fd_pipe[i - 1][PIPE_READ]);
-	else
-		close(fd_pipe[i - 2][PIPE_WRITE]);
-	return (exit_status);
 }
