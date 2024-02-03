@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 06:30:01 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 11:17:41 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/03 21:39:52 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,19 @@ static void	ft_cd_update(char *oldpwd, t_data *data)
 		return ;
 	oldpwd_env = env_find(data->env_list, "OLDPWD");
 	pwd_env = env_find(data->env_list, "PWD");
-	content = (t_env *) oldpwd_env->content;
-	free(content->value);
-	content->value = ft_strdup(oldpwd);
-	content = (t_env *) pwd_env->content;
-	free(content->value);
-	content->value = ft_strdup(cwd);
+	if (oldpwd_env != NULL)
+	{
+		content = (t_env *) oldpwd_env->content;
+		free(content->value);
+		content->value = ft_strdup(oldpwd);
+	}
+	if (pwd_env != NULL)
+	{
+		content = (t_env *) pwd_env->content;
+		free(content->value);
+		content->value = ft_strdup(cwd);
+	}
+	free(cwd);
 }
 
 /**
@@ -81,9 +88,14 @@ static char	*ft_cd_getpath(char *path_name, t_data *data)
  */
 static void	ft_cd_home(char *oldpwd, t_data *data)
 {
-	int	ret;
+	char	*path;
+	int		ret;
 
-	ret = chdir(ft_cd_getpath("HOME", data)) != 0;
+	path = ft_cd_getpath("HOME", data);
+	if (path == NULL)
+		ret = 1;
+	else
+		ret = chdir(path) != 0;
 	if (ret != 0)
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 	else
@@ -105,9 +117,14 @@ static void	ft_cd_home(char *oldpwd, t_data *data)
  */
 static void	ft_cd_previous(char *oldpwd, t_data *data)
 {
-	int	ret;
+	char	*path;
+	int		ret;
 
-	ret = chdir(ft_cd_getpath("OLDPWD", data)) != 0;
+	path = ft_cd_getpath("OLDPWD", data);
+	if (path == NULL)
+		ret = 1;
+	else
+		ret = chdir(path) != 0;
 	if (ret != 0)
 		ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
 	else
