@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:09:39 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 15:22:07 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/04 14:27:45 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ static char	*get_hostname(void)
  * The default to get PWD is to use the env_find function. However, when that
  * returns NULL (meaning that the variable has been unset in the current
  * session, which is our minishell), we fall back on the getcwd function that
- * gets the system current working directory. 
+ * gets the system current working directory. We cannot just use getcwd because
+ * then we'd be ignoring value of PWD set via export.
  * 
  * The default to get HOME is env_find too. However, when that returns NULL,
  * directory is simply set to the cwd value. And since there is no HOME to
@@ -89,7 +90,7 @@ static char	*get_directory(t_list *env_list)
 	if (cwd_env == NULL)
 		cwd = getcwd(NULL, 0);
 	else
-		cwd = ((t_env *) cwd_env->content)->value;
+		cwd = ft_strdup(((t_env *) cwd_env->content)->value);
 	home_env = env_find(env_list, "HOME");
 	if (home_env == NULL)
 		directory = ft_strdup(cwd);
@@ -101,6 +102,7 @@ static char	*get_directory(t_list *env_list)
 		else
 			directory = ft_strdup(cwd);
 	}
+	free(cwd);
 	return (directory);
 }
 
