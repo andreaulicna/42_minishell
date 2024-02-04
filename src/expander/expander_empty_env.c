@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:01:16 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 14:29:43 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/04 15:19:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
 	int	i;
 	int	old_i;
 
+	if (content->redirects != NULL && old_cmd == NULL)
+		return ;
 	if (only_empty_envs(content->cmd))
 	{
 		*exit_status = 0;
@@ -130,5 +132,4 @@ void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
 		i++;
 		old_i++;
 	}
-	free_array(old_cmd);
 }

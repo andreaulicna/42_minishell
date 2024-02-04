@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/02 16:15:11 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/04 15:36:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,9 +149,9 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 		signal(SIGUSR2, handle_sigint_hanging_command);
 		signal(SIGINT, SIG_IGN);
 		pipe_redirect(simple_cmds, fd_pipe, i);
+		free_pipe_child(fd_pipe, i);
 		if (content->redirects)
 			handle_redirect(content->redirects, content->hd_file);
-		free_pipe_child(fd_pipe, i);
 		if (content->cmd[0] == NULL)
 			run_exec(data, content);
 		if (is_builtin(content->cmd[0]))
@@ -195,7 +195,10 @@ void	run_exec(t_data *data, t_simple_cmds *content)
 	{
 		free(env_cpy);
 		ft_putstr_fd(content->cmd[0], STDERR);
-		ft_putendl_fd(": command not found", STDERR);
+		if (env_find(data->env_list, "PATH") == NULL)
+			ft_putendl_fd(": No such file or directory", STDERR);
+		else
+			ft_putendl_fd(": command not found", STDERR);
 		exit_minishell(NULL, 127);
 	}
 	free(env_cpy);

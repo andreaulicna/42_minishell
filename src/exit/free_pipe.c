@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 13:17:14 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 12:38:59 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/04 15:53:43 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ void	free_pipe(int **fd_pipe, int num_cmds)
 void	free_pipe_child(int **fd_pipe, int i)
 {
 	int	j;
-
 	if (i > 0)
 	{
+		close(fd_pipe[i - 1][PIPE_READ]);
 		j = 0;
 		while (j < i)
 		{

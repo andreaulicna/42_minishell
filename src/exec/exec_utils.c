@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 07:49:03 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/02 15:41:30 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/04 15:04:55 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static char	**paths_into_arr(t_data *data)
 	char	**path_arr;
 
 	path_env = env_find(data->env_list, "PATH");
+	if (path_env == NULL)
+		return (NULL);
 	content = (t_env *)(path_env->content);
 	path_arr = ft_split(content->value, ':');
 	return (path_arr);
@@ -54,8 +56,10 @@ char	*find_exe_path(t_data *data, char *cmd)
 	if (!ft_strncmp(cmd, ".", 2) || !ft_strncmp(cmd, "..", 3))
 		return (NULL);
 	path_arr = paths_into_arr(data);
-	i = 0;
-	while (path_arr[i] != NULL)
+	if (path_arr == NULL)
+		return (NULL);
+	i = -1;
+	while (path_arr[++i] != NULL)
 	{
 		temp = ft_strjoin(path_arr[i], "/");
 		working_path = ft_strjoin(temp, cmd);
@@ -66,7 +70,6 @@ char	*find_exe_path(t_data *data, char *cmd)
 			return (working_path);
 		}
 		free(working_path);
-		i++;
 	}
 	free_array(path_arr);
 	return (NULL);

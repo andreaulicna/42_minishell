@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 14:33:51 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/04 15:28:40 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,21 +176,21 @@ void	expander(t_data *data)
 	current = data->simple_cmds;
 	while (current != NULL)
 	{
-		i = 0;
+		i = -1;
 		content = (t_simple_cmds *) current->content;
 		old_cmd = ft_strdup_array(content->cmd);
-		while (content->cmd[i])
+		while (content->cmd[++i])
 		{
 			if (contains_dollar(content->cmd[i]))
 				expander_loop_dollar(content, i, data->exit_status,
 					data->env_list);
 			else
 				expander_loop_no_dollar(content, i);
-			i++;
 		}
 		expander_redirects(&content->redirects, data);
-		if (content->redirects == NULL && old_cmd != NULL)
-			handle_empty_envs(old_cmd, content, &data->exit_status);
+		handle_empty_envs(old_cmd, content, &data->exit_status);
 		current = current->next;
+		if (old_cmd != NULL)
+			free_array(old_cmd);
 	}
 }
