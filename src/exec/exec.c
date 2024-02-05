@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 11:33:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/04 18:32:23 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 16:54:34 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,7 @@ void	exec_pipeline(t_data *data, t_list *simple_cmds, int cmds_num)
 		fd_pipe[i] = malloc(sizeof(int) * 2);
 		pipe_create(fd_pipe, i);
 		data->pid_list[i] = fork_cmd(data, simple_cmds, fd_pipe, i);
-	//	signal(SIGINT, handle_sigint_hanging_command);
-	//	signal(SIGUSR2, SIG_IGN);
-		signal(SIGINT, SIG_IGN);
-		signal(SIGUSR1, SIG_IGN);
+		signal(SIGINT, handle_sigint_with_child);
 		close(fd_pipe[i][PIPE_WRITE]);
 		if (i > 0)
 			close(fd_pipe[i - 1][PIPE_READ]);
@@ -148,8 +145,7 @@ int	fork_cmd(t_data *data, t_list *simple_cmds, int **fd_pipe, int i)
 	fork_process(&pid);
 	if (pid == 0)
 	{
-	//	signal(SIGUSR2, handle_sigint_hanging_command);
-	//	signal(SIGINT, SIG_IGN);
+		reset_signals_default();
 		pipe_redirect(simple_cmds, fd_pipe, i);
 		free_pipe_child(fd_pipe, i);
 		if (content->redirects)

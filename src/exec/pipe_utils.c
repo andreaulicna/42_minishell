@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 22:14:18 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/02 14:57:09 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 17:35:31 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,13 @@ int	wait_for_pipeline(int cmds_num, int **fd_pipe, int i, int pid_list[])
 		waitpid(pid_list[j], &status, 0);
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			exit_status = signal_exit_of_child(&status);
 		j++;
 	}
 	if (cmds_num > 0)
 		close(fd_pipe[i - 1][PIPE_READ]);
 	if (cmds_num != 1)
 		close(fd_pipe[i - 2][PIPE_WRITE]);
-	if (g_signal == SIGUSR2)
-		exit_status = 130;
 	return (exit_status);
 }

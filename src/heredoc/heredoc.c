@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 14:26:45 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 17:26:24 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,19 @@ static void	process_heredoc(t_data *data, t_list *current_redirect,
 	fork_process(&pid);
 	if (pid == 0)
 	{
+		signal(SIGINT, handle_sigint_heredoc);
 		create_heredoc(current_redirect, content_simple_cmd->hd_file,
 			data);
 		exit_minishell(NULL, 0);
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGUSR1, handle_sigint_heredoc);
+		signal(SIGINT, handle_sigint_with_child);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			data->exit_status = WEXITSTATUS(status);
+		else if (WTERMSIG(status) == g_signal)
+			data->exit_status = 130;
 	}
 }
 

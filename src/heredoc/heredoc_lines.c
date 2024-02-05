@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 00:28:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 16:54:56 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ void	create_heredoc(t_list *heredoc, char *hd_file_name, t_data *data)
 	char	*line;
 	char	*limiter;
 
-	signal(SIGINT, handle_sigint_heredoc);
-	signal(SIGUSR1, SIG_IGN);
 	data->hd_fd = open(hd_file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	line = readline("> ");
 	limiter = ((t_lexer *) heredoc->content)->word;
