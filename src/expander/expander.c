@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/04 17:35:19 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 01:33:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,7 @@ void	expander_loop_dollar(t_simple_cmds *content, int i, int exit_status,
 		{
 			dollar_flag = checker_dollar(content->cmd[i], j);
 			while (has_quotes_to_delete(content->cmd[i]))
-			{
 				content->cmd[i] = delete_quotes(content->cmd[i]);
-				printf("word delete quotes: %s\n", content->cmd[i]);
-			}
 			if (dollar_flag == 5)
 				break ;
 			else if (dollar_flag == 3)
@@ -184,6 +181,8 @@ void	expander(t_data *data)
 		old_cmd = ft_strdup_array(content->cmd);
 		while (content->cmd[++i])
 		{
+			while (env_in_quotes_followed(content->cmd[i]))
+				expander_loop_dollar_no_space(data, content, i);
 			if (contains_dollar(content->cmd[i]))
 				expander_loop_dollar(content, i, data->exit_status,
 					data->env_list);
@@ -191,9 +190,7 @@ void	expander(t_data *data)
 				expander_loop_no_dollar(content, i);
 		}
 		expander_redirects(&content->redirects, data);
-		//handle_empty_envs(old_cmd, content, &data->exit_status);
+		handle_empty_envs(old_cmd, content, &data->exit_status);
 		current = current->next;
-		if (old_cmd != NULL)
-			free_array(old_cmd);
 	}
 }

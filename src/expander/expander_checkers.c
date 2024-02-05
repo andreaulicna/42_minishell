@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 14:44:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 14:49:12 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 01:40:50 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	contains_dollar(char *str)
  */
 int	checker_dollar(char *str, int j)
 {
-	if ((str[0] == '\'' && str[ft_strlen_custom(str) - 1] == '\''))
+	if (ft_strchr(str, '\'') != ft_strrchr(str, '\''))
 		return (5);
 	if (str[0] == '"' && str[ft_strlen_custom(str) - 1] == '"'
 		&& str[j + 1] == '\\')
@@ -69,5 +69,37 @@ int	checker_dollar(char *str, int j)
 		return (2);
 	if (str[j + 1] == '?')
 		return (1);
+	return (0);
+}
+
+/**
+ * @brief	Checks for a case where an env is enclosed in double qoutes and
+ * not separate from the rest of the string with a space.
+ * 
+ * @param	str	string to check
+ * @return	int	1 is there is such a string, 0 otherwise
+*/
+int	env_in_quotes_followed(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'')
+			return (0);
+		if (str[i] == '"' && str[i + 1] == '$')
+		{
+			j = 1;
+			while (str[i + j])
+			{
+				if (str[i + j] == '"' && str[i + j + 1] != '\0')
+					return (1);
+				j++;
+			}
+		}
+		i++;
+	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:50:36 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 00:28:12 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static void	create_heredoc_dollar_line(int fd, char *line, t_data *data)
 	tmp_node->cmd[1] = NULL;
 	tmp_node->redirects = NULL;
 	tmp_node->hd_file = NULL;
+	if (env_in_quotes_followed(tmp_node->cmd[0]))
+		expander_loop_dollar_no_space(data, tmp_node, 0);
 	expander_loop_dollar(tmp_node, 0, data->exit_status, data->env_list);
 	ft_putstr_fd(tmp_node->cmd[0], fd);
 	free_array(tmp_node->cmd);
