@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 14:44:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 01:40:50 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:13:31 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,13 @@ int	contains_dollar(char *str)
  */
 int	checker_dollar(char *str, int j)
 {
-	if (ft_strchr(str, '\'') != ft_strrchr(str, '\''))
+	if (str[0] == '\'' && str[ft_strlen_custom(str) - 1] == '\'')
 		return (5);
+	if (j > 0)
+	{
+		if (str[j - 1] == '\'' && str[ft_strlen_custom(str) - 1] == '\'')
+			return (5);
+	}
 	if (str[0] == '"' && str[ft_strlen_custom(str) - 1] == '"'
 		&& str[j + 1] == '\\')
 		return (4);
@@ -87,10 +92,10 @@ int	env_in_quotes_followed(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')
-			return (0);
 		if (str[i] == '"' && str[i + 1] == '$')
 		{
+			if (i > 0 && str[i - 1] == '\'')
+				return (0);
 			j = 1;
 			while (str[i + j])
 			{

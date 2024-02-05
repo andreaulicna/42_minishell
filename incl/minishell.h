@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 00:22:49 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:32:38 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,8 @@ void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
 // quotes_delete.c
 int		get_quotes_type(char *str, char *q);
 char	*delete_quotes(char *str);
-int		has_quotes_to_delete(char *str);
+int		has_quotes_to_delete(char *str, char *old_cmd);
+void	handle_quotes_deletion(t_simple_cmds *content, int i);
 
 /* Heredoc */
 // heredoc.c

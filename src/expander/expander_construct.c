@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 01:56:13 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:07:09 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,9 +182,12 @@ void	expander_loop_dollar_no_space(t_data *data, t_simple_cmds *content,
 	t_str	new_str;
 
 	j = 0;
-	while (content->cmd[i][j] != '"' && content->cmd[i][j + 1] != '$'
-		&& content->cmd[i][j])
+	while (content->cmd[i][j])
+	{
+		if (content->cmd[i][j] == '"' && content->cmd[i][j + 1] == '$')
+			break ;
 		j++;
+	}
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(content->cmd[i], 0, j);
 	j += 2;

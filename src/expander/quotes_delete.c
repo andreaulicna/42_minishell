@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 12:35:35 by aulicna           #+#    #+#             */
-/*   Updated: 2024/01/24 15:37:07 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:37:44 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,25 @@ int	get_quotes_type(char *str, char *q)
 /**
  * @brief	Checks whether there is a pair of quotes to delete from a string.
  * 
+ * For commands, it works with a copy of the original command before any
+ * expansion was performed to determine when to stop deleting quotes (e.g.
+ * one type of quotes enclosed in the other).
+ * 
  * It is done by comparing the pointer to their first and last occurence. If
  * those two equal, it means that there are no more quotes to delete as they
  * both evaluate to NULL.
  * 
  * @param	str	string to check
 */
-int	has_quotes_to_delete(char *str)
+int	has_quotes_to_delete(char *str, char *old_cmd)
 {
+	if (old_cmd)
+	{
+		if ((old_cmd[0] == '"' && old_cmd[ft_strlen_custom(old_cmd) - 1] == '"')
+			|| (old_cmd[0] == '\''
+				&& old_cmd[ft_strlen_custom(old_cmd) - 1] == '\''))
+			return (0);
+	}
 	if (ft_strchr(str, '"') != ft_strrchr(str, '"')
 		|| ft_strchr(str, '\'') != ft_strrchr(str, '\''))
 		return (1);
@@ -103,4 +114,25 @@ char	*delete_quotes(char *str)
 		return (new_str.final);
 	}
 	return (str);
+}
+
+/**
+ * @brief	Helper function for the expander_loop_dollar function
+ * that manages recursive quotes deletion from a word.
+ * 
+ * @param	content		pointer to t_simple_cmds struct
+ * @param	i			index of the command string in the array to process
+*/
+void	handle_quotes_deletion(t_simple_cmds *content, int i)
+{
+	char	*old_cmd;
+
+	old_cmd = ft_strdup(content->cmd[i]);
+	content->cmd[i] = delete_quotes(content->cmd[i]);
+	while (has_quotes_to_delete(content->cmd[i], old_cmd))
+	{
+		old_cmd = delete_quotes(old_cmd);
+		content->cmd[i] = delete_quotes(content->cmd[i]);
+	}
+	free(old_cmd);
 }
