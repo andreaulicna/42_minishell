@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:48:09 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 16:54:56 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 23:11:36 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,6 @@ static int	check_line_null(char *line, char *limiter)
  * to the file. If the line contains a dollar sign, expansion is performed
  * in the create_heredoc_dollar_line function before writing the line
  * in the file. Each line in the file is followed by a newline.
- * 
- * Signal lines:
- * 1. SIGINT: Sets up a signal handler for SIGINT that is different than the one
- * set in the parent process. When this signal is received,
- * handle_sigint_heredoc sends SIGUSR1 signal to all processes and then exits
- * minishell (it is the child process exiting, the parent keeps running).
- * 2. SIGUSR1: Ignores the SIGUSR1 signal, so that when handle_sigint_heredoc
- * sends it to all processes, it is processed (to indicate that the heredoc
- * process was interrupted by SIGINT) only in the parent process.
  * 
  * @param	heredoc			list containing heredoc content
  * @param	hd_file_name	name of the temporary heredoc file

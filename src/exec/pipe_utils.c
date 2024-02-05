@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 22:14:18 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/05 17:35:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 00:35:59 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,16 @@ void	pipe_redirect(t_list *simple_cmds, int **fd_pipe, int i)
 /**
  * @brief	Waits for all processes in the pipeline to finish.
  * 
+ * Signals management:
+ * They way a child process exits is checked and if it exited due
+ * to a signal - WIFSIGNALED (rather than via exit_minishell - WIFEXITED)
+ * the signal_exit_of_child makes the parent process take the correct (printing)
+ * action, resets g_signal if needed and returns the correct exit status.
+ * 
+ * Details:
  * The if and else statement after while loop ensure there is no fd left open
  * in the parent process for one command and piped commands, respectively.
  * 
- * The last if handles the case of a hanging command (e.g. cat or sort) getting
- * interrupted by SIGINT as g_signal == SIGUSR2 indicates that there was
- * such a command and therefore the exit_status should be set to 130.
- *
  * @param	data		pointer to the t_data structure (for exit_status)
  * @param	cmds_num	number of commands in the pipeline
  * @param	fd_pipe		2d array of file descriptors

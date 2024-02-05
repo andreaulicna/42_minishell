@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 17:31:43 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 22:50:46 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ void	fork_process(int *pid);
 
 /* Signals */
 void	handle_sigint(int sig_num);
-void	handle_sigint_with_child(int sig_num);
+void	handle_sigint_when_child_running(int sig_num);
 void	handle_sigint_heredoc(int sig_num);
 void	reset_signals_default(void);
 int		signal_exit_of_child(int *status);

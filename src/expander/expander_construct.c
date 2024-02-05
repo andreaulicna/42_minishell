@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 14:07:09 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 00:47:07 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@
  * Finally, the new_string.final is returned and assigned to the appropriate
  * string in the 2D input array in the caller function.
  * 
+ * Signal management:
+ * g_signal set to SIGINT indicates that the previous user input was interrupted
+ * by SIGINT (Ctrl+C) and hence the exit status to expand should be 130. Then
+ * g_signal is reset, so that the current command (e.g. echo $?) makes it
+ * to the execution (that doesn't happen unless g_signal is 0).
+ * 
  * @param 	str			string to be expanded
  * @param	exit_status	exit status of the most recently executed foreground
  * 						pipeline
@@ -54,7 +60,10 @@ char	*expand_exit_status(char *str, int exit_status)
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(str, 0, i);
 	if (g_signal == SIGINT)
+	{
 		exit_status = 130;
+		g_signal = 0;
+	}
 	new_str.part_2 = ft_itoa(exit_status);
 	j = 2;
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
