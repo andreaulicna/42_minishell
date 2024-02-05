@@ -6,7 +6,7 @@
 /*   By: vbartos <vbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 07:08:30 by vbartos           #+#    #+#             */
-/*   Updated: 2024/02/01 11:20:54 by vbartos          ###   ########.fr       */
+/*   Updated: 2024/02/05 09:10:18 by vbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ static void	ft_export_sort(char **env_arr)
 	char				*temp;
 
 	i = 0;
-	while (i < (strs_count(env_arr) - 2))
+	while (i < (strs_count(env_arr) - 1))
 	{
 		j = 0;
-		while (j < (strs_count(env_arr) - 2 - i))
+		while (j < (strs_count(env_arr) - 1 - i))
 		{
 			if (ft_strlen(env_arr[j]) > ft_strlen(env_arr[j + 1]))
 				bigger_len = ft_strlen(env_arr[j]);
