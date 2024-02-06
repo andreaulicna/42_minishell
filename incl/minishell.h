@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:59:42 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 16:13:38 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 22:50:46 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,9 +141,12 @@ void	free_pipe_child(int **fd_pipe, int i);
 void	expander(t_data *data);
 void	expander_loop_dollar(t_simple_cmds *content, int i, int exit_status,
 			t_list *env_list);
+void	expander_loop_dollar_no_space(t_data *data, t_simple_cmds *content,
+			int i);
 // expander_dollar_checkers.c
 int		contains_dollar(char *str);
 int		checker_dollar(char *str, int j);
+int		env_in_quotes_followed(char *str);
 // expander_construct.c
 char	*expand_exit_status(char *str, int exit_status);
 char	*expand_dollar(char *str, t_list *env_list, int *j_cmd);
@@ -155,7 +158,8 @@ void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
 // quotes_delete.c
 int		get_quotes_type(char *str, char *q);
 char	*delete_quotes(char *str);
-int		has_quotes_to_delete(char *str);
+int		has_quotes_to_delete(char *str, char *old_cmd);
+void	handle_quotes_deletion(t_simple_cmds *content, int i);
 
 /* Heredoc */
 // heredoc.c
@@ -224,7 +228,9 @@ void	fork_process(int *pid);
 
 /* Signals */
 void	handle_sigint(int sig_num);
+void	handle_sigint_when_child_running(int sig_num);
 void	handle_sigint_heredoc(int sig_num);
-void	handle_sigint_hanging_command(int sig_num);
+void	reset_signals_default(void);
+int		signal_exit_of_child(int *status);
 
 #endif

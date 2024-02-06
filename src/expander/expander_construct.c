@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 16:49:44 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:49:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@
  * Finally, the new_string.final is returned and assigned to the appropriate
  * string in the 2D input array in the caller function.
  * 
+ * Signal management:
+ * g_signal set to SIGUSR1 indicates that the previous user input was
+ * interrupted by SIGINT (Ctrl+C) and hence the exit status to expand should be
+ * 130. Then g_signal is reset, so that the current command (e.g. echo $?)
+ * makes it to the execution (that doesn't happen unless g_signal is 0).
+ * 
  * @param 	str			string to be expanded
  * @param	exit_status	exit status of the most recently executed foreground
  * 						pipeline
@@ -53,8 +59,11 @@ char	*expand_exit_status(char *str, int exit_status)
 		i++;
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(str, 0, i);
-	if (g_signal == SIGINT)
+	if (g_signal == SIGUSR1)
+	{
 		exit_status = 130;
+		g_signal = 0;
+	}
 	new_str.part_2 = ft_itoa(exit_status);
 	j = 2;
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
@@ -76,9 +85,10 @@ char	*expand_exit_status(char *str, int exit_status)
  * back to the expander_loop_dolar function.
  * 
  * @param	new_str	pointer to a t_str structure containing parsed string parts
- * @param	j_cmd	index of the dollar sign in string to modify
+ * @return	int		indicates whether to substract 1 from the iteration
+ * index (= yes if env not found) when called from expand_dollar
  */
-static void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
+static int	expand_dollar_construct_final(t_str *new_str)
 {
 	if (new_str->env_found != NULL)
 	{
@@ -86,11 +96,12 @@ static void	expand_dollar_construct_final(t_str *new_str, int *j_cmd)
 		new_str->tmp_join = ft_strjoin(new_str->part_1,
 				new_str->content->value);
 		new_str->final = ft_strjoin(new_str->tmp_join, new_str->part_3);
+		return (0);
 	}
 	else
 	{
 		new_str->final = ft_strjoin(new_str->part_1, new_str->part_3);
-		*j_cmd = -1;
+		return (1);
 	}
 }
 
@@ -139,9 +150,66 @@ char	*expand_dollar(char *str, t_list *env_list, int *j_cmd)
 	new_str.part_2 = ft_substr(str, i + 1, j - 1);
 	new_str.part_3 = ft_substr(str, i + j, ft_strlen_custom(str) - i - j);
 	new_str.env_found = env_find(env_list, new_str.part_2);
-	expand_dollar_construct_final(&new_str, j_cmd);
+	if (expand_dollar_construct_final(&new_str))
+		*j_cmd -= 1;
 	free_struct_str(&new_str, str);
 	return (new_str.final);
+}
+
+/**
+ * @brief	Expands a dollar sign followed by an environment variable when its
+ * enclosed in double quotes and not separate by spaces.
+ * 
+ * The function identifies the environment variable in the input string and
+ * replaces it with its value from the provided environment list.
+ * 
+ * It breaks down the input string into 3 parts:
+ * part_1: up until, but not including, the first quote and the dollar sign
+ * part_2: up until, and not including, the second quote
+ * part_3: after the second quote, potentially NULL if there is end of string
+ * 
+ * Then it constructs the final string, which can happen in 2 ways depending on
+ * whether or not the env variable was found in the env list. This part is done
+ * in the expand_dollar_construct_final helper function.
+ * 
+ * All of the dynamically allocated memory is then freed with the exception
+ * of the final string that is not freed until after the whole command
+ * is processed and the program reaches the free_simple_cmds function.
+ * 
+ * Finally, the new_string.final is assigned to the appropriate string
+ * in the 2D input array.
+ * 
+ * @param	data	pointer to the t_data structure (for env_list)
+ * @param	content	simple_cmds node to check
+ * @param	j_cmd	index of the cmd with dollar sign
+ */
+void	expander_loop_dollar_no_space(t_data *data, t_simple_cmds *content,
+	int i)
+{
+	int		j;
+	int		k;
+	t_str	new_str;
+
+	j = 0;
+	while (content->cmd[i][j])
+	{
+		if (content->cmd[i][j] == '"' && content->cmd[i][j + 1] == '$')
+			break ;
+		j++;
+	}
+	init_struct_str(&new_str);
+	new_str.part_1 = ft_substr(content->cmd[i], 0, j);
+	j += 2;
+	k = 0;
+	while (content->cmd[i][j + k] && content->cmd[i][j + k] != '"')
+		k++;
+	new_str.part_2 = ft_substr(content->cmd[i], j, k);
+	new_str.part_3 = ft_substr(content->cmd[i], j + k + 1,
+			ft_strlen_custom(content->cmd[i]) - j - k - 1);
+	new_str.env_found = env_find(data->env_list, new_str.part_2);
+	expand_dollar_construct_final(&new_str);
+	free_struct_str(&new_str, content->cmd[i]);
+	content->cmd[i] = new_str.final;
 }
 
 /**

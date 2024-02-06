@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:14:28 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/04 15:28:40 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:33:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 void	expander_loop_dollar(t_simple_cmds *content, int i, int exit_status,
 	t_list *env_list)
 {
-	int	j;
-	int	dollar_flag;
+	int		j;
+	int		dollar_flag;
 
 	j = 0;
 	while (content->cmd[i][j])
@@ -37,11 +37,13 @@ void	expander_loop_dollar(t_simple_cmds *content, int i, int exit_status,
 		if (content->cmd[i][j] == '$')
 		{
 			dollar_flag = checker_dollar(content->cmd[i], j);
-			while (has_quotes_to_delete(content->cmd[i]))
-				content->cmd[i] = delete_quotes(content->cmd[i]);
 			if (dollar_flag == 5)
+			{
+				content->cmd[i] = delete_quotes(content->cmd[i]);
 				break ;
-			else if (dollar_flag == 3)
+			}
+			handle_quotes_deletion(content, i);
+			if (dollar_flag == 3)
 				content->cmd[i] = delete_backslash(content->cmd[i]);
 			else if (dollar_flag == 1)
 				content->cmd[i] = expand_exit_status(content->cmd[i],
@@ -67,7 +69,7 @@ static void	expander_loop_no_dollar(t_simple_cmds *content, int i)
 {
 	int	j;
 
-	while (has_quotes_to_delete(content->cmd[i]))
+	while (has_quotes_to_delete(content->cmd[i], NULL))
 		content->cmd[i] = delete_quotes(content->cmd[i]);
 	j = 0;
 	while (content->cmd[i][j])
@@ -99,7 +101,7 @@ static void	expander_redirects_loop_dollar(t_lexer *content, int exit_status,
 		if (content->word[i] == '$')
 		{
 			dollar_flag = checker_dollar(content->word, i);
-			while (has_quotes_to_delete(content->word))
+			while (has_quotes_to_delete(content->word, NULL))
 				content->word = delete_quotes(content->word);
 			if (dollar_flag == 1)
 				content->word = expand_exit_status(content->word,
@@ -139,7 +141,7 @@ static void	expander_redirects(t_list **redirects, t_data *data)
 				data->env_list);
 		else
 		{
-			while (has_quotes_to_delete(content->word))
+			while (has_quotes_to_delete(content->word, NULL))
 				content->word = delete_quotes(content->word);
 		}
 		current = current->next;
@@ -181,6 +183,8 @@ void	expander(t_data *data)
 		old_cmd = ft_strdup_array(content->cmd);
 		while (content->cmd[++i])
 		{
+			while (env_in_quotes_followed(content->cmd[i]))
+				expander_loop_dollar_no_space(data, content, i);
 			if (contains_dollar(content->cmd[i]))
 				expander_loop_dollar(content, i, data->exit_status,
 					data->env_list);
@@ -190,7 +194,5 @@ void	expander(t_data *data)
 		expander_redirects(&content->redirects, data);
 		handle_empty_envs(old_cmd, content, &data->exit_status);
 		current = current->next;
-		if (old_cmd != NULL)
-			free_array(old_cmd);
 	}
 }

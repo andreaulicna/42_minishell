@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 14:26:45 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:20:43 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,12 @@ static char	*get_hd_file_name(void)
  * The function waits for the child to exit and saves the exit status into
  * the main t_data structure.
  * 
- * Signal lines (parent process):
- * 1. SIGINT: Ignores the SIGINT signal, so that the handle_sigint handler
- * doesn't get triggered in the parent process for now as there is a child
- * process running that has its own handler for this signal.
- * 
- * 2. SIGUSR1: Sets up the signal handler for SIGUSR1 to handle_sigint_heredoc
- * Thanks to that when the child process sends it to indicate that the heredoc
- * process has been interrupted by SIGINT (Ctrl + C), the parent process saves
- * this information in the global variable g_signal. This variable is then
- * checked in the minishell_loop before the execution is triggered and if
- * it is set to SIGUSR1, the execution won't be triggered because SIGINT
- * received during the heredoc process cancels the whole command.
- * 
+ * Signals management:
+ * In the child process, SIGINT handler prints a newline and exits with exit
+ * status of 130.
+ * In the parent process, SIGINT handler sets g_signal to SIGINT so that this
+ * value can be checked before launching exec (which shouldn't run if
+ * the heredoc process was interrupted with SIGINT).
  * 
  * @param	current_redirect		list containing heredoc content
  * @param	content_simle_cmd		pointer to the content of current_simple_cmd
@@ -70,14 +63,14 @@ static void	process_heredoc(t_data *data, t_list *current_redirect,
 	fork_process(&pid);
 	if (pid == 0)
 	{
+		signal(SIGINT, handle_sigint_heredoc);
 		create_heredoc(current_redirect, content_simple_cmd->hd_file,
 			data);
 		exit_minishell(NULL, 0);
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGUSR1, handle_sigint_heredoc);
+		signal(SIGINT, handle_sigint_when_child_running);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			data->exit_status = WEXITSTATUS(status);

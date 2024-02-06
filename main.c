@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/02 14:27:39 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:38:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,10 @@ int	g_signal = 0;
 /**
  * @brief	Runs the minishell.
  * 
- * Signal lines:
- * 1. SIGINT: Sets up the signal handler for SIGINT (Ctrl + C), so that 
- * minishell displays a new prompt when the signal is received.
- * 2. SIGQUIT: Ignores SIGQUIT (Ctrl + \), so that minishell doesn't quit when
- * the signal is received.
- * 3. global_signal: Is set to 0 to indicate that the heredoc process has not
- * been run (and may not even be) yet for the current command, and so
- * the execution will be run unless the heredoc process is interrupted with
- * SIGINT (Ctrl + C) when (and if) it runs.
- * 
- * The global variable g_signal is checked before the execution is launched
- * because in case it isn't 0 (but SIGUSR1), it indicates that the heredoc
- * process was interrupted with SIGINT (Ctrl + C), and so the whole command
- * should be canceled and a new prompt displayed.
+ * Signals management:
+ * SIGINT signal is handled via the primary SIGINT handler which displays a new
+ * prompt and sets g_signal to SIGINT so that this value cam inform the exit
+ * status used in the expander.
 */
 int	minishell_loop(t_data *data)
 {
@@ -51,7 +41,7 @@ int	minishell_loop(t_data *data)
 	expander(data);
 	heredoc(data);
 	handle_open_pipe(data);
-	if (g_signal != SIGUSR1)
+	if (g_signal != SIGINT)
 		exec(data, data->simple_cmds);
 	exit_current_prompt(data);
 	return (1);

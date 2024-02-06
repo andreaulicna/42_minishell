@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 13:01:16 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/04 15:19:27 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/05 01:59:06 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,17 +81,36 @@ static char	**remove_cmd_empty_env(char **cmd, int i)
 	new_cmd = ft_calloc(len_2d, sizeof(char *));
 	j = 0;
 	new_j = 0;
-	while (cmd[j])
+	while (j < len_2d)
 	{
 		if (j == i)
 			j++;
-		new_cmd[new_j] = ft_strdup(cmd[j]);
+		if (cmd[j] != NULL)
+			new_cmd[new_j] = ft_strdup(cmd[j]);
 		j++;
 		new_j++;
 	}
 	new_cmd[new_j] = NULL;
 	free_array(cmd);
 	return (new_cmd);
+}
+
+/**
+ * @brief	Helper function for handle_empty_envs that safeguards only valid
+ * input (only if there are no redirections and old_cmd exists) to be processed.
+ * 
+ * @param	old_cmd		original simple_cmds array before expander
+ * @param	content		content of the current command (simple_cmds)
+*/
+static int	handle_empty_envs_omit(char **old_cmd, t_simple_cmds *content)
+{
+	if (content->redirects != NULL || old_cmd == NULL)
+	{
+		if (old_cmd != NULL)
+			free_array(old_cmd);
+		return (1);
+	}
+	return (0);
 }
 
 /**
@@ -112,7 +131,7 @@ void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
 	int	i;
 	int	old_i;
 
-	if (content->redirects != NULL && old_cmd == NULL)
+	if (handle_empty_envs_omit(old_cmd, content))
 		return ;
 	if (only_empty_envs(content->cmd))
 	{
@@ -132,4 +151,5 @@ void	handle_empty_envs(char **old_cmd, t_simple_cmds *content,
 		i++;
 		old_i++;
 	}
+	free_array(old_cmd);
 }

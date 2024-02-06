@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 10:28:47 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/01 15:56:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:47:23 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,8 @@ void	print_simple_cmds(t_list **simple_cmds)
 //	printf("SIMPLE CMDS - before expander\n");
 //	print_simple_cmds(&data->simple_cmds);
 //	printf("----------------------\n");
-//	printf("SIMPLE CMDS - after expander\n");
 //	expander(data);
+//	printf("SIMPLE CMDS - after expander\n");
 //	print_simple_cmds(&data->simple_cmds);
 //	printf("----------------------\n");
 //	printf("Heredoc output:\n");
@@ -136,7 +136,7 @@ void	print_simple_cmds(t_list **simple_cmds)
 //	printf("----------------------\n");
 //	printf("SIMPLE CMDS - after heredoc\n");
 //	handle_open_pipe(data);
-//	if (g_signal != SIGUSR1)
+//	if (g_signal != SIGINT)
 //		exec(data, data->simple_cmds);
 //	exit_current_prompt(data);
 //	return (1); //should never reach this
