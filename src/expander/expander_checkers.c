@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 14:44:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 14:13:31 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 12:57:54 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	checker_dollar(char *str, int j)
 		return (5);
 	if (j > 0)
 	{
-		if (str[j - 1] == '\'' && str[ft_strlen_custom(str) - 1] == '\'')
+		if (str[j - 1] == '\'' && str[0] != '"')
 			return (5);
 	}
 	if (str[0] == '"' && str[ft_strlen_custom(str) - 1] == '"'

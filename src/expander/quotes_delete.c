@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 12:35:35 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 14:37:44 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:46:21 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,8 @@ int	has_quotes_to_delete(char *str, char *old_cmd)
 {
 	if (old_cmd)
 	{
-		if ((old_cmd[0] == '"' && old_cmd[ft_strlen_custom(old_cmd) - 1] == '"')
-			|| (old_cmd[0] == '\''
-				&& old_cmd[ft_strlen_custom(old_cmd) - 1] == '\''))
+		if (old_cmd[0] == '\''
+			&& old_cmd[ft_strlen_custom(old_cmd) - 1] == '\'')
 			return (0);
 	}
 	if (ft_strchr(str, '"') != ft_strrchr(str, '"')

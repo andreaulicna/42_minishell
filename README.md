@@ -2,17 +2,6 @@
 This project is about recreating our own version of bash with limited functionality.
 A miniature shell :).
 
-## Valgrind
-```valgrind -s --leak-check=full --show-reachable=yes --error-limit=no --suppressions=minishell.supp --trace-children=yes --track-fds=yes ./minishell```
-
-- ```-s```: same as --show-error-list=yes that shows detected errors list and suppression count at exit
-- ```--leak-check=full```: shows a full list of memory leaks
-- ```--show-reachable=yes```: same as ```--show-leak-kinds=all``` that shows all kinds of memory leaks
-- ```--error-limit=no```: won't stop showing errors if too many
-- ```--suppressions=minishell.supp```: suppresses memory leaks from in-built functions (readline and add_history)
-- ```--trace-children=yes```: checks memory leaks in child process too
-- ```--track-fds=yes```: tracks open and closed file descriptors
-
 ### Permitted functions and their description
 | Function        | Description                                                                 |
 |-----------------|-----------------------------------------------------------------------------|
@@ -69,3 +58,27 @@ A miniature shell :).
 | tgetstr         | Retrieves a string capability from the terminal description.                |
 | tgoto           | Decodes a cursor motion string.                                             |
 | tputs           | Puts a terminal string with padding.   
+
+### Test cases
+#### Simple commands with absolute path
+```
+/bin/ls src
+/bin/pwd hello
+/bin/date
+/usr/bin/head -n 10 Makefile
+/bin/grep # Makefile
+/usr/bin/uname -a
+/usr/bin/head Makefile
+/usr/bin/tail Makefile
+```
+
+### Valgrind
+```valgrind -s --leak-check=full --show-reachable=yes --error-limit=no --suppressions=minishell.supp --trace-children=yes --track-fds=yes ./minishell```
+
+- ```-s```: same as --show-error-list=yes that shows detected errors list and suppression count at exit
+- ```--leak-check=full```: shows a full list of memory leaks
+- ```--show-reachable=yes```: same as ```--show-leak-kinds=all``` that shows all kinds of memory leaks
+- ```--error-limit=no```: won't stop showing errors if too many
+- ```--suppressions=minishell.supp```: suppresses memory leaks from in-built functions (readline and add_history)
+- ```--trace-children=yes```: checks memory leaks in child process too
+- ```--track-fds=yes```: tracks open and closed file descriptors

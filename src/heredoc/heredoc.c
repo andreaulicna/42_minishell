@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 10:23:00 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/06 00:43:37 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:20:43 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ static void	process_heredoc(t_data *data, t_list *current_redirect,
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			data->exit_status = WEXITSTATUS(status);
-		else if (WTERMSIG(status) == g_signal)
-			data->exit_status = 130;
 	}
 }
 

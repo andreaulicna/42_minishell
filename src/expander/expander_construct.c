@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 22:16:33 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/06 00:47:07 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:49:27 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@
  * string in the 2D input array in the caller function.
  * 
  * Signal management:
- * g_signal set to SIGINT indicates that the previous user input was interrupted
- * by SIGINT (Ctrl+C) and hence the exit status to expand should be 130. Then
- * g_signal is reset, so that the current command (e.g. echo $?) makes it
- * to the execution (that doesn't happen unless g_signal is 0).
+ * g_signal set to SIGUSR1 indicates that the previous user input was
+ * interrupted by SIGINT (Ctrl+C) and hence the exit status to expand should be
+ * 130. Then g_signal is reset, so that the current command (e.g. echo $?)
+ * makes it to the execution (that doesn't happen unless g_signal is 0).
  * 
  * @param 	str			string to be expanded
  * @param	exit_status	exit status of the most recently executed foreground
@@ -59,7 +59,7 @@ char	*expand_exit_status(char *str, int exit_status)
 		i++;
 	init_struct_str(&new_str);
 	new_str.part_1 = ft_substr(str, 0, i);
-	if (g_signal == SIGINT)
+	if (g_signal == SIGUSR1)
 	{
 		exit_status = 130;
 		g_signal = 0;

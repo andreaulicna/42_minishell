@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 14:33:13 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 23:19:00 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:38:01 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	minishell_loop(t_data *data)
 	expander(data);
 	heredoc(data);
 	handle_open_pipe(data);
-	if (g_signal == 0)
+	if (g_signal != SIGINT)
 		exec(data, data->simple_cmds);
 	exit_current_prompt(data);
 	return (1);

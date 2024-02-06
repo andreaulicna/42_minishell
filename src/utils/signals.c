@@ -6,7 +6,7 @@
 /*   By: aulicna <aulicna@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 14:36:46 by aulicna           #+#    #+#             */
-/*   Updated: 2024/02/05 23:18:04 by aulicna          ###   ########.fr       */
+/*   Updated: 2024/02/06 13:48:57 by aulicna          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
  * This function handles the SIGINT signal (pressing Ctrl+C) when minishell is
  * in interactive mode, meaning that it is waiting for user input.
  * 
- * When the SIGINT signal is received, the g_signal is set to SIGINT and checked
- * later on in the code to correctly assign an exit status of 130.
+ * When the SIGINT signal is received, the g_signal is set to SIGUSR1 and
+ * checked later on in the code to correctly assign an exit status of 130.
  * 
  * Then the function writes a newline character to the standard output, prepares
  * readline library to accept a new line, replaces the current line
@@ -31,7 +31,7 @@ void	handle_sigint(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		g_signal = SIGINT;
+		g_signal = SIGUSR1;
 		write(STDOUT, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -126,7 +126,7 @@ int	signal_exit_of_child(int *status)
 	}
 	if (WTERMSIG(*status) == SIGQUIT)
 	{
-		write(1, "Quit\n", 5);
+		write(1, "Quit (core dumped)\n", 19);
 		return (131);
 	}
 	return (0);
